@@ -97,7 +97,6 @@ export default function VoiceCallAgent({ persona, onClose }: VoiceCallAgentProps
       const conversation = await Conversation.startSession({
         agentId: agentId,
         connectionType: "websocket",
-        apiKey: process.env.NEXT_PUBLIC_ELEVENLABS_API_KEY,
         onConnect: () => {
           console.log('✅ Connected to agent');
           setCallState('connected');
