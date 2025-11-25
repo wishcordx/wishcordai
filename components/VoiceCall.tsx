@@ -20,8 +20,7 @@ export default function VoiceCall({ persona, onClose }: VoiceCallProps) {
   const [callDuration, setCallDuration] = useState(0);
   const [textInput, setTextInput] = useState('');
   const [isSpeaking, setIsSpeaking] = useState(false);
-  const [silenceTimer, setSilenceTimer] = useState<NodeJS.Timeout | null>(null);
-  const [currentVolume, setCurrentVolume] = useState(0);
+  const [isPushingToTalk, setIsPushingToTalk] = useState(false);
   
   const mediaRecorderRef = useRef<MediaRecorder | null>(null);
   const audioChunksRef = useRef<Blob[]>([]);
@@ -30,10 +29,7 @@ export default function VoiceCall({ persona, onClose }: VoiceCallProps) {
   const callTimerRef = useRef<NodeJS.Timeout | null>(null);
   const currentAudioRef = useRef<HTMLAudioElement | null>(null);
   const preloadedAudioRef = useRef<HTMLAudioElement | null>(null);
-  const audioContextRef = useRef<AudioContext | null>(null);
-  const analyserRef = useRef<AnalyserNode | null>(null);
-  const silenceTimeoutRef = useRef<NodeJS.Timeout | null>(null);
-  const hasSpokenRef = useRef<boolean>(false);
+  const streamRef = useRef<MediaStream | null>(null);
 
   // Get persona config directly
   const modPersona = getPersonaConfig(persona);
@@ -241,22 +237,22 @@ export default function VoiceCall({ persona, onClose }: VoiceCallProps) {
   const startListening = async () => {
     try {
       const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-      const mediaRecorder = new MediaRecorder(stream);
+      streamRef.current = stream;
+      setCallState('listening');
+      console.log('🎤 Ready to record - Press and hold the mic button');
+    } catch (err) {
+      console.error('Microphone error:', err);
+      setError('Could not access microphone. Use text input.');
+    }
+  };
+
+  const startRecording = () => {
+    if (!streamRef.current || isRecording || callState !== 'listening') return;
+    
+    try {
+      const mediaRecorder = new MediaRecorder(streamRef.current);
       mediaRecorderRef.current = mediaRecorder;
       audioChunksRef.current = [];
-      hasSpokenRef.current = false; // Reset
-
-      // Setup voice activity detection
-      const audioContext = new (window.AudioContext || (window as any).webkitAudioContext)();
-      const analyser = audioContext.createAnalyser();
-      const microphone = audioContext.createMediaStreamSource(stream);
-      microphone.connect(analyser);
-      analyser.fftSize = 512;
-      audioContextRef.current = audioContext;
-      analyserRef.current = analyser;
-
-      // Start monitoring volume
-      detectVoiceActivity();
 
       mediaRecorder.ondataavailable = (event) => {
         if (event.data.size > 0) {
@@ -267,87 +263,25 @@ export default function VoiceCall({ persona, onClose }: VoiceCallProps) {
       mediaRecorder.onstop = async () => {
         const audioBlob = new Blob(audioChunksRef.current, { type: 'audio/webm' });
         setCallState('processing');
+        setIsSpeaking(false);
         await processAudio(audioBlob);
-        stream.getTracks().forEach(track => track.stop());
-        if (audioContextRef.current) {
-          audioContextRef.current.close();
-        }
       };
 
       mediaRecorder.start();
       setIsRecording(true);
-      console.log('🎤 Started listening with auto voice detection');
+      setIsSpeaking(true);
+      console.log('🎤 Recording started');
     } catch (err) {
-      console.error('Microphone error:', err);
-      setError('Could not access microphone. Use text input.');
+      console.error('Recording error:', err);
     }
   };
 
-  const detectVoiceActivity = () => {
-    if (!analyserRef.current) return;
-
-    const analyser = analyserRef.current;
-    const dataArray = new Uint8Array(analyser.frequencyBinCount);
-
-    const checkVolume = () => {
-      if (!isRecording) return;
-      
-      analyser.getByteFrequencyData(dataArray);
-      const average = dataArray.reduce((a, b) => a + b) / dataArray.length;
-      
-      // Update volume display
-      setCurrentVolume(Math.round(average));
-
-      const SPEECH_THRESHOLD = 15; // Lowered threshold for better detection
-      
-      if (average > SPEECH_THRESHOLD) {
-        // Speaking detected
-        if (!isSpeaking) {
-          console.log('🎤 Speech started, volume:', Math.round(average));
-        }
-        setIsSpeaking(true);
-        hasSpokenRef.current = true;
-        
-        // Clear any existing silence timeout
-        if (silenceTimeoutRef.current) {
-          clearTimeout(silenceTimeoutRef.current);
-          silenceTimeoutRef.current = null;
-        }
-      } else {
-        // Silence detected
-        if (isSpeaking) {
-          console.log('🔇 Silence detected, starting countdown...');
-        }
-        setIsSpeaking(false);
-        
-        // Only start silence timeout if user has spoken before
-        if (hasSpokenRef.current && !silenceTimeoutRef.current) {
-          console.log('⏱️ Silence timeout started (1.5s)');
-          silenceTimeoutRef.current = setTimeout(() => {
-            console.log('✅ Silence timeout reached, auto-stopping recording');
-            stopListening();
-          }, 1500);
-        }
-      }
-
-      requestAnimationFrame(checkVolume);
-    };
-
-    checkVolume();
-  };
-
-  const stopListening = () => {
+  const stopRecording = () => {
     if (mediaRecorderRef.current && isRecording) {
-      // Clear silence timeout
-      if (silenceTimeoutRef.current) {
-        clearTimeout(silenceTimeoutRef.current);
-        silenceTimeoutRef.current = null;
-      }
-      
       mediaRecorderRef.current.stop();
       setIsRecording(false);
       setIsSpeaking(false);
-      setCallState('processing');
+      console.log('🛑 Recording stopped');
     }
   };
 
@@ -434,6 +368,11 @@ export default function VoiceCall({ persona, onClose }: VoiceCallProps) {
       currentAudioRef.current.pause();
       currentAudioRef.current.currentTime = 0;
       currentAudioRef.current = null;
+    }
+    
+    // Stop microphone stream
+    if (streamRef.current) {
+      streamRef.current.getTracks().forEach(track => track.stop());
     }
     
     // Stop call timer
@@ -593,20 +532,8 @@ export default function VoiceCall({ persona, onClose }: VoiceCallProps) {
 
             <p className="text-white text-lg font-semibold mt-2">You</p>
             <p className="text-sm text-gray-400">
-              {isSpeaking ? '🎤 Speaking...' : '🤫 Silent'}
+              {isSpeaking ? '🎤 Recording...' : '⏸️ Ready'}
             </p>
-            
-            {/* Volume Meter */}
-            <div className="mt-2 w-32">
-              <div className="h-1 bg-gray-700 rounded-full overflow-hidden">
-                <motion.div
-                  className={`h-full ${isSpeaking ? 'bg-blue-500' : 'bg-gray-500'}`}
-                  animate={{ width: `${Math.min(currentVolume * 2, 100)}%` }}
-                  transition={{ duration: 0.1 }}
-                />
-              </div>
-              <p className="text-xs text-gray-500 text-center mt-1">Vol: {currentVolume}</p>
-            </div>
           </motion.div>
         )}
 
@@ -642,23 +569,34 @@ export default function VoiceCall({ persona, onClose }: VoiceCallProps) {
       {/* Bottom Bar - Controls */}
       <div className="bg-[#313338] px-4 py-6 border-t border-gray-700">
         <div className="flex items-center justify-center gap-4">
-          {/* Manual Send Button (if speaking detected but not auto-sent) */}
-          {callState === 'listening' && hasSpokenRef.current && (
+          {/* Push to Talk Button */}
+          {callState === 'listening' && (
             <motion.button
-              initial={{ scale: 0 }}
-              animate={{ scale: 1 }}
+              onMouseDown={startRecording}
+              onMouseUp={stopRecording}
+              onMouseLeave={stopRecording}
+              onTouchStart={startRecording}
+              onTouchEnd={stopRecording}
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
-              onClick={() => {
-                console.log('📤 Manual send triggered');
-                stopListening();
-              }}
-              className="w-14 h-14 rounded-full bg-blue-600 hover:bg-blue-700 text-white flex items-center justify-center shadow-lg transition"
+              className={`w-16 h-16 rounded-full ${
+                isRecording 
+                  ? 'bg-red-600 animate-pulse' 
+                  : 'bg-blue-600 hover:bg-blue-700'
+              } text-white flex items-center justify-center shadow-lg transition`}
             >
-              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" />
+              <svg className="w-8 h-8" fill="currentColor" viewBox="0 0 24 24">
+                <path d="M12 14c1.66 0 3-1.34 3-3V5c0-1.66-1.34-3-3-3S9 3.34 9 5v6c0 1.66 1.34 3 3 3z"/>
+                <path d="M17 11c0 2.76-2.24 5-5 5s-5-2.24-5-5H5c0 3.53 2.61 6.43 6 6.92V21h2v-3.08c3.39-.49 6-3.39 6-6.92h-2z"/>
               </svg>
             </motion.button>
+          )}
+
+          {/* Processing indicator */}
+          {callState === 'processing' && (
+            <div className="w-16 h-16 rounded-full bg-yellow-600 text-white flex items-center justify-center shadow-lg">
+              <div className="animate-spin">⏳</div>
+            </div>
           )}
 
           {/* End Call Button */}
@@ -674,9 +612,10 @@ export default function VoiceCall({ persona, onClose }: VoiceCallProps) {
           </motion.button>
         </div>
         
-        <p className="text-center text-gray-500 text-xs mt-4">
-          {callState === 'listening' && hasSpokenRef.current && 'Tap blue button to send or wait for auto-send'}
-          {callState === 'listening' && !hasSpokenRef.current && 'Start speaking...'}
+        <p className="text-center text-gray-400 text-sm mt-4 font-medium">
+          {callState === 'listening' && !isRecording && '👇 Hold mic button to talk'}
+          {callState === 'listening' && isRecording && '🔴 Recording... Release to send'}
+          {callState === 'processing' && 'Processing...'}
         </p>
       </div>
     </div>
