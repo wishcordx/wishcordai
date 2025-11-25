@@ -26,6 +26,7 @@ export default function VoiceCall({ persona, onClose }: VoiceCallProps) {
   const ringToneRef = useRef<HTMLAudioElement | null>(null);
   const callTimerRef = useRef<NodeJS.Timeout | null>(null);
   const currentAudioRef = useRef<HTMLAudioElement | null>(null);
+  const preloadedAudioRef = useRef<HTMLAudioElement | null>(null);
 
   // Get persona config directly
   const modPersona = getPersonaConfig(persona);
@@ -43,11 +44,23 @@ export default function VoiceCall({ persona, onClose }: VoiceCallProps) {
     // Preload the audio
     audio.load();
     
+    // Create a pre-initialized audio element for AI responses (mobile Safari fix)
+    const preloadedAudio = new Audio();
+    preloadedAudio.preload = 'auto';
+    preloadedAudio.setAttribute('playsinline', 'true');
+    preloadedAudioRef.current = preloadedAudio;
+    console.log('🎵 Pre-initialized audio element for mobile Safari');
+    
     return () => {
       if (ringToneRef.current) {
         ringToneRef.current.pause();
         ringToneRef.current.src = '';
         ringToneRef.current = null;
+      }
+      if (preloadedAudioRef.current) {
+        preloadedAudioRef.current.pause();
+        preloadedAudioRef.current.src = '';
+        preloadedAudioRef.current = null;
       }
       if (callTimerRef.current) {
         clearInterval(callTimerRef.current);
@@ -149,20 +162,15 @@ export default function VoiceCall({ persona, onClose }: VoiceCallProps) {
     try {
       console.log('🎵 Starting audio playback, base64 length:', base64Audio.length);
       
-      // Use data URL instead of blob URL for better mobile compatibility
-      const dataUrl = `data:audio/mpeg;base64,${base64Audio}`;
-      const audio = new Audio();
+      // Use the pre-initialized audio element (created during user interaction)
+      const audio = preloadedAudioRef.current || new Audio();
       
       // Set source to data URL
+      const dataUrl = `data:audio/mpeg;base64,${base64Audio}`;
       audio.src = dataUrl;
-      audio.preload = 'auto';
+      audio.load();
       
-      // Mobile compatibility settings
-      audio.setAttribute('playsinline', 'true');
-      audio.autoplay = false;
-      audio.muted = false;
-      
-      console.log('🎵 Audio element created with data URL');
+      console.log('🎵 Audio element updated with new source');
       
       currentAudioRef.current = audio;
       
@@ -189,7 +197,6 @@ export default function VoiceCall({ persona, onClose }: VoiceCallProps) {
         };
         
         // Try to play
-        audio.load();
         audio.play()
           .then(() => {
             console.log('🎵 Audio playing successfully');
