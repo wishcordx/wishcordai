@@ -1,8 +1,8 @@
 'use client';
 
 import { useState, useRef, useEffect } from 'react';
-import { fabric } from 'fabric';
-import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
+import * as fabric from 'fabric';
+import { supabase } from '@/lib/supabase';
 
 interface MemeEditorProps {
   isOpen: boolean;
@@ -29,8 +29,6 @@ export default function MemeEditor({
   const [fontFamily, setFontFamily] = useState('Impact');
   const [isSaving, setIsSaving] = useState(false);
 
-  const supabase = createClientComponentClient();
-
   // Initialize Fabric.js canvas
   useEffect(() => {
     if (!canvasRef.current || !isOpen) return;
@@ -46,32 +44,34 @@ export default function MemeEditor({
 
     // Load initial image if provided
     if (initialImage) {
-      fabric.Image.fromURL(initialImage, (img) => {
-        // Scale image to fit canvas
+      const img = new Image();
+      img.crossOrigin = 'anonymous';
+      img.onload = () => {
+        const fabricImage = new fabric.Image(img);
         const scale = Math.min(
-          canvas.width! / img.width!,
-          canvas.height! / img.height!
+          800 / img.width,
+          600 / img.height
         );
-        img.scale(scale);
-        img.set({
-          left: canvas.width! / 2,
-          top: canvas.height! / 2,
+        fabricImage.scale(scale);
+        fabricImage.set({
+          left: 400,
+          top: 300,
           originX: 'center',
           originY: 'center',
-          selectable: false, // Background image shouldn't be selectable
+          selectable: false,
         });
-        canvas.add(img);
-        canvas.sendToBack(img);
+        canvas.add(fabricImage);
         canvas.renderAll();
-      }, { crossOrigin: 'anonymous' });
+      };
+      img.src = initialImage;
     }
 
     // Selection event listeners
-    canvas.on('selection:created', (e) => {
+    canvas.on('selection:created', (e: any) => {
       setSelectedObject(e.selected?.[0] || null);
     });
 
-    canvas.on('selection:updated', (e) => {
+    canvas.on('selection:updated', (e: any) => {
       setSelectedObject(e.selected?.[0] || null);
     });
 
@@ -154,6 +154,7 @@ export default function MemeEditor({
     const dataURL = canvas.toDataURL({
       format: 'png',
       quality: 1,
+      multiplier: 1,
     });
 
     const link = document.createElement('a');
@@ -168,7 +169,7 @@ export default function MemeEditor({
     if (!canvas) return;
 
     try {
-      const dataURL = canvas.toDataURL({ format: 'png', quality: 1 });
+      const dataURL = canvas.toDataURL({ format: 'png', quality: 1, multiplier: 1 });
       const blob = await (await fetch(dataURL)).blob();
       const file = new File([blob], 'wish-meme.png', { type: 'image/png' });
 
@@ -200,7 +201,7 @@ export default function MemeEditor({
 
     try {
       // Convert canvas to blob
-      const dataURL = canvas.toDataURL({ format: 'png', quality: 0.9 });
+      const dataURL = canvas.toDataURL({ format: 'png', quality: 0.9, multiplier: 1 });
       const blob = await (await fetch(dataURL)).blob();
 
       // Upload to Supabase Storage
