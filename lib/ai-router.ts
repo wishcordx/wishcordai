@@ -64,7 +64,7 @@ export const aiRouter = {
       const mediaType = imageResponse.headers.get('content-type') || 'image/jpeg';
 
       const response = await anthropic.messages.create({
-        model: 'claude-3-sonnet-20240229',
+        model: 'claude-sonnet-4-5',
         max_tokens: 500,
         messages: [
           {
@@ -153,7 +153,7 @@ export const aiRouter = {
       }
 
       const response = await anthropic.messages.create({
-        model: 'claude-3-5-sonnet-20241022',
+        model: 'claude-sonnet-4-5',
         max_tokens: 500,
         system: systemPrompt,
         messages: [

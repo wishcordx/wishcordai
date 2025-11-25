@@ -273,14 +273,14 @@ export default function WishCard({ wish }: WishCardProps) {
         >
           <button
             onClick={() => setShowImageLightbox(false)}
-            className="absolute top-4 right-4 text-white text-3xl hover:text-gray-300 z-10"
+            className="absolute top-2 right-2 sm:top-4 sm:right-4 bg-black/50 hover:bg-black/70 text-white rounded-full w-10 h-10 sm:w-12 sm:h-12 flex items-center justify-center text-xl sm:text-2xl z-10"
           >
             ✕
           </button>
           <img
             src={wish.image_url}
             alt="Full size meme"
-            className="max-w-full max-h-full rounded-lg"
+            className="max-w-full max-h-[90vh] object-contain rounded-lg"
             onClick={(e) => e.stopPropagation()}
           />
         </div>

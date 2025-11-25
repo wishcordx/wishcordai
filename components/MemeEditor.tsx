@@ -164,34 +164,6 @@ export default function MemeEditor({
   };
 
   // Share meme (Web Share API)
-  const shareMeme = async () => {
-    const canvas = fabricCanvasRef.current;
-    if (!canvas) return;
-
-    try {
-      const dataURL = canvas.toDataURL({ format: 'png', quality: 1, multiplier: 1 });
-      const blob = await (await fetch(dataURL)).blob();
-      const file = new File([blob], 'wish-meme.png', { type: 'image/png' });
-
-      if (navigator.share) {
-        await navigator.share({
-          files: [file],
-          title: 'WishAI Meme',
-          text: 'Check out my wish meme from WishAI!',
-        });
-      } else {
-        // Fallback: Copy to clipboard
-        await navigator.clipboard.write([
-          new ClipboardItem({ 'image/png': blob }),
-        ]);
-        alert('Meme copied to clipboard!');
-      }
-    } catch (error) {
-      console.error('Share error:', error);
-      alert('Failed to share meme');
-    }
-  };
-
   // Save to feed
   const saveToFeed = async () => {
     const canvas = fabricCanvasRef.current;
@@ -249,16 +221,16 @@ export default function MemeEditor({
           </button>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
-          {/* Canvas Area */}
-          <div className="lg:col-span-2">
+        <div className="flex flex-col lg:grid lg:grid-cols-3 gap-4 h-auto lg:h-[calc(100vh-200px)]">
+          {/* Canvas Area - Left side on desktop, top on mobile */}
+          <div className="lg:col-span-2 overflow-auto max-h-[50vh] lg:max-h-full">
             <div className="bg-[#1a1b1e] rounded-lg p-4 border border-[#0f1011]">
-              <canvas ref={canvasRef} className="border-2 border-[#0f1011] rounded-lg mx-auto" />
+              <canvas ref={canvasRef} className="border-2 border-[#0f1011] rounded-lg mx-auto max-w-full" />
             </div>
           </div>
 
-          {/* Controls Panel */}
-          <div className="space-y-4">
+          {/* Controls Panel - Right side on desktop, bottom on mobile */}
+          <div className="space-y-4 overflow-y-auto max-h-[50vh] lg:max-h-full">
             {/* Add Text Buttons */}
             <div className="bg-[#1e1f22] rounded-lg p-4 border border-[#0f1011]">
               <h3 className="text-white font-semibold mb-3">Add Text</h3>
@@ -376,12 +348,6 @@ export default function MemeEditor({
                 className="w-full px-4 py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-semibold transition-colors"
               >
                 ⬇️ Download
-              </button>
-              <button
-                onClick={shareMeme}
-                className="w-full px-4 py-3 bg-green-600 hover:bg-green-700 text-white rounded-lg font-semibold transition-colors"
-              >
-                📤 Share
               </button>
               <button
                 onClick={saveToFeed}

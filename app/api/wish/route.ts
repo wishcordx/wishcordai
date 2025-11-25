@@ -48,9 +48,27 @@ export async function POST(request: NextRequest) {
 
     // Parse @mentions from text if not already provided
     const mentions = mentionedPersonas || aiRouter.parseMentions(wishText || '');
+    
+    // Convert mentioned usernames to persona IDs for matching
+    const usernameToPersonaMap: Record<string, string> = {
+      'SantaMod69': 'santa',
+      'xX_Krampus_Xx': 'grinch',
+      'elfgirluwu': 'elf',
+      'FrostyTheCoder': 'snowman',
+      'DasherSpeedrun': 'reindeer',
+      'SantaKumar': 'scammer',
+      'JingBells叮噹鈴': 'jingbells',
+    };
+    
+    const mentionedPersonaIds = mentions.map(m => usernameToPersonaMap[m] || m.toLowerCase()).filter(Boolean);
 
     // Check if this persona was mentioned (or no mentions = respond anyway for backward compatibility)
-    const shouldRespond = mentions.length === 0 || mentions.includes(persona);
+    const shouldRespond = mentionedPersonaIds.length === 0 || mentionedPersonaIds.includes(persona);
+    
+    console.log('🏷️ Mentions detected:', mentions);
+    console.log('🎭 Persona IDs:', mentionedPersonaIds);
+    console.log('🤖 Current persona:', persona);
+    console.log('💭 Should respond:', shouldRespond);
 
     let aiReply: string | null = null;
     let imageDescription: string | undefined;
@@ -93,6 +111,7 @@ export async function POST(request: NextRequest) {
       image_path: imagePath,
       audio_url: audioUrl,
       audio_path: audioPath,
+      mentioned_personas: mentionedPersonaIds.length > 0 ? mentionedPersonaIds : null,
     });
 
     console.log('📝 Wish saved:', wish.id);
