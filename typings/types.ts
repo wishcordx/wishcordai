@@ -33,7 +33,6 @@ export interface WishSubmitPayload {
   username?: string;
   avatar?: string;
 }
-}
 
 export interface WishResponse {
   success: boolean;
