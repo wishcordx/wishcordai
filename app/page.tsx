@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react';
 import Header from '@/components/Header';
 import WishForm from '@/components/WishForm';
 import Feed from '@/components/Feed';
-import VoiceCall from '@/components/VoiceCall';
+import VoiceCallAgent from '@/components/VoiceCallAgent';
 import MembersList from '@/components/MembersList';
 import ModProfileModal from '@/components/ModProfileModal';
 import MobileSidebar from '@/components/MobileSidebar';
@@ -176,7 +176,7 @@ export default function HomePage() {
 
       {/* Voice Call Modal */}
       {activeCall && (
-        <VoiceCall persona={activeCall} onClose={handleCloseCall} />
+        <VoiceCallAgent persona={activeCall} onClose={handleCloseCall} />
       )}
 
       {/* Mobile Sidebar */}
