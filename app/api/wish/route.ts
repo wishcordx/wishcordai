@@ -111,7 +111,7 @@ export async function POST(request: NextRequest) {
       image_path: imagePath,
       audio_url: audioUrl,
       audio_path: audioPath,
-      mentioned_personas: mentionedPersonaIds.length > 0 ? mentionedPersonaIds : null,
+      mentioned_personas: mentionedPersonaIds.length > 0 ? mentionedPersonaIds : undefined,
     });
 
     console.log('📝 Wish saved:', wish.id);
