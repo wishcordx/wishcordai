@@ -40,6 +40,7 @@ export default function WishCard({ wish }: WishCardProps) {
   const [replyCount, setReplyCount] = useState(0);
   const [shareCount, setShareCount] = useState(0);
   const [isLoadingData, setIsLoadingData] = useState(true);
+  const [showImageLightbox, setShowImageLightbox] = useState(false);
 
   const personaConfig = PERSONAS[wish.persona as keyof typeof PERSONAS];
   
@@ -237,8 +238,53 @@ export default function WishCard({ wish }: WishCardProps) {
             </span>
           </div>
           <p className="text-gray-300 text-xs sm:text-sm leading-relaxed">{wish.wish_text}</p>
+          
+          {/* Image Attachment */}
+          {wish.image_url && (
+            <div className="mt-3">
+              <img
+                src={wish.image_url}
+                alt="Attached meme"
+                className="max-w-full max-h-80 rounded-lg cursor-pointer hover:opacity-90 transition-opacity border border-[#0f1011]"
+                onClick={() => setShowImageLightbox(true)}
+              />
+            </div>
+          )}
+
+          {/* Audio Attachment */}
+          {wish.audio_url && (
+            <div className="mt-3 bg-[#202225] rounded-lg p-3 border border-[#0f1011] flex items-center gap-2">
+              <span className="text-xl">🎤</span>
+              <audio controls className="flex-1 h-8">
+                <source src={wish.audio_url} type="audio/webm" />
+                <source src={wish.audio_url} type="audio/mpeg" />
+                Your browser does not support the audio element.
+              </audio>
+            </div>
+          )}
         </div>
       </div>
+
+      {/* Image Lightbox */}
+      {showImageLightbox && wish.image_url && (
+        <div
+          className="fixed inset-0 bg-black/90 z-50 flex items-center justify-center p-4"
+          onClick={() => setShowImageLightbox(false)}
+        >
+          <button
+            onClick={() => setShowImageLightbox(false)}
+            className="absolute top-4 right-4 text-white text-3xl hover:text-gray-300 z-10"
+          >
+            ✕
+          </button>
+          <img
+            src={wish.image_url}
+            alt="Full size meme"
+            className="max-w-full max-h-full rounded-lg"
+            onClick={(e) => e.stopPropagation()}
+          />
+        </div>
+      )}
 
       {/* Mod Response */}
       {wish.ai_reply && (

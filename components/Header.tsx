@@ -50,6 +50,22 @@ export default function Header({ onMenuClick }: HeaderProps = {}) {
           </Link>
           
           <nav className="flex items-center gap-2 sm:gap-4 text-sm">
+            {/* About Link */}
+            <Link
+              href="/about"
+              className="hidden md:flex items-center gap-1 px-3 py-2 text-gray-300 hover:text-white hover:bg-[#202225] rounded-lg transition-colors"
+            >
+              ℹ️ <span>About</span>
+            </Link>
+
+            {/* How It Works Link */}
+            <Link
+              href="/how-it-works"
+              className="hidden md:flex items-center gap-1 px-3 py-2 text-gray-300 hover:text-white hover:bg-[#202225] rounded-lg transition-colors"
+            >
+              ❓ <span>How It Works</span>
+            </Link>
+
             {/* $WISH Token Link */}
             <Link
               href="/wishtoken"

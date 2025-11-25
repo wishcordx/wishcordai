@@ -1,7 +1,8 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import PersonaSelector from './PersonaSelector';
+import MemeEditor from './MemeEditor';
 import { useWallet } from '@/lib/wallet-context';
 import type { Persona } from '@/typings/types';
 
@@ -17,6 +18,19 @@ export default function WishForm({ onWishSubmitted }: WishFormProps) {
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState(false);
   const [isTyping, setIsTyping] = useState(false);
+  
+  // Media features
+  const [uploadedImage, setUploadedImage] = useState<string | null>(null);
+  const [imageUrl, setImageUrl] = useState<string | null>(null);
+  const [imagePath, setImagePath] = useState<string | null>(null);
+  const [showMemeEditor, setShowMemeEditor] = useState(false);
+  const [isRecording, setIsRecording] = useState(false);
+  const [audioBlob, setAudioBlob] = useState<Blob | null>(null);
+  const [recordingTime, setRecordingTime] = useState(0);
+  
+  const fileInputRef = useRef<HTMLInputElement>(null);
+  const mediaRecorderRef = useRef<MediaRecorder | null>(null);
+  const recordingIntervalRef = useRef<NodeJS.Timeout | null>(null);
 
   const handleTextChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     setWishText(e.target.value);
@@ -30,11 +44,97 @@ export default function WishForm({ onWishSubmitted }: WishFormProps) {
     setTimeout(() => setIsTyping(false), 2000);
   };
 
+  // Handle image upload
+  const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    // Validate file type
+    if (!file.type.startsWith('image/')) {
+      setError('Please upload an image file');
+      return;
+    }
+
+    // Validate file size (5MB max)
+    if (file.size > 5 * 1024 * 1024) {
+      setError('Image must be less than 5MB');
+      return;
+    }
+
+    const reader = new FileReader();
+    reader.onload = () => {
+      setUploadedImage(reader.result as string);
+      setShowMemeEditor(true);
+    };
+    reader.readAsDataURL(file);
+  };
+
+  // Handle meme editor save
+  const handleMemeEditorSave = (url: string, path: string) => {
+    setImageUrl(url);
+    setImagePath(path);
+    setShowMemeEditor(false);
+  };
+
+  // Remove image
+  const removeImage = () => {
+    setImageUrl(null);
+    setImagePath(null);
+    setUploadedImage(null);
+    if (fileInputRef.current) fileInputRef.current.value = '';
+  };
+
+  // Start voice recording
+  const startRecording = async () => {
+    try {
+      const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+      const mediaRecorder = new MediaRecorder(stream);
+      mediaRecorderRef.current = mediaRecorder;
+
+      const chunks: Blob[] = [];
+      mediaRecorder.ondataavailable = (e) => chunks.push(e.data);
+      mediaRecorder.onstop = () => {
+        const blob = new Blob(chunks, { type: 'audio/webm' });
+        setAudioBlob(blob);
+        stream.getTracks().forEach(track => track.stop());
+      };
+
+      mediaRecorder.start();
+      setIsRecording(true);
+      setRecordingTime(0);
+
+      // Update recording time
+      recordingIntervalRef.current = setInterval(() => {
+        setRecordingTime(t => t + 1);
+      }, 1000);
+    } catch (err) {
+      console.error('Recording error:', err);
+      setError('Failed to access microphone');
+    }
+  };
+
+  // Stop voice recording
+  const stopRecording = () => {
+    if (mediaRecorderRef.current && isRecording) {
+      mediaRecorderRef.current.stop();
+      setIsRecording(false);
+      if (recordingIntervalRef.current) {
+        clearInterval(recordingIntervalRef.current);
+      }
+    }
+  };
+
+  // Remove audio
+  const removeAudio = () => {
+    setAudioBlob(null);
+    setRecordingTime(0);
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
-    if (!wishText.trim()) {
-      setError('Please write your wish first!');
+    if (!wishText.trim() && !imageUrl && !audioBlob) {
+      setError('Please write a message, add an image, or record audio!');
       return;
     }
 
@@ -47,6 +147,27 @@ export default function WishForm({ onWishSubmitted }: WishFormProps) {
     const profile = profileData ? JSON.parse(profileData) : null;
 
     try {
+      // If audio exists, upload it first
+      let audioUrl = null;
+      let audioPath = null;
+      
+      if (audioBlob) {
+        const formData = new FormData();
+        formData.append('audio', audioBlob, 'voice-message.webm');
+        
+        // Upload audio to Supabase via API
+        const uploadResponse = await fetch('/api/voice/transcribe', {
+          method: 'POST',
+          body: formData,
+        });
+        
+        const uploadData = await uploadResponse.json();
+        if (uploadData.success) {
+          audioUrl = uploadData.audioUrl;
+          audioPath = uploadData.audioPath;
+        }
+      }
+
       const response = await fetch('/api/wish', {
         method: 'POST',
         headers: {
@@ -58,6 +179,10 @@ export default function WishForm({ onWishSubmitted }: WishFormProps) {
           walletAddress: walletAddress || '',
           username: profile?.username || 'Anonymous',
           avatar: profile?.avatar || '👤',
+          imageUrl,
+          imagePath,
+          audioUrl,
+          audioPath,
         }),
       });
 
@@ -66,6 +191,12 @@ export default function WishForm({ onWishSubmitted }: WishFormProps) {
       if (data.success) {
         setWishText('');
         setSelectedPersona('santa');
+        setImageUrl(null);
+        setImagePath(null);
+        setUploadedImage(null);
+        setAudioBlob(null);
+        setRecordingTime(0);
+        if (fileInputRef.current) fileInputRef.current.value = '';
         setSuccess(true);
         setTimeout(() => setSuccess(false), 3000);
         onWishSubmitted?.(data.wish);
@@ -81,34 +212,120 @@ export default function WishForm({ onWishSubmitted }: WishFormProps) {
   };
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-3 sm:space-y-4">
-      <div className="space-y-2">
-        <textarea
-          id="wish"
-          value={wishText}
-          onChange={handleTextChange}
-          placeholder="Message #xmas-wishes"
-          className="w-full px-3 py-2 sm:px-4 sm:py-3 rounded-lg bg-[#1a1b1e] text-sm sm:text-base text-white placeholder:text-gray-500 border border-[#0f1011] focus:outline-none focus:border-indigo-500 resize-none"
-          rows={3}
-          maxLength={500}
-          disabled={isSubmitting}
-        />
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            {isTyping && wishText.length > 0 && (
-              <div className="flex items-center gap-1 text-xs text-gray-400">
-                <span className="inline-block w-1 h-1 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '0ms' }}></span>
-                <span className="inline-block w-1 h-1 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '150ms' }}></span>
-                <span className="inline-block w-1 h-1 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '300ms' }}></span>
-                <span className="ml-1">typing...</span>
-              </div>
-            )}
+    <>
+      {/* Meme Editor Modal */}
+      <MemeEditor
+        isOpen={showMemeEditor}
+        onClose={() => setShowMemeEditor(false)}
+        initialImage={uploadedImage}
+        onSaveToFeed={handleMemeEditorSave}
+      />
+
+      <form onSubmit={handleSubmit} className="space-y-3 sm:space-y-4">
+        <div className="space-y-2">
+          <textarea
+            id="wish"
+            value={wishText}
+            onChange={handleTextChange}
+            placeholder="Message #xmas-wishes (use @SantaMod69 to tag specific mods)"
+            className="w-full px-3 py-2 sm:px-4 sm:py-3 rounded-lg bg-[#1a1b1e] text-sm sm:text-base text-white placeholder:text-gray-500 border border-[#0f1011] focus:outline-none focus:border-indigo-500 resize-none"
+            rows={3}
+            maxLength={500}
+            disabled={isSubmitting}
+          />
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-2">
+              {isTyping && wishText.length > 0 && (
+                <div className="flex items-center gap-1 text-xs text-gray-400">
+                  <span className="inline-block w-1 h-1 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '0ms' }}></span>
+                  <span className="inline-block w-1 h-1 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '150ms' }}></span>
+                  <span className="inline-block w-1 h-1 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '300ms' }}></span>
+                  <span className="ml-1">typing...</span>
+                </div>
+              )}
+            </div>
+            <p className="text-xs text-gray-500">
+              {wishText.length}/500
+            </p>
           </div>
-          <p className="text-xs text-gray-500">
-            {wishText.length}/500
-          </p>
         </div>
-      </div>
+
+        {/* Media Attachments Section */}
+        <div className="flex flex-wrap items-center gap-2">
+          {/* Image Upload Button */}
+          <input
+            ref={fileInputRef}
+            type="file"
+            accept="image/*"
+            onChange={handleImageUpload}
+            className="hidden"
+          />
+          <button
+            type="button"
+            onClick={() => fileInputRef.current?.click()}
+            disabled={isSubmitting || !!imageUrl}
+            className="px-3 py-2 bg-[#1e1f22] hover:bg-[#202225] text-gray-300 rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2 text-sm"
+          >
+            📷 <span className="hidden sm:inline">Add Image</span>
+          </button>
+
+          {/* Voice Recording Button */}
+          <button
+            type="button"
+            onClick={isRecording ? stopRecording : startRecording}
+            disabled={isSubmitting || !!audioBlob}
+            className={`px-3 py-2 rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2 text-sm ${
+              isRecording 
+                ? 'bg-red-600 hover:bg-red-700 text-white animate-pulse' 
+                : 'bg-[#1e1f22] hover:bg-[#202225] text-gray-300'
+            }`}
+          >
+            {isRecording ? (
+              <>🔴 <span className="hidden sm:inline">{recordingTime}s</span></>
+            ) : (
+              <>🎤 <span className="hidden sm:inline">Voice</span></>
+            )}
+          </button>
+        </div>
+
+        {/* Image Preview */}
+        {imageUrl && (
+          <div className="relative bg-[#1e1f22] rounded-lg p-3 border border-[#0f1011]">
+            <button
+              type="button"
+              onClick={removeImage}
+              className="absolute top-1 right-1 bg-red-600 hover:bg-red-700 text-white rounded-full w-6 h-6 flex items-center justify-center text-sm"
+            >
+              ✕
+            </button>
+            <img
+              src={imageUrl}
+              alt="Attached meme"
+              className="max-h-40 rounded-lg mx-auto"
+            />
+            <p className="text-xs text-gray-400 text-center mt-2">🎨 Meme attached</p>
+          </div>
+        )}
+
+        {/* Audio Preview */}
+        {audioBlob && (
+          <div className="relative bg-[#1e1f22] rounded-lg p-3 border border-[#0f1011] flex items-center justify-between">
+            <div className="flex items-center gap-2">
+              <span className="text-2xl">🎤</span>
+              <div>
+                <p className="text-sm text-white">Voice message</p>
+                <p className="text-xs text-gray-400">{recordingTime} seconds</p>
+              </div>
+            </div>
+            <button
+              type="button"
+              onClick={removeAudio}
+              className="bg-red-600 hover:bg-red-700 text-white rounded-full w-6 h-6 flex items-center justify-center text-sm"
+            >
+              ✕
+            </button>
+          </div>
+        )}
 
       <div className="space-y-2">
         <p className="text-xs sm:text-sm text-gray-400">Pick a mod to respond:</p>
@@ -136,7 +353,7 @@ export default function WishForm({ onWishSubmitted }: WishFormProps) {
 
       <button
         type="submit"
-        disabled={isSubmitting || !wishText.trim()}
+        disabled={isSubmitting || (!wishText.trim() && !imageUrl && !audioBlob)}
         className="send-message-button relative w-full min-h-[68px] px-5 py-4 rounded-[14px] bg-[#2e2e2e] text-white font-semibold text-base sm:text-lg border-none cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300"
         style={{
           textShadow: '0 1px 1px rgba(0, 0, 0, 0.3)',
@@ -205,5 +422,6 @@ export default function WishForm({ onWishSubmitted }: WishFormProps) {
         }
       `}</style>
     </form>
+    </>
   );
 }

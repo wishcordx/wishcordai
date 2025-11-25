@@ -14,6 +14,11 @@ export interface Wish {
   ai_reply: string | null;
   judge_responses?: Record<string, string>;
   final_verdict?: string;
+  image_url?: string;
+  image_path?: string;
+  audio_url?: string;
+  audio_path?: string;
+  mentioned_personas?: string[];
   created_at: string;
 }
 
@@ -32,6 +37,11 @@ export interface WishSubmitPayload {
   walletAddress?: string;
   username?: string;
   avatar?: string;
+  imageUrl?: string;
+  imagePath?: string;
+  audioUrl?: string;
+  audioPath?: string;
+  mentionedPersonas?: string[];
 }
 
 export interface WishResponse {
