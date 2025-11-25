@@ -149,49 +149,53 @@ export default function VoiceCall({ persona, onClose }: VoiceCallProps) {
     try {
       const audioBlob = base64ToBlob(base64Audio, 'audio/mpeg');
       const audioUrl = URL.createObjectURL(audioBlob);
-      const audio = new Audio(audioUrl);
+      const audio = new Audio();
+      
+      // Set source
+      audio.src = audioUrl;
       audio.preload = 'auto';
       
-      // Mobile Safari fix: set playsInline
+      // Mobile compatibility settings
       audio.setAttribute('playsinline', 'true');
+      audio.autoplay = false;
+      audio.muted = false;
       
       currentAudioRef.current = audio;
       
       return new Promise<void>((resolve, reject) => {
+        let hasResolved = false;
+        
+        const cleanup = () => {
+          if (!hasResolved) {
+            hasResolved = true;
+            URL.revokeObjectURL(audioUrl);
+            currentAudioRef.current = null;
+          }
+        };
+        
         audio.onended = () => {
-          URL.revokeObjectURL(audioUrl);
-          currentAudioRef.current = null;
+          console.log('✅ Audio playback completed');
+          cleanup();
           resolve();
         };
         
         audio.onerror = (e) => {
-          console.error('Audio playback error:', e);
-          URL.revokeObjectURL(audioUrl);
-          currentAudioRef.current = null;
-          reject(new Error('Audio playback failed'));
+          console.error('❌ Audio playback error:', e, audio.error);
+          cleanup();
+          resolve(); // Resolve anyway to continue conversation
         };
         
-        audio.oncanplaythrough = () => {
-          console.log('✅ Audio ready to play');
-        };
-        
-        // Load and play
+        // Try to play
         audio.load();
-        
-        // Try to play with error handling
-        const playPromise = audio.play();
-        if (playPromise !== undefined) {
-          playPromise
-            .then(() => {
-              console.log('🎵 Audio playing successfully');
-            })
-            .catch(err => {
-              console.error('❌ Audio play failed:', err);
-              // On mobile, autoplay might be blocked
-              // Still resolve to continue the conversation
-              resolve();
-            });
-        }
+        audio.play()
+          .then(() => {
+            console.log('🎵 Audio playing successfully');
+          })
+          .catch(err => {
+            console.error('❌ Audio play failed:', err);
+            cleanup();
+            resolve(); // Resolve anyway to continue conversation
+          });
       });
     } catch (err) {
       console.error('Audio setup error:', err);
