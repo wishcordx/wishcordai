@@ -74,9 +74,9 @@ export default function ProfileDropdown({ onDisconnect, onOpenSetup }: ProfileDr
       </button>
 
       {isOpen && (
-        <div className="absolute right-0 mt-2 w-64 bg-[#2b2d31] rounded-lg shadow-xl border border-[#1e1f22] overflow-hidden z-50 animate-slideDown">
+        <div className="absolute right-0 mt-2 w-64 bg-[#1e1f22] rounded-lg shadow-xl border border-[#0f1011] overflow-hidden z-50 animate-slideDown">
           {/* Profile Header */}
-          <div className="p-4 bg-gradient-to-br from-green-600/20 to-emerald-600/20 border-b border-[#1e1f22]">
+          <div className="p-4 bg-gradient-to-br from-green-600/20 to-emerald-600/20 border-b border-[#0f1011]">
             <div className="flex items-center gap-3">
               <div className="w-12 h-12 bg-gradient-to-br from-green-500 to-emerald-500 rounded-full flex items-center justify-center overflow-hidden">
                 {profile?.avatar ? (
@@ -103,7 +103,7 @@ export default function ProfileDropdown({ onDisconnect, onOpenSetup }: ProfileDr
                 setIsOpen(false);
                 onOpenSetup?.();
               }}
-              className="w-full px-4 py-2 text-left text-sm text-gray-300 hover:bg-[#35373c] transition-colors flex items-center gap-2"
+              className="w-full px-4 py-2 text-left text-sm text-gray-300 hover:bg-[#2b2d31] transition-colors flex items-center gap-2"
             >
               <span>⚙️</span>
               Setup Profile
@@ -111,13 +111,13 @@ export default function ProfileDropdown({ onDisconnect, onOpenSetup }: ProfileDr
             
             <button
               onClick={handleCopyAddress}
-              className="w-full px-4 py-2 text-left text-sm text-gray-300 hover:bg-[#35373c] transition-colors flex items-center gap-2"
+              className="w-full px-4 py-2 text-left text-sm text-gray-300 hover:bg-[#2b2d31] transition-colors flex items-center gap-2"
             >
               <span>📋</span>
               Copy Address
             </button>
 
-            <div className="my-2 border-t border-[#1e1f22]"></div>
+            <div className="my-2 border-t border-[#0f1011]"></div>
 
             <button
               onClick={() => {
