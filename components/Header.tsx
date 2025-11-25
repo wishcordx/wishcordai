@@ -53,9 +53,13 @@ export default function Header({ onMenuClick }: HeaderProps = {}) {
             {/* $WISH Token Link */}
             <Link
               href="/wishtoken"
-              className="px-2 py-1.5 sm:px-3 sm:py-2 rounded-md bg-gradient-to-r from-yellow-500 to-orange-500 hover:from-yellow-600 hover:to-orange-600 text-white text-xs sm:text-sm font-bold transition-colors"
+              className="pushable-button relative border-none bg-transparent p-0 outline-none cursor-pointer"
             >
-              $WISH
+              <span className="absolute top-0 left-0 w-full h-full bg-black/25 rounded-lg translate-y-[2px] transition-transform duration-[600ms] cubic-bezier-[0.3,0.7,0.4,1] hover:translate-y-[4px] hover:duration-[250ms] active:translate-y-[1px] active:duration-[34ms]"></span>
+              <span className="absolute top-0 left-0 w-full h-full rounded-lg bg-gradient-to-l from-yellow-700 via-yellow-600 to-yellow-700"></span>
+              <span className="relative flex items-center justify-center px-3 py-2 sm:px-4 sm:py-2.5 text-xs sm:text-sm font-bold text-white bg-gradient-to-r from-yellow-500 to-orange-500 rounded-lg -translate-y-1 transition-transform duration-[600ms] cubic-bezier-[0.3,0.7,0.4,1] hover:-translate-y-[6px] hover:duration-[250ms] active:-translate-y-[2px] active:duration-[34ms] select-none">
+                $WISH
+              </span>
             </Link>
 
             {/* Wallet Connection */}
@@ -69,10 +73,14 @@ export default function Header({ onMenuClick }: HeaderProps = {}) {
               <button
                 onClick={connectWallet}
                 disabled={isConnecting}
-                className="px-2 py-1.5 sm:px-4 sm:py-2 rounded-md bg-indigo-600 hover:bg-indigo-700 text-white text-xs sm:text-sm font-medium transition-colors disabled:opacity-50"
+                className="pushable-button relative border-none bg-transparent p-0 outline-none cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
               >
-                <span className="hidden sm:inline">{isConnecting ? 'Connecting...' : '🔗 Connect Wallet'}</span>
-                <span className="sm:hidden">{isConnecting ? '...' : '🔗 Connect'}</span>
+                <span className="absolute top-0 left-0 w-full h-full bg-black/25 rounded-lg translate-y-[2px] transition-transform duration-[600ms] cubic-bezier-[0.3,0.7,0.4,1] hover:translate-y-[4px] hover:duration-[250ms] active:translate-y-[1px] active:duration-[34ms]"></span>
+                <span className="absolute top-0 left-0 w-full h-full rounded-lg bg-gradient-to-l from-indigo-900 via-indigo-700 to-indigo-900"></span>
+                <span className="relative flex items-center justify-center px-3 py-2 sm:px-6 sm:py-2.5 text-xs sm:text-sm font-medium text-white bg-indigo-600 rounded-lg -translate-y-1 transition-transform duration-[600ms] cubic-bezier-[0.3,0.7,0.4,1] hover:-translate-y-[6px] hover:duration-[250ms] active:-translate-y-[2px] active:duration-[34ms] select-none">
+                  <span className="hidden sm:inline">{isConnecting ? 'Connecting...' : '🔗 Connect Wallet'}</span>
+                  <span className="sm:hidden">{isConnecting ? '...' : '🔗 Connect'}</span>
+                </span>
               </button>
             )}
 
