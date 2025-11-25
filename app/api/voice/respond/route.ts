@@ -69,7 +69,7 @@ export async function POST(request: NextRequest) {
 
     const audio = await elevenlabs.textToSpeech.convert(voiceId, {
       text: aiText,
-      model_id: 'eleven_turbo_v2_5', // Fastest model for real-time
+      modelId: 'eleven_turbo_v2_5', // Fastest model for real-time
       output_format: 'mp3_44100_128', // Explicit format for better compatibility
     });
 
