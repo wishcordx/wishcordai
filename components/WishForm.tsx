@@ -137,28 +137,28 @@ export default function WishForm({ onWishSubmitted }: WishFormProps) {
       <button
         type="submit"
         disabled={isSubmitting || !wishText.trim()}
-        className="send-message-button relative w-full min-h-[68px] px-5 py-4 rounded-[14px] bg-gradient-to-b from-red-600 to-red-700 text-white font-semibold text-base sm:text-lg border-none cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300"
+        className="send-message-button relative w-full min-h-[68px] px-5 py-4 rounded-[14px] bg-[#2e2e2e] text-white font-semibold text-base sm:text-lg border-none cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300"
         style={{
           textShadow: '0 1px 1px rgba(0, 0, 0, 0.3)',
-          boxShadow: '0 0.5px 0.5px 1px rgba(0, 0, 0, 0.2), 0 10px 20px rgba(239, 68, 68, 0.3), 0 4px 5px 0px rgba(0, 0, 0, 0.05)'
+          boxShadow: '0 0.5px 0.5px 1px rgba(0, 0, 0, 0.2), 0 10px 20px rgba(0, 0, 0, 0.2), 0 4px 5px 0px rgba(0, 0, 0, 0.05)'
         }}
       >
         {/* Outline effect */}
         <div className="send-btn-outline absolute inset-[-2px_-3.5px] rounded-[14px] overflow-hidden opacity-0 transition-opacity duration-400 pointer-events-none">
           <div className="absolute inset-[-100%] animate-spin-slow" style={{
-            background: 'conic-gradient(from 180deg, transparent 60%, rgb(185, 28, 28) 80%, transparent 100%)',
+            background: 'conic-gradient(from 180deg, transparent 60%, rgb(22, 22, 22) 80%, transparent 100%)',
             animationPlayState: isSubmitting ? 'paused' : 'running'
           }} />
         </div>
         
         {/* Border effect */}
         <div className="absolute inset-0 rounded-[14px] border-[2.5px] border-transparent pointer-events-none" style={{
-          background: 'linear-gradient(rgb(220, 38, 38), rgb(185, 28, 28)) padding-box, linear-gradient(to bottom, rgba(0, 0, 0, 0.1), rgba(0, 0, 0, 0.45)) border-box'
+          background: 'linear-gradient(#2e2e2e, #1a1a1a) padding-box, linear-gradient(to bottom, rgba(0, 0, 0, 0.1), rgba(0, 0, 0, 0.45)) border-box'
         }} />
         
         {/* Inner glow */}
         <div className="absolute inset-[7px_6px_6px_6px] rounded-[30px] pointer-events-none z-[2]" style={{
-          background: 'linear-gradient(to top, rgb(220, 38, 38), rgb(239, 68, 68))',
+          background: 'linear-gradient(to top, #2e2e2e, #1a1a1a)',
           filter: 'blur(0.5px)'
         }} />
         
@@ -187,14 +187,14 @@ export default function WishForm({ onWishSubmitted }: WishFormProps) {
       <style jsx>{`
         .send-message-button:hover:not(:disabled) {
           transform: scale(1.02);
-          box-shadow: 0 0 1px 2px rgba(239, 68, 68, 0.4), 0 15px 30px rgba(239, 68, 68, 0.4), 0 10px 3px -3px rgba(0, 0, 0, 0.04);
+          box-shadow: 0 0 1px 2px rgba(255, 255, 255, 0.3), 0 15px 30px rgba(0, 0, 0, 0.3), 0 10px 3px -3px rgba(0, 0, 0, 0.04);
         }
         .send-message-button:hover:not(:disabled) .send-btn-outline {
           opacity: 1;
         }
         .send-message-button:active:not(:disabled) {
           transform: scale(1);
-          box-shadow: 0 0 1px 2px rgba(239, 68, 68, 0.4), 0 10px 3px -3px rgba(0, 0, 0, 0.2);
+          box-shadow: 0 0 1px 2px rgba(255, 255, 255, 0.3), 0 10px 3px -3px rgba(0, 0, 0, 0.2);
         }
         @keyframes spin-slow {
           from { transform: rotate(0deg); }
