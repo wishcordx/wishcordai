@@ -149,20 +149,20 @@ export default function VoiceCall({ persona, onClose }: VoiceCallProps) {
     try {
       console.log('🎵 Starting audio playback, base64 length:', base64Audio.length);
       
-      const audioBlob = base64ToBlob(base64Audio, 'audio/mpeg');
-      console.log('🎵 Blob created, size:', audioBlob.size, 'type:', audioBlob.type);
-      
-      const audioUrl = URL.createObjectURL(audioBlob);
+      // Use data URL instead of blob URL for better mobile compatibility
+      const dataUrl = `data:audio/mpeg;base64,${base64Audio}`;
       const audio = new Audio();
       
-      // Set source
-      audio.src = audioUrl;
+      // Set source to data URL
+      audio.src = dataUrl;
       audio.preload = 'auto';
       
       // Mobile compatibility settings
       audio.setAttribute('playsinline', 'true');
       audio.autoplay = false;
       audio.muted = false;
+      
+      console.log('🎵 Audio element created with data URL');
       
       currentAudioRef.current = audio;
       
@@ -172,7 +172,6 @@ export default function VoiceCall({ persona, onClose }: VoiceCallProps) {
         const cleanup = () => {
           if (!hasResolved) {
             hasResolved = true;
-            URL.revokeObjectURL(audioUrl);
             currentAudioRef.current = null;
           }
         };
