@@ -58,7 +58,7 @@ export default function WishTokenPage() {
   };
 
   return (
-    <main className="min-h-screen bg-[#2b2d31]">
+    <main className="min-h-screen bg-[#1a1b1e]">
       <Header />
       
       <div className="mx-auto max-w-6xl px-3 sm:px-6 py-6 sm:py-12">
@@ -73,13 +73,13 @@ export default function WishTokenPage() {
         </div>
 
         {/* Contract Address Section */}
-        <div className="bg-[#313338] rounded-lg p-4 sm:p-6 border border-[#1e1f22] mb-6 sm:mb-8">
+        <div className="bg-[#1e1f22] rounded-lg p-4 sm:p-6 border border-[#0f1011] mb-6 sm:mb-8">
           <h2 className="text-lg sm:text-xl font-bold text-white mb-3 sm:mb-4 flex items-center gap-2">
             📜 Contract Address
           </h2>
           
           {CONTRACT_ADDRESS ? (
-            <div className="bg-[#2b2d31] rounded-lg p-3 sm:p-4 border border-[#1e1f22]">
+            <div className="bg-[#202225] rounded-lg p-3 sm:p-4 border border-[#0f1011]">
               <div className="flex items-center justify-between gap-3 flex-wrap">
                 <code className="text-xs sm:text-sm text-yellow-400 font-mono break-all flex-1">
                   {CONTRACT_ADDRESS}
@@ -111,7 +111,7 @@ export default function WishTokenPage() {
               </div>
             </div>
           ) : (
-            <div className="bg-[#2b2d31] rounded-lg p-6 sm:p-8 border border-[#1e1f22] text-center">
+            <div className="bg-[#202225] rounded-lg p-6 sm:p-8 border border-[#0f1011] text-center">
               <p className="text-gray-400 text-sm sm:text-base mb-3">
                 🚀 Token launching soon on Pump.fun!
               </p>
@@ -125,20 +125,20 @@ export default function WishTokenPage() {
         {/* Grid Layout for Tokenomics and Holders */}
         <div className="grid lg:grid-cols-2 gap-6 sm:gap-8 mb-6 sm:mb-8">
           {/* Tokenomics */}
-          <div className="bg-[#313338] rounded-lg p-4 sm:p-6 border border-[#1e1f22]">
+          <div className="bg-[#1e1f22] rounded-lg p-4 sm:p-6 border border-[#0f1011]">
             <h2 className="text-lg sm:text-xl font-bold text-white mb-4 sm:mb-6 flex items-center gap-2">
               📊 Tokenomics
             </h2>
             
             <div className="space-y-4">
-              <div className="bg-[#2b2d31] rounded-lg p-3 sm:p-4 border border-[#1e1f22]">
+              <div className="bg-[#202225] rounded-lg p-3 sm:p-4 border border-[#0f1011]">
                 <div className="flex justify-between items-center">
                   <span className="text-gray-400 text-sm sm:text-base">Total Supply</span>
                   <span className="text-white font-bold text-base sm:text-lg">1,000,000,000</span>
                 </div>
               </div>
 
-              <div className="bg-[#2b2d31] rounded-lg p-3 sm:p-4 border border-[#1e1f22]">
+              <div className="bg-[#202225] rounded-lg p-3 sm:p-4 border border-[#0f1011]">
                 <div className="flex justify-between items-center">
                   <span className="text-gray-400 text-sm sm:text-base">Network</span>
                   <div className="flex items-center gap-2">
@@ -148,14 +148,14 @@ export default function WishTokenPage() {
                 </div>
               </div>
 
-              <div className="bg-[#2b2d31] rounded-lg p-3 sm:p-4 border border-[#1e1f22]">
+              <div className="bg-[#202225] rounded-lg p-3 sm:p-4 border border-[#0f1011]">
                 <div className="flex justify-between items-center">
                   <span className="text-gray-400 text-sm sm:text-base">Tax</span>
                   <span className="text-green-400 font-bold text-base sm:text-lg">0% 🎉</span>
                 </div>
               </div>
 
-              <div className="bg-[#2b2d31] rounded-lg p-3 sm:p-4 border border-[#1e1f22]">
+              <div className="bg-[#202225] rounded-lg p-3 sm:p-4 border border-[#0f1011]">
                 <div className="flex justify-between items-center">
                   <span className="text-gray-400 text-sm sm:text-base">Launch Platform</span>
                   <span className="text-white font-bold text-base sm:text-lg">Pump.fun 🚀</span>
@@ -165,7 +165,7 @@ export default function WishTokenPage() {
           </div>
 
           {/* Top 10 Holders */}
-          <div className="bg-[#313338] rounded-lg p-4 sm:p-6 border border-[#1e1f22]">
+          <div className="bg-[#1e1f22] rounded-lg p-4 sm:p-6 border border-[#0f1011]">
             <h2 className="text-lg sm:text-xl font-bold text-white mb-4 sm:mb-6 flex items-center gap-2">
               👑 Top 10 Holders
             </h2>
@@ -174,7 +174,7 @@ export default function WishTokenPage() {
               <div className="space-y-2 overflow-x-auto">
                 <table className="w-full text-sm">
                   <thead>
-                    <tr className="text-gray-400 border-b border-[#1e1f22]">
+                    <tr className="text-gray-400 border-b border-[#0f1011]">
                       <th className="text-left py-2 px-2">#</th>
                       <th className="text-left py-2 px-2">Address</th>
                       <th className="text-right py-2 px-2">Balance</th>
@@ -183,7 +183,7 @@ export default function WishTokenPage() {
                   </thead>
                   <tbody>
                     {holders.map((holder, index) => (
-                      <tr key={holder.address} className="border-b border-[#1e1f22] hover:bg-[#2b2d31] transition-colors">
+                      <tr key={holder.address} className="border-b border-[#0f1011] hover:bg-[#2b2d31] transition-colors">
                         <td className="py-3 px-2 text-gray-400">{index + 1}</td>
                         <td className="py-3 px-2">
                           <a
@@ -203,7 +203,7 @@ export default function WishTokenPage() {
                 </table>
               </div>
             ) : (
-              <div className="bg-[#2b2d31] rounded-lg p-6 sm:p-8 border border-[#1e1f22] text-center">
+              <div className="bg-[#202225] rounded-lg p-6 sm:p-8 border border-[#0f1011] text-center">
                 <p className="text-gray-400 text-sm sm:text-base mb-2">
                   📊 Holder data will appear here once token is live
                 </p>
@@ -216,7 +216,7 @@ export default function WishTokenPage() {
         </div>
 
         {/* Socials Section */}
-        <div className="bg-[#313338] rounded-lg p-4 sm:p-6 border border-[#1e1f22]">
+        <div className="bg-[#1e1f22] rounded-lg p-4 sm:p-6 border border-[#0f1011]">
           <h2 className="text-lg sm:text-xl font-bold text-white mb-4 sm:mb-6 flex items-center gap-2">
             🌐 Community & Socials
           </h2>
@@ -235,7 +235,7 @@ export default function WishTokenPage() {
                 Follow on X
               </a>
             ) : (
-              <div className="flex items-center gap-2 px-4 sm:px-6 py-3 bg-[#2b2d31] rounded-lg border border-[#1e1f22] text-gray-500 text-sm sm:text-base">
+              <div className="flex items-center gap-2 px-4 sm:px-6 py-3 bg-[#202225] rounded-lg border border-[#0f1011] text-gray-500 text-sm sm:text-base">
                 <svg className="w-5 h-5" viewBox="0 0 24 24" fill="currentColor">
                   <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
                 </svg>
