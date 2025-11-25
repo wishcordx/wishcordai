@@ -147,7 +147,11 @@ export default function VoiceCall({ persona, onClose }: VoiceCallProps) {
     setCallState('ai-speaking');
     
     try {
+      console.log('🎵 Starting audio playback, base64 length:', base64Audio.length);
+      
       const audioBlob = base64ToBlob(base64Audio, 'audio/mpeg');
+      console.log('🎵 Blob created, size:', audioBlob.size, 'type:', audioBlob.type);
+      
       const audioUrl = URL.createObjectURL(audioBlob);
       const audio = new Audio();
       
@@ -204,13 +208,21 @@ export default function VoiceCall({ persona, onClose }: VoiceCallProps) {
   };
 
   const base64ToBlob = (base64: string, mimeType: string) => {
-    const byteCharacters = atob(base64);
-    const byteNumbers = new Array(byteCharacters.length);
-    for (let i = 0; i < byteCharacters.length; i++) {
-      byteNumbers[i] = byteCharacters.charCodeAt(i);
+    try {
+      // Remove any data URL prefix if present
+      const base64Data = base64.includes(',') ? base64.split(',')[1] : base64;
+      
+      const byteCharacters = atob(base64Data);
+      const byteNumbers = new Array(byteCharacters.length);
+      for (let i = 0; i < byteCharacters.length; i++) {
+        byteNumbers[i] = byteCharacters.charCodeAt(i);
+      }
+      const byteArray = new Uint8Array(byteNumbers);
+      return new Blob([byteArray], { type: mimeType });
+    } catch (err) {
+      console.error('❌ Base64 decode error:', err);
+      throw err;
     }
-    const byteArray = new Uint8Array(byteNumbers);
-    return new Blob([byteArray], { type: mimeType });
   };
 
   const startListening = async () => {
