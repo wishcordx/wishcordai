@@ -115,7 +115,7 @@ export default function HomePage() {
             <div className="bg-[#2b2d31] rounded-lg p-5 border border-[#1e1f22] sticky top-6">
               <h3 className="text-white font-semibold mb-4 flex items-center gap-2">
                 <span className="w-2 h-2 bg-green-500 rounded-full"></span>
-                Mods Online — 6
+                Mods Online — 7
               </h3>
               <div className="space-y-3">
                 {[
@@ -125,6 +125,7 @@ export default function HomePage() {
                   { name: 'FrostyTheCoder', emoji: '☃️', role: 'Mod', color: 'text-cyan-400', persona: 'snowman' as Persona },
                   { name: 'DasherSpeedrun', emoji: '🦌', role: 'Mod', color: 'text-orange-400', persona: 'reindeer' as Persona },
                   { name: 'SantaKumar', emoji: '🕉️', role: 'Scammer', color: 'text-yellow-400', persona: 'scammer' as Persona },
+                  { name: 'JingBells叮噹鈴', emoji: '🔔', role: 'Mod', color: 'text-red-400', persona: 'jingbells' as Persona },
                 ].map((mod) => (
                   <div 
                     key={mod.name} 
