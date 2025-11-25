@@ -27,7 +27,7 @@ export default function PersonaSelector({ selectedPersona, onSelect, onCallMod }
                 px-3 py-2 rounded-md text-sm font-medium
                 transition-all duration-200 flex items-center gap-2
                 ${isSelected 
-                  ? 'bg-indigo-600 text-white shadow-lg' 
+                  ? `${config.buttonColor} text-white shadow-lg` 
                   : 'bg-[#2b2d31] text-gray-300 hover:bg-[#35373c] border border-[#1e1f22]'
                 }
               `}
