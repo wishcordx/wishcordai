@@ -69,7 +69,8 @@ export async function POST(request: NextRequest) {
 
     const audio = await elevenlabs.textToSpeech.convert(voiceId, {
       text: aiText,
-      modelId: 'eleven_turbo_v2_5', // Fastest model for real-time
+      model_id: 'eleven_turbo_v2_5', // Fastest model for real-time
+      output_format: 'mp3_44100_128', // Explicit format for better compatibility
     });
 
     // Convert audio stream to base64
@@ -82,6 +83,8 @@ export async function POST(request: NextRequest) {
     }
     const audioBuffer = Buffer.concat(chunks);
     const audioBase64 = audioBuffer.toString('base64');
+    
+    console.log(`✅ Audio generated, size: ${audioBase64.length} bytes`);
 
     return NextResponse.json({
       success: true,

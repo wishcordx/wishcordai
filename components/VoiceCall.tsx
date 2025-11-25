@@ -145,36 +145,57 @@ export default function VoiceCall({ persona, onClose }: VoiceCallProps) {
   const playAudio = async (base64Audio: string) => {
     setCallState('ai-speaking');
     
-    const audioBlob = base64ToBlob(base64Audio, 'audio/mpeg');
-    const audioUrl = URL.createObjectURL(audioBlob);
-    const audio = new Audio(audioUrl);
-    audio.preload = 'auto';
-    currentAudioRef.current = audio;
-    
-    return new Promise<void>((resolve, reject) => {
-      audio.onended = () => {
-        URL.revokeObjectURL(audioUrl);
-        currentAudioRef.current = null;
-        resolve();
-      };
+    try {
+      const audioBlob = base64ToBlob(base64Audio, 'audio/mpeg');
+      const audioUrl = URL.createObjectURL(audioBlob);
+      const audio = new Audio(audioUrl);
+      audio.preload = 'auto';
       
-      audio.onerror = (e) => {
-        console.error('Audio playback error:', e);
-        URL.revokeObjectURL(audioUrl);
-        currentAudioRef.current = null;
-        reject(new Error('Audio playback failed'));
-      };
+      // Mobile Safari fix: set playsInline
+      audio.setAttribute('playsinline', 'true');
       
-      // Try to play with error handling
-      const playPromise = audio.play();
-      if (playPromise !== undefined) {
-        playPromise.catch(err => {
-          console.error('Audio play failed:', err);
-          // Still resolve to continue the conversation
+      currentAudioRef.current = audio;
+      
+      return new Promise<void>((resolve, reject) => {
+        audio.onended = () => {
+          URL.revokeObjectURL(audioUrl);
+          currentAudioRef.current = null;
           resolve();
-        });
-      }
-    });
+        };
+        
+        audio.onerror = (e) => {
+          console.error('Audio playback error:', e);
+          URL.revokeObjectURL(audioUrl);
+          currentAudioRef.current = null;
+          reject(new Error('Audio playback failed'));
+        };
+        
+        audio.oncanplaythrough = () => {
+          console.log('✅ Audio ready to play');
+        };
+        
+        // Load and play
+        audio.load();
+        
+        // Try to play with error handling
+        const playPromise = audio.play();
+        if (playPromise !== undefined) {
+          playPromise
+            .then(() => {
+              console.log('🎵 Audio playing successfully');
+            })
+            .catch(err => {
+              console.error('❌ Audio play failed:', err);
+              // On mobile, autoplay might be blocked
+              // Still resolve to continue the conversation
+              resolve();
+            });
+        }
+      });
+    } catch (err) {
+      console.error('Audio setup error:', err);
+      throw err;
+    }
   };
 
   const base64ToBlob = (base64: string, mimeType: string) => {
