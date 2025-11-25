@@ -6,7 +6,7 @@ import { useWallet } from '@/lib/wallet-context';
 import type { Persona } from '@/typings/types';
 
 interface WishFormProps {
-  onWishSubmitted?: () => void;
+  onWishSubmitted?: (wish: any) => void;
 }
 
 export default function WishForm({ onWishSubmitted }: WishFormProps) {
@@ -68,7 +68,7 @@ export default function WishForm({ onWishSubmitted }: WishFormProps) {
         setSelectedPersona('santa');
         setSuccess(true);
         setTimeout(() => setSuccess(false), 3000);
-        onWishSubmitted?.();
+        onWishSubmitted?.(data.wish);
       } else {
         setError(data.error || 'Failed to submit wish');
       }

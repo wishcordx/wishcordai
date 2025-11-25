@@ -17,10 +17,15 @@ export default function HomePage() {
   const [userProfile, setUserProfile] = useState<{ username: string; avatar: string } | null>(null);
   const [selectedMod, setSelectedMod] = useState<Persona | null>(null);
   const [isMobileSidebarOpen, setIsMobileSidebarOpen] = useState(false);
+  const [newWish, setNewWish] = useState<any>(null);
 
-  const handleWishSubmitted = () => {
-    // Trigger feed refresh
-    setRefreshTrigger(prev => prev + 1);
+  const handleWishSubmitted = (wish: any) => {
+    // Add new wish to feed instantly
+    setNewWish(wish);
+    // Trigger background refresh after a delay to sync with server
+    setTimeout(() => {
+      setRefreshTrigger(prev => prev + 1);
+    }, 2000);
   };
 
   const handleModClick = (persona: Persona) => {
@@ -106,7 +111,7 @@ export default function HomePage() {
 
             {/* Messages Feed */}
             <div className="space-y-3">
-              <Feed refreshTrigger={refreshTrigger} />
+              <Feed refreshTrigger={refreshTrigger} newWish={newWish} />
             </div>
           </div>
 

@@ -6,9 +6,10 @@ import type { Wish } from '@/typings/types';
 
 interface FeedProps {
   refreshTrigger?: number;
+  newWish?: Wish | null;
 }
 
-export default function Feed({ refreshTrigger }: FeedProps) {
+export default function Feed({ refreshTrigger, newWish }: FeedProps) {
   const [wishes, setWishes] = useState<Wish[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -17,9 +18,24 @@ export default function Feed({ refreshTrigger }: FeedProps) {
     fetchWishes();
   }, [refreshTrigger]);
 
+  // Optimistically add new wish to top of feed
+  useEffect(() => {
+    if (newWish) {
+      setWishes(prev => {
+        // Check if wish already exists to avoid duplicates
+        const exists = prev.some(w => w.id === newWish.id);
+        if (exists) return prev;
+        return [newWish, ...prev];
+      });
+    }
+  }, [newWish]);
+
   const fetchWishes = async () => {
     try {
-      setIsLoading(true);
+      // Don't show loading spinner if we already have wishes
+      if (wishes.length === 0) {
+        setIsLoading(true);
+      }
       const response = await fetch(`/api/wishes?t=${Date.now()}`);
       const data = await response.json();
 
