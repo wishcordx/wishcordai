@@ -26,12 +26,21 @@ export function WalletProvider({ children }: { children: ReactNode }) {
   const connectWallet = async () => {
     setIsConnecting(true);
     try {
-      // Check if Phantom or Solflare is installed
+      // Check if we're on mobile
+      const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
       const { solana } = window as any;
       
       if (!solana) {
-        alert('Please install a Solana wallet like Phantom or Solflare!');
-        return;
+        if (isMobile) {
+          // Redirect to Phantom app with deep link
+          const currentUrl = window.location.href;
+          const dappUrl = encodeURIComponent(currentUrl);
+          window.location.href = `https://phantom.app/ul/browse/${dappUrl}?ref=${currentUrl}`;
+          return;
+        } else {
+          alert('Please install a Solana wallet like Phantom or Solflare!');
+          return;
+        }
       }
 
       const response = await solana.connect();

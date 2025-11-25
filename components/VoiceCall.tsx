@@ -148,15 +148,32 @@ export default function VoiceCall({ persona, onClose }: VoiceCallProps) {
     const audioBlob = base64ToBlob(base64Audio, 'audio/mpeg');
     const audioUrl = URL.createObjectURL(audioBlob);
     const audio = new Audio(audioUrl);
+    audio.preload = 'auto';
     currentAudioRef.current = audio;
     
-    return new Promise<void>((resolve) => {
+    return new Promise<void>((resolve, reject) => {
       audio.onended = () => {
         URL.revokeObjectURL(audioUrl);
         currentAudioRef.current = null;
         resolve();
       };
-      audio.play();
+      
+      audio.onerror = (e) => {
+        console.error('Audio playback error:', e);
+        URL.revokeObjectURL(audioUrl);
+        currentAudioRef.current = null;
+        reject(new Error('Audio playback failed'));
+      };
+      
+      // Try to play with error handling
+      const playPromise = audio.play();
+      if (playPromise !== undefined) {
+        playPromise.catch(err => {
+          console.error('Audio play failed:', err);
+          // Still resolve to continue the conversation
+          resolve();
+        });
+      }
     });
   };
 
@@ -241,8 +258,19 @@ export default function VoiceCall({ persona, onClose }: VoiceCallProps) {
         setTranscript(prev => [...prev, `${modPersona.name}: ${respondData.text}`]);
         conversationHistoryRef.current += `${modPersona.name}: ${respondData.text}\n`;
         
+        console.log('🎵 AI response received, audio length:', respondData.audio?.length || 0);
+        
         // Play AI response
-        await playAudio(respondData.audio);
+        if (respondData.audio) {
+          try {
+            await playAudio(respondData.audio);
+            console.log('✅ Audio playback completed');
+          } catch (err) {
+            console.error('❌ Audio playback error:', err);
+          }
+        } else {
+          console.warn('⚠️ No audio in response');
+        }
         
         // Continue listening
         setCallState('listening');
