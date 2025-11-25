@@ -309,8 +309,9 @@ export default function VoiceCall({ persona, onClose }: VoiceCallProps) {
         startListening();
       }
     } catch (err) {
-      console.error('Audio processing error:', err);
-      setError('Failed to process audio');
+      console.error('Error:', err);
+      setError('Something went wrong');
+      setCallState('listening');
     }
   };
 
