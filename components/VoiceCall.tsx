@@ -518,7 +518,6 @@ export default function VoiceCall({ persona, onClose }: VoiceCallProps) {
             End Call
           </button>
         </div>
-        </div>
 
         <p className="text-gray-500 text-xs text-center mt-4">
           {callState === 'listening' ? '🎤 Speak now, then click "Stop Recording"' : 'Type to test or use voice'}
