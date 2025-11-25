@@ -70,7 +70,7 @@ export async function POST(request: NextRequest) {
     const audio = await elevenlabs.textToSpeech.convert(voiceId, {
       text: aiText,
       modelId: 'eleven_turbo_v2_5', // Fastest model for real-time
-      outputFormat: 'mp3_44100_128', // Explicit format for better compatibility
+      outputFormat: 'mp3_22050_32', // Lower quality but universally compatible with mobile Safari
     });
 
     // Convert audio stream to base64
