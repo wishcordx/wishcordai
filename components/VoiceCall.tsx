@@ -21,6 +21,7 @@ export default function VoiceCall({ persona, onClose }: VoiceCallProps) {
   const [textInput, setTextInput] = useState('');
   const [isSpeaking, setIsSpeaking] = useState(false);
   const [silenceTimer, setSilenceTimer] = useState<NodeJS.Timeout | null>(null);
+  const [currentVolume, setCurrentVolume] = useState(0);
   
   const mediaRecorderRef = useRef<MediaRecorder | null>(null);
   const audioChunksRef = useRef<Blob[]>([]);
@@ -293,8 +294,11 @@ export default function VoiceCall({ persona, onClose }: VoiceCallProps) {
       
       analyser.getByteFrequencyData(dataArray);
       const average = dataArray.reduce((a, b) => a + b) / dataArray.length;
+      
+      // Update volume display
+      setCurrentVolume(Math.round(average));
 
-      const SPEECH_THRESHOLD = 25; // Volume threshold for detecting speech
+      const SPEECH_THRESHOLD = 15; // Lowered threshold for better detection
       
       if (average > SPEECH_THRESHOLD) {
         // Speaking detected
@@ -591,6 +595,18 @@ export default function VoiceCall({ persona, onClose }: VoiceCallProps) {
             <p className="text-sm text-gray-400">
               {isSpeaking ? '🎤 Speaking...' : '🤫 Silent'}
             </p>
+            
+            {/* Volume Meter */}
+            <div className="mt-2 w-32">
+              <div className="h-1 bg-gray-700 rounded-full overflow-hidden">
+                <motion.div
+                  className={`h-full ${isSpeaking ? 'bg-blue-500' : 'bg-gray-500'}`}
+                  animate={{ width: `${Math.min(currentVolume * 2, 100)}%` }}
+                  transition={{ duration: 0.1 }}
+                />
+              </div>
+              <p className="text-xs text-gray-500 text-center mt-1">Vol: {currentVolume}</p>
+            </div>
           </motion.div>
         )}
 
