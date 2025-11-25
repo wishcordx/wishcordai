@@ -298,6 +298,9 @@ export default function VoiceCall({ persona, onClose }: VoiceCallProps) {
       
       if (average > SPEECH_THRESHOLD) {
         // Speaking detected
+        if (!isSpeaking) {
+          console.log('🎤 Speech started, volume:', Math.round(average));
+        }
         setIsSpeaking(true);
         hasSpokenRef.current = true;
         
@@ -308,12 +311,16 @@ export default function VoiceCall({ persona, onClose }: VoiceCallProps) {
         }
       } else {
         // Silence detected
+        if (isSpeaking) {
+          console.log('🔇 Silence detected, starting countdown...');
+        }
         setIsSpeaking(false);
         
         // Only start silence timeout if user has spoken before
         if (hasSpokenRef.current && !silenceTimeoutRef.current) {
+          console.log('⏱️ Silence timeout started (1.5s)');
           silenceTimeoutRef.current = setTimeout(() => {
-            console.log('🔇 Silence detected after speech, auto-stopping recording');
+            console.log('✅ Silence timeout reached, auto-stopping recording');
             stopListening();
           }, 1500);
         }
@@ -517,43 +524,75 @@ export default function VoiceCall({ persona, onClose }: VoiceCallProps) {
         </div>
       </div>
 
-      {/* Center - Avatar and Status */}
-      <div className="flex-1 flex flex-col items-center justify-center px-4">
-        {/* Avatar with Speaking Animation */}
-        <motion.div
-          animate={{
-            scale: callState === 'ai-speaking' ? [1, 1.05, 1] : 1,
-            boxShadow: callState === 'ai-speaking' 
-              ? ['0 0 0 0 rgba(34, 197, 94, 0.4)', '0 0 0 20px rgba(34, 197, 94, 0)', '0 0 0 0 rgba(34, 197, 94, 0)']
-              : isSpeaking
-              ? ['0 0 0 0 rgba(59, 130, 246, 0.4)', '0 0 0 20px rgba(59, 130, 246, 0)', '0 0 0 0 rgba(59, 130, 246, 0)']
-              : '0 0 0 0 rgba(107, 114, 128, 0.3)'
-          }}
-          transition={{ duration: 1, repeat: (callState === 'ai-speaking' || isSpeaking) ? Infinity : 0 }}
-          className="relative"
-        >
-          <div className="w-32 h-32 sm:w-40 sm:h-40 rounded-full bg-gradient-to-br from-indigo-500 via-purple-500 to-pink-500 flex items-center justify-center text-6xl sm:text-7xl shadow-2xl">
-            {modPersona.emoji}
-          </div>
-          
-          {/* Status Indicator */}
-          <div className={`absolute bottom-2 right-2 w-6 h-6 rounded-full border-4 border-[#1e1f22] ${
-            callState === 'ai-speaking' ? 'bg-green-500 animate-pulse' :
-            isSpeaking ? 'bg-blue-500 animate-pulse' :
-            callState === 'processing' ? 'bg-yellow-500 animate-pulse' :
-            'bg-gray-500'
-          }`} />
-        </motion.div>
+      {/* Center - Avatars and Status */}
+      <div className="flex-1 flex flex-col items-center justify-center px-4 gap-8">
+        {/* Mod Avatar with Speaking Animation */}
+        <div className="flex flex-col items-center">
+          <motion.div
+            animate={{
+              scale: callState === 'ai-speaking' ? [1, 1.05, 1] : 1,
+              boxShadow: callState === 'ai-speaking' 
+                ? ['0 0 0 0 rgba(34, 197, 94, 0.4)', '0 0 0 20px rgba(34, 197, 94, 0)', '0 0 0 0 rgba(34, 197, 94, 0)']
+                : '0 0 0 0 rgba(107, 114, 128, 0.3)'
+            }}
+            transition={{ duration: 1, repeat: callState === 'ai-speaking' ? Infinity : 0 }}
+            className="relative"
+          >
+            <div className="w-32 h-32 sm:w-40 sm:h-40 rounded-full bg-gradient-to-br from-indigo-500 via-purple-500 to-pink-500 flex items-center justify-center text-6xl sm:text-7xl shadow-2xl">
+              {modPersona.emoji}
+            </div>
+            
+            {/* Status Indicator */}
+            <div className={`absolute bottom-2 right-2 w-6 h-6 rounded-full border-4 border-[#1e1f22] ${
+              callState === 'ai-speaking' ? 'bg-green-500 animate-pulse' :
+              callState === 'processing' ? 'bg-yellow-500 animate-pulse' :
+              'bg-gray-500'
+            }`} />
+          </motion.div>
 
-        {/* Name and Status */}
-        <h1 className="text-white text-2xl sm:text-3xl font-bold mt-8 mb-2">{modPersona.name}</h1>
-        <p className="text-gray-400 text-sm sm:text-base mb-8">
-          {callState === 'ai-speaking' && '🗣️ Speaking...'}
-          {callState === 'listening' && !isSpeaking && '👂 Listening...'}
-          {callState === 'listening' && isSpeaking && '🎤 You are speaking...'}
-          {callState === 'processing' && '💭 Thinking...'}
-          {callState === 'connecting' && '📞 Connecting...'}
-        </p>
+          {/* Name and Status */}
+          <h1 className="text-white text-2xl sm:text-3xl font-bold mt-4 mb-1">{modPersona.name}</h1>
+          <p className="text-gray-400 text-sm sm:text-base">
+            {callState === 'ai-speaking' && '🗣️ Speaking...'}
+            {callState === 'listening' && '👂 Listening...'}
+            {callState === 'processing' && '💭 Thinking...'}
+            {callState === 'connecting' && '📞 Connecting...'}
+          </p>
+        </div>
+
+        {/* User Avatar (You) - Only show when listening */}
+        {callState === 'listening' && (
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="flex flex-col items-center"
+          >
+            <motion.div
+              animate={{
+                scale: isSpeaking ? [1, 1.08, 1] : 1,
+                boxShadow: isSpeaking
+                  ? ['0 0 0 0 rgba(59, 130, 246, 0.6)', '0 0 0 15px rgba(59, 130, 246, 0)', '0 0 0 0 rgba(59, 130, 246, 0)']
+                  : '0 0 0 0 rgba(107, 114, 128, 0.2)'
+              }}
+              transition={{ duration: 0.8, repeat: isSpeaking ? Infinity : 0 }}
+              className="relative"
+            >
+              <div className="w-20 h-20 sm:w-24 sm:h-24 rounded-full bg-gradient-to-br from-blue-500 to-cyan-500 flex items-center justify-center text-3xl sm:text-4xl shadow-xl">
+                👤
+              </div>
+              
+              {/* Speaking Indicator */}
+              <div className={`absolute bottom-1 right-1 w-4 h-4 rounded-full border-2 border-[#1e1f22] ${
+                isSpeaking ? 'bg-blue-500 animate-pulse' : 'bg-gray-500'
+              }`} />
+            </motion.div>
+
+            <p className="text-white text-lg font-semibold mt-2">You</p>
+            <p className="text-sm text-gray-400">
+              {isSpeaking ? '🎤 Speaking...' : '🤫 Silent'}
+            </p>
+          </motion.div>
+        )}
 
         {/* Error Message */}
         {error && (
@@ -587,6 +626,25 @@ export default function VoiceCall({ persona, onClose }: VoiceCallProps) {
       {/* Bottom Bar - Controls */}
       <div className="bg-[#313338] px-4 py-6 border-t border-gray-700">
         <div className="flex items-center justify-center gap-4">
+          {/* Manual Send Button (if speaking detected but not auto-sent) */}
+          {callState === 'listening' && hasSpokenRef.current && (
+            <motion.button
+              initial={{ scale: 0 }}
+              animate={{ scale: 1 }}
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              onClick={() => {
+                console.log('📤 Manual send triggered');
+                stopListening();
+              }}
+              className="w-14 h-14 rounded-full bg-blue-600 hover:bg-blue-700 text-white flex items-center justify-center shadow-lg transition"
+            >
+              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" />
+              </svg>
+            </motion.button>
+          )}
+
           {/* End Call Button */}
           <motion.button
             whileHover={{ scale: 1.05 }}
@@ -601,7 +659,8 @@ export default function VoiceCall({ persona, onClose }: VoiceCallProps) {
         </div>
         
         <p className="text-center text-gray-500 text-xs mt-4">
-          {callState === 'listening' ? 'Speak naturally - auto-detects when you finish' : ''}
+          {callState === 'listening' && hasSpokenRef.current && 'Tap blue button to send or wait for auto-send'}
+          {callState === 'listening' && !hasSpokenRef.current && 'Start speaking...'}
         </p>
       </div>
     </div>
