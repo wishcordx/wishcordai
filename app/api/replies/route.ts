@@ -2,6 +2,7 @@ import { createClient } from '@supabase/supabase-js';
 import { NextRequest, NextResponse } from 'next/server';
 import aiRouter from '@/lib/ai-router';
 import { getPersonaConfig } from '@/lib/personas';
+import type { Persona } from '@/typings/types';
 
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
 const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY!;
@@ -48,7 +49,7 @@ export async function POST(req: NextRequest) {
     
     if (matches && matches.length > 0) {
       // Map usernames to persona IDs
-      const usernameToPersonaMap: Record<string, string> = {
+      const usernameToPersonaMap: Record<string, Persona> = {
         'SantaMod69': 'santa',
         'xX_Krampus_Xx': 'grinch',
         'elfgirluwu': 'elf',
@@ -128,7 +129,7 @@ export async function POST(req: NextRequest) {
               wish_id,
               wallet_address: personaConfig.name.toLowerCase().replace(/\s+/g, '_'),
               username: mentionedUsername,
-              avatar: personaConfig.avatar,
+              avatar: personaConfig.emoji,
               reply_text: aiReply,
             });
             
