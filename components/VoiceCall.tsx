@@ -32,6 +32,7 @@ export default function VoiceCall({ persona, onClose }: VoiceCallProps) {
   const audioContextRef = useRef<AudioContext | null>(null);
   const analyserRef = useRef<AnalyserNode | null>(null);
   const silenceTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const hasSpokenRef = useRef<boolean>(false);
 
   // Get persona config directly
   const modPersona = getPersonaConfig(persona);
@@ -242,6 +243,7 @@ export default function VoiceCall({ persona, onClose }: VoiceCallProps) {
       const mediaRecorder = new MediaRecorder(stream);
       mediaRecorderRef.current = mediaRecorder;
       audioChunksRef.current = [];
+      hasSpokenRef.current = false; // Reset
 
       // Setup voice activity detection
       const audioContext = new (window.AudioContext || (window as any).webkitAudioContext)();
@@ -287,28 +289,37 @@ export default function VoiceCall({ persona, onClose }: VoiceCallProps) {
     const dataArray = new Uint8Array(analyser.frequencyBinCount);
 
     const checkVolume = () => {
+      if (!isRecording) return;
+      
       analyser.getByteFrequencyData(dataArray);
       const average = dataArray.reduce((a, b) => a + b) / dataArray.length;
 
-      if (average > 20) {
+      const SPEECH_THRESHOLD = 25; // Volume threshold for detecting speech
+      
+      if (average > SPEECH_THRESHOLD) {
         // Speaking detected
         setIsSpeaking(true);
+        hasSpokenRef.current = true;
+        
         // Clear any existing silence timeout
         if (silenceTimeoutRef.current) {
           clearTimeout(silenceTimeoutRef.current);
+          silenceTimeoutRef.current = null;
         }
-        // Set new silence timeout (1.5 seconds of silence = stop recording)
-        silenceTimeoutRef.current = setTimeout(() => {
-          console.log('🔇 Silence detected, auto-stopping recording');
-          stopListening();
-        }, 1500);
       } else {
+        // Silence detected
         setIsSpeaking(false);
+        
+        // Only start silence timeout if user has spoken before
+        if (hasSpokenRef.current && !silenceTimeoutRef.current) {
+          silenceTimeoutRef.current = setTimeout(() => {
+            console.log('🔇 Silence detected after speech, auto-stopping recording');
+            stopListening();
+          }, 1500);
+        }
       }
 
-      if (isRecording) {
-        requestAnimationFrame(checkVolume);
-      }
+      requestAnimationFrame(checkVolume);
     };
 
     checkVolume();
@@ -316,8 +327,15 @@ export default function VoiceCall({ persona, onClose }: VoiceCallProps) {
 
   const stopListening = () => {
     if (mediaRecorderRef.current && isRecording) {
+      // Clear silence timeout
+      if (silenceTimeoutRef.current) {
+        clearTimeout(silenceTimeoutRef.current);
+        silenceTimeoutRef.current = null;
+      }
+      
       mediaRecorderRef.current.stop();
       setIsRecording(false);
+      setIsSpeaking(false);
       setCallState('processing');
     }
   };
