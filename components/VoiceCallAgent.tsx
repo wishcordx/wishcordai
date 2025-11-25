@@ -247,24 +247,67 @@ export default function VoiceCallAgent({ persona, onClose }: VoiceCallAgentProps
       <div className="flex-1 flex flex-col items-center justify-center px-4 gap-8">
         {/* Mod Avatar */}
         <div className="flex flex-col items-center">
-          <motion.div
-            animate={{
-              scale: isAgentSpeaking ? [1, 1.05, 1] : 1,
-              boxShadow: isAgentSpeaking 
-                ? ['0 0 0 0 rgba(34, 197, 94, 0.4)', '0 0 0 20px rgba(34, 197, 94, 0)', '0 0 0 0 rgba(34, 197, 94, 0)']
-                : '0 0 0 0 rgba(107, 114, 128, 0.3)'
-            }}
-            transition={{ duration: 1, repeat: isAgentSpeaking ? Infinity : 0 }}
-            className="relative"
-          >
-            <div className="w-32 h-32 sm:w-40 sm:h-40 rounded-full bg-gradient-to-br from-indigo-500 via-purple-500 to-pink-500 flex items-center justify-center text-6xl sm:text-7xl shadow-2xl">
-              {modPersona.emoji}
-            </div>
+          <div className="relative flex items-center justify-center">
+            {/* Animated ripple rings when speaking */}
+            {isAgentSpeaking && (
+              <>
+                <motion.div
+                  animate={{ 
+                    scale: [1, 1.8],
+                    opacity: [0.6, 0]
+                  }}
+                  transition={{ 
+                    duration: 1.5,
+                    repeat: Infinity,
+                    ease: "easeOut"
+                  }}
+                  className="absolute w-32 h-32 sm:w-40 sm:h-40 rounded-full border-4 border-green-500"
+                />
+                <motion.div
+                  animate={{ 
+                    scale: [1, 1.6],
+                    opacity: [0.4, 0]
+                  }}
+                  transition={{ 
+                    duration: 1.5,
+                    repeat: Infinity,
+                    ease: "easeOut",
+                    delay: 0.3
+                  }}
+                  className="absolute w-32 h-32 sm:w-40 sm:h-40 rounded-full border-4 border-green-500"
+                />
+                <motion.div
+                  animate={{ 
+                    scale: [1, 1.4],
+                    opacity: [0.3, 0]
+                  }}
+                  transition={{ 
+                    duration: 1.5,
+                    repeat: Infinity,
+                    ease: "easeOut",
+                    delay: 0.6
+                  }}
+                  className="absolute w-32 h-32 sm:w-40 sm:h-40 rounded-full border-4 border-green-500"
+                />
+              </>
+            )}
             
-            <div className={`absolute bottom-2 right-2 w-6 h-6 rounded-full border-4 border-[#1e1f22] ${
-              isAgentSpeaking ? 'bg-green-500 animate-pulse' : 'bg-gray-500'
-            }`} />
-          </motion.div>
+            <motion.div
+              animate={{
+                scale: isAgentSpeaking ? [1, 1.05, 1] : 1
+              }}
+              transition={{ duration: 1, repeat: isAgentSpeaking ? Infinity : 0 }}
+              className="relative"
+            >
+              <div className="w-32 h-32 sm:w-40 sm:h-40 rounded-full bg-gradient-to-br from-indigo-500 via-purple-500 to-pink-500 flex items-center justify-center text-6xl sm:text-7xl shadow-2xl">
+                {modPersona.emoji}
+              </div>
+              
+              <div className={`absolute bottom-2 right-2 w-6 h-6 rounded-full border-4 border-[#1e1f22] ${
+                isAgentSpeaking ? 'bg-green-500 animate-pulse' : 'bg-gray-500'
+              }`} />
+            </motion.div>
+          </div>
 
           <h1 className="text-white text-2xl sm:text-3xl font-bold mt-4 mb-1">{modPersona.name}</h1>
           <p className="text-gray-400 text-sm sm:text-base">
@@ -278,24 +321,67 @@ export default function VoiceCallAgent({ persona, onClose }: VoiceCallAgentProps
           animate={{ opacity: 1, y: 0 }}
           className="flex flex-col items-center"
         >
-          <motion.div
-            animate={{
-              scale: isSpeaking ? [1, 1.08, 1] : 1,
-              boxShadow: isSpeaking
-                ? ['0 0 0 0 rgba(59, 130, 246, 0.6)', '0 0 0 15px rgba(59, 130, 246, 0)', '0 0 0 0 rgba(59, 130, 246, 0)']
-                : '0 0 0 0 rgba(107, 114, 128, 0.2)'
-            }}
-            transition={{ duration: 0.8, repeat: isSpeaking ? Infinity : 0 }}
-            className="relative"
-          >
-            <div className="w-20 h-20 sm:w-24 sm:h-24 rounded-full bg-gradient-to-br from-blue-500 to-cyan-500 flex items-center justify-center text-3xl sm:text-4xl shadow-xl">
-              👤
-            </div>
+          <div className="relative flex items-center justify-center">
+            {/* Animated ripple rings when speaking */}
+            {isSpeaking && (
+              <>
+                <motion.div
+                  animate={{ 
+                    scale: [1, 1.8],
+                    opacity: [0.6, 0]
+                  }}
+                  transition={{ 
+                    duration: 1.2,
+                    repeat: Infinity,
+                    ease: "easeOut"
+                  }}
+                  className="absolute w-20 h-20 sm:w-24 sm:h-24 rounded-full border-4 border-blue-500"
+                />
+                <motion.div
+                  animate={{ 
+                    scale: [1, 1.6],
+                    opacity: [0.4, 0]
+                  }}
+                  transition={{ 
+                    duration: 1.2,
+                    repeat: Infinity,
+                    ease: "easeOut",
+                    delay: 0.25
+                  }}
+                  className="absolute w-20 h-20 sm:w-24 sm:h-24 rounded-full border-4 border-blue-500"
+                />
+                <motion.div
+                  animate={{ 
+                    scale: [1, 1.4],
+                    opacity: [0.3, 0]
+                  }}
+                  transition={{ 
+                    duration: 1.2,
+                    repeat: Infinity,
+                    ease: "easeOut",
+                    delay: 0.5
+                  }}
+                  className="absolute w-20 h-20 sm:w-24 sm:h-24 rounded-full border-4 border-blue-500"
+                />
+              </>
+            )}
             
-            <div className={`absolute bottom-1 right-1 w-4 h-4 rounded-full border-2 border-[#1e1f22] ${
-              isSpeaking ? 'bg-blue-500 animate-pulse' : 'bg-gray-500'
-            }`} />
-          </motion.div>
+            <motion.div
+              animate={{
+                scale: isSpeaking ? [1, 1.08, 1] : 1
+              }}
+              transition={{ duration: 0.8, repeat: isSpeaking ? Infinity : 0 }}
+              className="relative"
+            >
+              <div className="w-20 h-20 sm:w-24 sm:h-24 rounded-full bg-gradient-to-br from-blue-500 to-cyan-500 flex items-center justify-center text-3xl sm:text-4xl shadow-xl">
+                👤
+              </div>
+              
+              <div className={`absolute bottom-1 right-1 w-4 h-4 rounded-full border-2 border-[#1e1f22] ${
+                isSpeaking ? 'bg-blue-500 animate-pulse' : 'bg-gray-500'
+              }`} />
+            </motion.div>
+          </div>
 
           <p className="text-white text-lg font-semibold mt-2">You</p>
           <p className="text-sm text-gray-400">
