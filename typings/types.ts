@@ -17,7 +17,7 @@ export interface Wish {
   created_at: string;
 }
 
-export type Persona = 'santa' | 'grinch' | 'elf' | 'snowman' | 'reindeer' | 'scammer';
+export type Persona = 'santa' | 'grinch' | 'elf' | 'snowman' | 'reindeer' | 'scammer' | 'jingbells';
 
 export interface PersonaConfig {
   name: string;

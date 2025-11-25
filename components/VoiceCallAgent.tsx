@@ -20,6 +20,7 @@ const AGENT_MAP: Record<Persona, string> = {
   snowman: process.env.NEXT_PUBLIC_ELEVENLABS_AGENT_SNOWMAN!,
   elf: process.env.NEXT_PUBLIC_ELEVENLABS_AGENT_ELF!,
   scammer: process.env.NEXT_PUBLIC_ELEVENLABS_AGENT_SCAMMER!,
+  jingbells: process.env.NEXT_PUBLIC_ELEVENLABS_AGENT_JINGBELLS!,
 };
 
 export default function VoiceCallAgent({ persona, onClose }: VoiceCallAgentProps) {
