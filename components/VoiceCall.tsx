@@ -103,14 +103,7 @@ export default function VoiceCall({ persona, onClose }: VoiceCallProps) {
       // Start actual call - ringtone will keep playing
       await startCall();
       
-      console.log('✅ AI responded, stopping ringtone');
-      // Stop ringtone after AI responds
-      if (ringToneRef.current) {
-        ringToneRef.current.pause();
-        ringToneRef.current.currentTime = 0;
-      }
-      
-      // Start call timer
+      // Start call timer (ringtone already stopped in startCall)
       callTimerRef.current = setInterval(() => {
         setCallDuration(prev => prev + 1);
       }, 1000);
@@ -140,6 +133,13 @@ export default function VoiceCall({ persona, onClose }: VoiceCallProps) {
 
       const data = await response.json();
       if (data.success) {
+        // Stop ringtone immediately when AI responds
+        console.log('✅ AI responded, stopping ringtone');
+        if (ringToneRef.current) {
+          ringToneRef.current.pause();
+          ringToneRef.current.currentTime = 0;
+        }
+        
         // Now we can transition to connecting state
         setCallState('connecting');
         
@@ -446,7 +446,7 @@ export default function VoiceCall({ persona, onClose }: VoiceCallProps) {
   }
 
   return (
-    <div className="fixed inset-0 bg-[#1e1f22] z-50 flex flex-col">
+    <div className="fixed inset-0 bg-[#1e1f22] z-50 flex flex-col select-none" style={{ userSelect: 'none', WebkitUserSelect: 'none' }}>
       {/* Top Bar */}
       <div className="bg-[#313338] px-4 py-3 flex items-center justify-between border-b border-gray-700">
         <div className="flex items-center gap-3">
@@ -577,15 +577,17 @@ export default function VoiceCall({ persona, onClose }: VoiceCallProps) {
               onMouseLeave={stopRecording}
               onTouchStart={startRecording}
               onTouchEnd={stopRecording}
+              onContextMenu={(e) => e.preventDefault()}
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
               className={`w-16 h-16 rounded-full ${
                 isRecording 
                   ? 'bg-red-600 animate-pulse' 
                   : 'bg-blue-600 hover:bg-blue-700'
-              } text-white flex items-center justify-center shadow-lg transition`}
+              } text-white flex items-center justify-center shadow-lg transition select-none`}
+              style={{ userSelect: 'none', WebkitUserSelect: 'none', WebkitTouchCallout: 'none' }}
             >
-              <svg className="w-8 h-8" fill="currentColor" viewBox="0 0 24 24">
+              <svg className="w-8 h-8 pointer-events-none" fill="currentColor" viewBox="0 0 24 24">
                 <path d="M12 14c1.66 0 3-1.34 3-3V5c0-1.66-1.34-3-3-3S9 3.34 9 5v6c0 1.66 1.34 3 3 3z"/>
                 <path d="M17 11c0 2.76-2.24 5-5 5s-5-2.24-5-5H5c0 3.53 2.61 6.43 6 6.92V21h2v-3.08c3.39-.49 6-3.39 6-6.92h-2z"/>
               </svg>
