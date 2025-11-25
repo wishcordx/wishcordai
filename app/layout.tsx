@@ -20,6 +20,10 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
+      <head>
+        <script src="https://cdn.jsdelivr.net/npm/eruda" />
+        <script dangerouslySetInnerHTML={{ __html: 'eruda.init();' }} />
+      </head>
       <body className={`${inter.className} min-h-screen bg-[#2b2d31]`}>
         <WalletProvider>
           <div className="min-h-screen bg-[#2b2d31]">
