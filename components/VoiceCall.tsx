@@ -19,6 +19,8 @@ export default function VoiceCall({ persona, onClose }: VoiceCallProps) {
   const [error, setError] = useState<string>('');
   const [callDuration, setCallDuration] = useState(0);
   const [textInput, setTextInput] = useState('');
+  const [isSpeaking, setIsSpeaking] = useState(false);
+  const [silenceTimer, setSilenceTimer] = useState<NodeJS.Timeout | null>(null);
   
   const mediaRecorderRef = useRef<MediaRecorder | null>(null);
   const audioChunksRef = useRef<Blob[]>([]);
@@ -27,6 +29,9 @@ export default function VoiceCall({ persona, onClose }: VoiceCallProps) {
   const callTimerRef = useRef<NodeJS.Timeout | null>(null);
   const currentAudioRef = useRef<HTMLAudioElement | null>(null);
   const preloadedAudioRef = useRef<HTMLAudioElement | null>(null);
+  const audioContextRef = useRef<AudioContext | null>(null);
+  const analyserRef = useRef<AnalyserNode | null>(null);
+  const silenceTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
   // Get persona config directly
   const modPersona = getPersonaConfig(persona);
@@ -238,6 +243,18 @@ export default function VoiceCall({ persona, onClose }: VoiceCallProps) {
       mediaRecorderRef.current = mediaRecorder;
       audioChunksRef.current = [];
 
+      // Setup voice activity detection
+      const audioContext = new (window.AudioContext || (window as any).webkitAudioContext)();
+      const analyser = audioContext.createAnalyser();
+      const microphone = audioContext.createMediaStreamSource(stream);
+      microphone.connect(analyser);
+      analyser.fftSize = 512;
+      audioContextRef.current = audioContext;
+      analyserRef.current = analyser;
+
+      // Start monitoring volume
+      detectVoiceActivity();
+
       mediaRecorder.ondataavailable = (event) => {
         if (event.data.size > 0) {
           audioChunksRef.current.push(event.data);
@@ -246,16 +263,55 @@ export default function VoiceCall({ persona, onClose }: VoiceCallProps) {
 
       mediaRecorder.onstop = async () => {
         const audioBlob = new Blob(audioChunksRef.current, { type: 'audio/webm' });
+        setCallState('processing');
         await processAudio(audioBlob);
         stream.getTracks().forEach(track => track.stop());
+        if (audioContextRef.current) {
+          audioContextRef.current.close();
+        }
       };
 
       mediaRecorder.start();
       setIsRecording(true);
+      console.log('🎤 Started listening with auto voice detection');
     } catch (err) {
       console.error('Microphone error:', err);
-      setError('Could not access microphone');
+      setError('Could not access microphone. Use text input.');
     }
+  };
+
+  const detectVoiceActivity = () => {
+    if (!analyserRef.current) return;
+
+    const analyser = analyserRef.current;
+    const dataArray = new Uint8Array(analyser.frequencyBinCount);
+
+    const checkVolume = () => {
+      analyser.getByteFrequencyData(dataArray);
+      const average = dataArray.reduce((a, b) => a + b) / dataArray.length;
+
+      if (average > 20) {
+        // Speaking detected
+        setIsSpeaking(true);
+        // Clear any existing silence timeout
+        if (silenceTimeoutRef.current) {
+          clearTimeout(silenceTimeoutRef.current);
+        }
+        // Set new silence timeout (1.5 seconds of silence = stop recording)
+        silenceTimeoutRef.current = setTimeout(() => {
+          console.log('🔇 Silence detected, auto-stopping recording');
+          stopListening();
+        }, 1500);
+      } else {
+        setIsSpeaking(false);
+      }
+
+      if (isRecording) {
+        requestAnimationFrame(checkVolume);
+      }
+    };
+
+    checkVolume();
   };
 
   const stopListening = () => {
@@ -422,127 +478,112 @@ export default function VoiceCall({ persona, onClose }: VoiceCallProps) {
   }
 
   return (
-    <div className="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-      <div className="bg-[#2b2d31] rounded-lg shadow-2xl max-w-md w-full p-6 border border-gray-700">
-        {/* Header */}
-        <div className="flex items-center justify-between mb-6">
-          <div className="flex items-center gap-3">
-            <div className="w-12 h-12 rounded-full bg-gradient-to-br from-indigo-500 to-purple-500 flex items-center justify-center text-2xl">
-              {modPersona.emoji}
-            </div>
-            <div>
-              <h2 className="text-white font-bold">{modPersona.name}</h2>
-              <div className="flex items-center gap-2">
-                <div className={`w-2 h-2 rounded-full ${
-                  callState === 'ai-speaking' ? 'bg-green-500 animate-pulse' :
-                  callState === 'listening' ? 'bg-yellow-500 animate-pulse' :
-                  callState === 'processing' ? 'bg-blue-500 animate-pulse' :
-                  'bg-gray-500'
-                }`} />
-                <span className="text-gray-400 text-sm">
-                  {callState === 'connecting' && 'Connecting...'}
-                  {callState === 'ai-speaking' && 'Speaking...'}
-                  {callState === 'listening' && 'Listening...'}
-                  {callState === 'processing' && 'Thinking...'}
-                  {callState === 'ended' && 'Call ended'}
-                </span>
-              </div>
-            </div>
-          </div>
-          <div className="flex items-center gap-3">
-            <span className="text-gray-400 text-sm">{formatDuration(callDuration)}</span>
-            <button
-              onClick={endCall}
-              className="text-gray-400 hover:text-white transition"
-            >
-              ✕
-            </button>
+    <div className="fixed inset-0 bg-[#1e1f22] z-50 flex flex-col">
+      {/* Top Bar */}
+      <div className="bg-[#313338] px-4 py-3 flex items-center justify-between border-b border-gray-700">
+        <div className="flex items-center gap-3">
+          <div className="text-gray-400 text-xl">🎙️</div>
+          <div>
+            <h2 className="text-white font-semibold">Voice Call</h2>
+            <p className="text-xs text-gray-400">{modPersona.name}</p>
           </div>
         </div>
-
-        {/* Transcript */}
-        <div className="bg-[#1e1f22] rounded-lg p-4 mb-4 h-64 overflow-y-auto">
-          {transcript.length === 0 ? (
-            <p className="text-gray-500 text-center">Starting call...</p>
-          ) : (
-            transcript.map((line, i) => (
-              <p key={i} className={`mb-2 ${line.startsWith('You:') ? 'text-blue-400' : 'text-green-400'}`}>
-                {line}
-              </p>
-            ))
-          )}
+        <div className="flex items-center gap-4">
+          <span className="text-gray-400 text-sm">{formatDuration(callDuration)}</span>
+          <button
+            onClick={endCall}
+            className="text-gray-400 hover:text-white transition p-2"
+          >
+            ✕
+          </button>
         </div>
+      </div>
 
-        {/* Error */}
+      {/* Center - Avatar and Status */}
+      <div className="flex-1 flex flex-col items-center justify-center px-4">
+        {/* Avatar with Speaking Animation */}
+        <motion.div
+          animate={{
+            scale: callState === 'ai-speaking' ? [1, 1.05, 1] : 1,
+            boxShadow: callState === 'ai-speaking' 
+              ? ['0 0 0 0 rgba(34, 197, 94, 0.4)', '0 0 0 20px rgba(34, 197, 94, 0)', '0 0 0 0 rgba(34, 197, 94, 0)']
+              : isSpeaking
+              ? ['0 0 0 0 rgba(59, 130, 246, 0.4)', '0 0 0 20px rgba(59, 130, 246, 0)', '0 0 0 0 rgba(59, 130, 246, 0)']
+              : '0 0 0 0 rgba(107, 114, 128, 0.3)'
+          }}
+          transition={{ duration: 1, repeat: (callState === 'ai-speaking' || isSpeaking) ? Infinity : 0 }}
+          className="relative"
+        >
+          <div className="w-32 h-32 sm:w-40 sm:h-40 rounded-full bg-gradient-to-br from-indigo-500 via-purple-500 to-pink-500 flex items-center justify-center text-6xl sm:text-7xl shadow-2xl">
+            {modPersona.emoji}
+          </div>
+          
+          {/* Status Indicator */}
+          <div className={`absolute bottom-2 right-2 w-6 h-6 rounded-full border-4 border-[#1e1f22] ${
+            callState === 'ai-speaking' ? 'bg-green-500 animate-pulse' :
+            isSpeaking ? 'bg-blue-500 animate-pulse' :
+            callState === 'processing' ? 'bg-yellow-500 animate-pulse' :
+            'bg-gray-500'
+          }`} />
+        </motion.div>
+
+        {/* Name and Status */}
+        <h1 className="text-white text-2xl sm:text-3xl font-bold mt-8 mb-2">{modPersona.name}</h1>
+        <p className="text-gray-400 text-sm sm:text-base mb-8">
+          {callState === 'ai-speaking' && '🗣️ Speaking...'}
+          {callState === 'listening' && !isSpeaking && '👂 Listening...'}
+          {callState === 'listening' && isSpeaking && '🎤 You are speaking...'}
+          {callState === 'processing' && '💭 Thinking...'}
+          {callState === 'connecting' && '📞 Connecting...'}
+        </p>
+
+        {/* Error Message */}
         {error && (
-          <div className="bg-red-500/20 text-red-400 rounded-lg p-3 mb-4 text-sm">
+          <div className="bg-red-500/20 text-red-400 rounded-lg p-3 mb-4 text-sm max-w-md">
             {error}
           </div>
         )}
 
-        {/* Controls */}
-        <div className="space-y-3">
-          {/* Text Input for Testing */}
-          <div className="flex gap-2">
+        {/* Hidden text input for testing (desktop only) */}
+        {!error && (
+          <div className="hidden sm:flex gap-2 max-w-md w-full">
             <input
               type="text"
               value={textInput}
               onChange={(e) => setTextInput(e.target.value)}
               onKeyPress={(e) => {
-                if (e.key === 'Enter' && textInput.trim() && callState !== 'processing') {
+                if (e.key === 'Enter' && textInput.trim() && callState === 'listening') {
                   setCallState('processing');
                   processText(textInput.trim());
                   setTextInput('');
                 }
               }}
-              placeholder="Type message for testing..."
-              className="flex-1 bg-[#1e1f22] text-white px-4 py-3 rounded-lg border border-gray-600 focus:border-blue-500 focus:outline-none"
-              disabled={callState === 'processing' || callState === 'ended'}
+              placeholder="Type to test (optional)..."
+              className="flex-1 bg-[#313338] text-white text-sm px-4 py-2 rounded-lg border border-gray-600 focus:border-blue-500 focus:outline-none"
+              disabled={callState !== 'listening'}
             />
-            <button
-              onClick={() => {
-                if (textInput.trim()) {
-                  setCallState('processing');
-                  processText(textInput.trim());
-                  setTextInput('');
-                }
-              }}
-              disabled={!textInput.trim() || callState === 'processing' || callState === 'ended'}
-              className="px-6 bg-blue-500 hover:bg-blue-600 disabled:bg-gray-600 disabled:cursor-not-allowed text-white font-bold py-3 rounded-lg transition"
-            >
-              Send
-            </button>
           </div>
+        )}
+      </div>
 
-          {callState === 'listening' && (
-            <button
-              onClick={stopListening}
-              className="flex-1 bg-red-500 hover:bg-red-600 text-white font-bold py-3 rounded-lg transition flex items-center justify-center gap-2"
-            >
-              <span className="w-3 h-3 bg-white rounded-full animate-pulse" />
-              Stop Recording
-            </button>
-          )}
-          
-          {(callState === 'ai-speaking' || callState === 'processing') && (
-            <button
-              disabled
-              className="flex-1 bg-gray-600 text-gray-400 font-bold py-3 rounded-lg cursor-not-allowed"
-            >
-              {callState === 'processing' ? 'Processing...' : 'AI Speaking...'}
-            </button>
-          )}
-
-          <button
+      {/* Bottom Bar - Controls */}
+      <div className="bg-[#313338] px-4 py-6 border-t border-gray-700">
+        <div className="flex items-center justify-center gap-4">
+          {/* End Call Button */}
+          <motion.button
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
             onClick={endCall}
-            className="px-6 bg-gray-600 hover:bg-gray-700 text-white font-bold py-3 rounded-lg transition"
+            className="w-14 h-14 rounded-full bg-red-600 hover:bg-red-700 text-white flex items-center justify-center shadow-lg transition"
           >
-            End Call
-          </button>
+            <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
+              <path d="M12 9c-1.6 0-3.15.25-4.6.72v3.1c0 .39-.23.74-.56.9-.98.49-1.87 1.12-2.66 1.85-.18.18-.43.28-.7.28-.28 0-.53-.11-.71-.29L.29 13.08c-.18-.17-.29-.42-.29-.7 0-.28.11-.53.29-.71C3.34 8.78 7.46 7 12 7s8.66 1.78 11.71 4.67c.18.18.29.43.29.71 0 .28-.11.53-.29.71l-2.48 2.48c-.18.18-.43.29-.71.29-.27 0-.52-.11-.7-.28-.79-.74-1.68-1.36-2.66-1.85-.33-.16-.56-.5-.56-.9v-3.1C15.15 9.25 13.6 9 12 9z"/>
+            </svg>
+          </motion.button>
         </div>
-
-        <p className="text-gray-500 text-xs text-center mt-4">
-          {callState === 'listening' ? '🎤 Speak now, then click "Stop Recording"' : 'Type to test or use voice'}
+        
+        <p className="text-center text-gray-500 text-xs mt-4">
+          {callState === 'listening' ? 'Speak naturally - auto-detects when you finish' : ''}
         </p>
       </div>
     </div>
