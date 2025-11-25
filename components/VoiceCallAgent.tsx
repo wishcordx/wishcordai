@@ -64,6 +64,20 @@ export default function VoiceCallAgent({ persona, onClose }: VoiceCallAgentProps
 
   const startCallSequence = async () => {
     try {
+      // Request microphone permission first
+      console.log('🎤 Requesting microphone permission...');
+      try {
+        const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+        console.log('✅ Microphone permission granted');
+        // Stop the test stream
+        stream.getTracks().forEach(track => track.stop());
+      } catch (err) {
+        console.error('❌ Microphone permission denied:', err);
+        setError('Microphone permission required');
+        setCallState('ended');
+        return;
+      }
+
       // Play ringtone
       if (ringToneRef.current) {
         try {
