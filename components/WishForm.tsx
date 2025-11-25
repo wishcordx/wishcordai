@@ -88,7 +88,7 @@ export default function WishForm({ onWishSubmitted }: WishFormProps) {
           value={wishText}
           onChange={handleTextChange}
           placeholder="Message #xmas-wishes"
-          className="w-full px-3 py-2 sm:px-4 sm:py-3 rounded-lg bg-[#383a40] text-sm sm:text-base text-white placeholder:text-gray-500 border border-[#1e1f22] focus:outline-none focus:border-indigo-500 resize-none"
+          className="w-full px-3 py-2 sm:px-4 sm:py-3 rounded-lg bg-[#1a1b1e] text-sm sm:text-base text-white placeholder:text-gray-500 border border-[#0f1011] focus:outline-none focus:border-indigo-500 resize-none"
           rows={3}
           maxLength={500}
           disabled={isSubmitting}

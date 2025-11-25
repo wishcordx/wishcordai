@@ -85,7 +85,7 @@ export default function MembersList() {
   });
 
   return (
-    <div className="mt-6 pt-4 border-t border-[#1e1f22]">
+    <div className="mt-6 pt-4 border-t border-[#0f1011]">
       <h3 className="text-white font-semibold mb-3 flex items-center gap-2">
         <span className="w-2 h-2 bg-gray-500 rounded-full"></span>
         Members — {members.length}
@@ -99,7 +99,7 @@ export default function MembersList() {
         {sortedMembers.map((member) => (
           <div
             key={member.wallet_address}
-            className="flex items-center gap-3 p-2 rounded hover:bg-[#35373c] transition-colors"
+            className="flex items-center gap-3 p-2 rounded hover:bg-[#2b2d31] transition-colors"
           >
             <div className="relative">
               <div className="w-8 h-8 rounded-full flex items-center justify-center overflow-hidden bg-gradient-to-br from-indigo-500 to-purple-500">
@@ -110,7 +110,7 @@ export default function MembersList() {
                 )}
               </div>
               <span
-                className={`absolute -bottom-0.5 -right-0.5 w-3 h-3 rounded-full border-2 border-[#2b2d31] ${
+                className={`absolute -bottom-0.5 -right-0.5 w-3 h-3 rounded-full border-2 border-[#1e1f22] ${
                   member.is_online ? 'bg-green-500' : 'bg-gray-500'
                 }`}
               ></span>
@@ -144,7 +144,7 @@ export default function MembersList() {
           width: 6px;
         }
         .custom-scrollbar::-webkit-scrollbar-track {
-          background: #1e1f22;
+          background: #0f1011;
           border-radius: 3px;
         }
         .custom-scrollbar::-webkit-scrollbar-thumb {

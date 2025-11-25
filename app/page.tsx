@@ -88,7 +88,7 @@ export default function HomePage() {
           {/* Chat Area - Left Side (2 columns) */}
           <div className="lg:col-span-2 space-y-3 sm:space-y-4">
             {/* Post Message Box */}
-            <div className="bg-[#383a40] rounded-lg p-3 sm:p-6 border border-[#1e1f22]">
+            <div className="bg-[#202225] rounded-lg p-3 sm:p-6 border border-[#0f1011]">
               <div className="flex items-center gap-2 sm:gap-3 mb-3 sm:mb-4">
                 <div className="w-8 h-8 sm:w-10 sm:h-10 bg-gradient-to-br from-indigo-500 to-purple-500 rounded-full flex items-center justify-center overflow-hidden">
                   {userProfile?.avatar ? (
@@ -117,7 +117,7 @@ export default function HomePage() {
 
           {/* Sidebar - Right Side */}
           <div className="hidden lg:block lg:col-span-1">
-            <div className="bg-[#2b2d31] rounded-lg p-5 border border-[#1e1f22] sticky top-6">
+            <div className="bg-[#1e1f22] rounded-lg p-5 border border-[#0f1011] sticky top-6">
               <h3 className="text-white font-semibold mb-4 flex items-center gap-2">
                 <span className="w-2 h-2 bg-green-500 rounded-full"></span>
                 Mods Online — 7

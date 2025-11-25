@@ -52,13 +52,13 @@ export default function ModProfileModal({ isOpen, persona, onClose, onCall }: Mo
           >
             <div
               onClick={(e) => e.stopPropagation()}
-              className="bg-[#313338] rounded-lg border border-[#1e1f22] w-full max-w-md overflow-hidden"
+              className="bg-[#1e1f22] rounded-lg border border-[#0f1011] w-full max-w-md overflow-hidden"
             >
               {/* Header with Banner */}
               <div className="bg-gradient-to-br from-indigo-600 to-purple-600 h-24 relative">
                 <button
                   onClick={onClose}
-                  className="absolute top-3 right-3 w-8 h-8 rounded-full bg-[#2b2d31]/80 hover:bg-[#2b2d31] flex items-center justify-center text-gray-400 hover:text-white transition-colors"
+                  className="absolute top-3 right-3 w-8 h-8 rounded-full bg-[#1e1f22]/80 hover:bg-[#1e1f22] flex items-center justify-center text-gray-400 hover:text-white transition-colors"
                 >
                   ✕
                 </button>
@@ -67,10 +67,10 @@ export default function ModProfileModal({ isOpen, persona, onClose, onCall }: Mo
               {/* Avatar */}
               <div className="px-6 pb-6">
                 <div className="relative -mt-16 mb-4">
-                  <div className="w-24 h-24 rounded-full bg-[#2b2d31] border-8 border-[#313338] flex items-center justify-center text-5xl">
+                  <div className="w-24 h-24 rounded-full bg-[#1e1f22] border-8 border-[#1e1f22] flex items-center justify-center text-5xl">
                     {personaConfig.emoji}
                   </div>
-                  <div className="absolute bottom-2 right-2 w-6 h-6 bg-green-500 rounded-full border-4 border-[#313338]"></div>
+                  <div className="absolute bottom-2 right-2 w-6 h-6 bg-green-500 rounded-full border-4 border-[#1e1f22]"></div>
                 </div>
 
                 {/* Name & Role */}
@@ -85,7 +85,7 @@ export default function ModProfileModal({ isOpen, persona, onClose, onCall }: Mo
                 </div>
 
                 {/* About Me */}
-                <div className="bg-[#2b2d31] rounded-lg p-4 mb-4">
+                <div className="bg-[#202225] rounded-lg p-4 mb-4">
                   <h3 className="text-xs font-bold text-gray-400 uppercase mb-2">About Me</h3>
                   <p className="text-sm text-gray-300 leading-relaxed">
                     {personaConfig.systemPrompt?.split('.')[0].replace(/^You are /i, 'I am ') || `I'm ${personaConfig.name}, ready to review your Christmas wishes!`}
@@ -93,7 +93,7 @@ export default function ModProfileModal({ isOpen, persona, onClose, onCall }: Mo
                 </div>
 
                 {/* Stats */}
-                <div className="bg-[#2b2d31] rounded-lg p-4 mb-4">
+                <div className="bg-[#202225] rounded-lg p-4 mb-4">
                   <h3 className="text-xs font-bold text-gray-400 uppercase mb-3">Mod Stats</h3>
                   <div className="space-y-2">
                     <div className="flex justify-between items-center">

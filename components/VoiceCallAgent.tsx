@@ -222,9 +222,9 @@ export default function VoiceCallAgent({ persona, onClose }: VoiceCallAgentProps
 
   // Connected - Real-time conversation
   return (
-    <div className="fixed inset-0 bg-[#1e1f22] z-50 flex flex-col select-none" style={{ userSelect: 'none', WebkitUserSelect: 'none' }}>
+    <div className="fixed inset-0 bg-[#0f1011] z-50 flex flex-col select-none" style={{ userSelect: 'none', WebkitUserSelect: 'none' }}>
       {/* Top Bar */}
-      <div className="bg-[#313338] px-4 py-3 flex items-center justify-between border-b border-gray-700">
+      <div className="bg-[#1e1f22] px-4 py-3 flex items-center justify-between border-b border-[#0f1011]">
         <div className="flex items-center gap-3">
           <div className="text-gray-400 text-xl">🎙️</div>
           <div>
@@ -398,7 +398,7 @@ export default function VoiceCallAgent({ persona, onClose }: VoiceCallAgentProps
       </div>
 
       {/* Bottom Bar */}
-      <div className="bg-[#313338] px-4 py-6 border-t border-gray-700">
+      <div className="bg-[#1e1f22] px-4 py-6 border-t border-[#0f1011]">
         <div className="flex items-center justify-center">
           <motion.button
             whileHover={{ scale: 1.05 }}

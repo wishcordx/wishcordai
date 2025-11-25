@@ -34,7 +34,7 @@ export default function Header({ onMenuClick }: HeaderProps = {}) {
   };
 
   return (
-    <header className="border-b border-[#1e1f22] bg-[#313338]">
+    <header className="border-b border-[#0f1011] bg-[#1e1f22]">
       <div className="mx-auto max-w-7xl px-3 sm:px-6 py-2 sm:py-3">
         <div className="flex items-center justify-between">
           <Link href="/" className="flex items-center gap-2 sm:gap-3">

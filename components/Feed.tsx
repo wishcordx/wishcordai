@@ -57,7 +57,7 @@ export default function Feed({ refreshTrigger, newWish }: FeedProps) {
 
   if (isLoading) {
     return (
-      <div className="bg-[#2b2d31] rounded-lg p-8 border border-[#1e1f22] text-center">
+      <div className="bg-[#1e1f22] rounded-lg p-8 border border-[#0f1011] text-center">
         <div className="animate-pulse">
           <p className="text-gray-400">Loading messages...</p>
         </div>
@@ -75,7 +75,7 @@ export default function Feed({ refreshTrigger, newWish }: FeedProps) {
 
   if (wishes.length === 0) {
     return (
-      <div className="bg-[#2b2d31] rounded-lg p-8 border border-[#1e1f22] text-center">
+      <div className="bg-[#1e1f22] rounded-lg p-8 border border-[#0f1011] text-center">
         <p className="text-gray-400">No messages yet. Be the first to post! 💬</p>
       </div>
     );

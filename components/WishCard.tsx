@@ -213,7 +213,7 @@ export default function WishCard({ wish }: WishCardProps) {
   };
 
   return (
-    <div className="bg-[#2b2d31] rounded-lg p-3 sm:p-5 border border-[#1e1f22] hover:border-[#35373c] transition-colors">
+    <div className="bg-[#1e1f22] rounded-lg p-4 sm:p-6 border border-[#0f1011] hover:border-[#2b2d31] transition-colors">
       {/* User Message */}
       <div className="flex gap-2 sm:gap-3 mb-3 sm:mb-4">
         <div className="w-8 h-8 sm:w-10 sm:h-10 bg-gradient-to-br from-blue-500 to-purple-500 rounded-full flex items-center justify-center flex-shrink-0 overflow-hidden">

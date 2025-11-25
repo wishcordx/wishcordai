@@ -41,10 +41,10 @@ export default function MobileSidebar({ isOpen, onClose, onModClick, totalMessag
             animate={{ x: 0 }}
             exit={{ x: '100%' }}
             transition={{ type: 'spring', damping: 25, stiffness: 200 }}
-            className="fixed right-0 top-0 bottom-0 w-80 bg-[#2b2d31] border-l border-[#1e1f22] z-50 overflow-y-auto lg:hidden"
+            className="fixed right-0 top-0 bottom-0 w-80 bg-[#1e1f22] border-l border-[#0f1011] z-50 overflow-y-auto lg:hidden"
           >
             {/* Header */}
-            <div className="sticky top-0 bg-[#2b2d31] border-b border-[#1e1f22] p-4 flex items-center justify-between">
+            <div className="sticky top-0 bg-[#1e1f22] border-b border-[#0f1011] p-4 flex items-center justify-between">
               <h2 className="text-white font-semibold text-lg">Server Info</h2>
               <button
                 onClick={onClose}
