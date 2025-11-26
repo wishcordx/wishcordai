@@ -209,14 +209,6 @@ export default function WishCard({ wish }: WishCardProps) {
         setMentionSearch(textAfterAt.toLowerCase());
         setShowMentions(true);
         setSelectedMentionIndex(0);
-        
-        // Calculate position for dropdown - use fixed positioning relative to viewport
-        const rect = input.getBoundingClientRect();
-        setMentionPosition({
-          top: rect.bottom + 4, // Just below the input
-          left: rect.left, // Align with left edge of input
-        });
-        console.log('[Reply @] Position set:', { top: rect.bottom + 4, left: rect.left });
       } else {
         console.log('[Reply @] hiding - space found');
         setShowMentions(false);
@@ -615,23 +607,19 @@ export default function WishCard({ wish }: WishCardProps) {
               />
               
               {/* @Mention Autocomplete */}
-              {(() => {
-                console.log('[Reply @] Render check - showMentions:', showMentions);
-                if (showMentions) {
-                  const filtered = MODS.filter(mod =>
-                    mod.name.toLowerCase().includes(mentionSearch)
-                  );
-                  console.log('[Reply @] Rendering autocomplete with', filtered.length, 'mods');
-                  return (
-                    <MentionAutocomplete
-                      mentions={filtered}
-                      onSelect={handleMentionSelect}
-                      position={mentionPosition}
-                      selectedIndex={selectedMentionIndex}
-                    />
-                  );
-                }
-                return null;
+              {showMentions && (() => {
+                const filtered = MODS.filter(mod =>
+                  mod.name.toLowerCase().includes(mentionSearch)
+                );
+                console.log('[Reply @] Rendering autocomplete with', filtered.length, 'mods');
+                return (
+                  <MentionAutocomplete
+                    mentions={filtered}
+                    onSelect={handleMentionSelect}
+                    position={{ top: 0, left: 0 }}
+                    selectedIndex={selectedMentionIndex}
+                  />
+                );
               })()}
             </div>
             <button

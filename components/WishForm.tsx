@@ -66,32 +66,9 @@ export default function WishForm({ onWishSubmitted }: WishFormProps) {
         setShowMentions(true);
         setSelectedMentionIndex(0);
         
-        // Calculate position for dropdown next to @ symbol
-        if (textareaRef.current) {
-          const textarea = textareaRef.current;
-          const rect = textarea.getBoundingClientRect();
-          
-          // Get computed styles for accurate measurements
-          const style = window.getComputedStyle(textarea);
-          const fontSize = parseFloat(style.fontSize);
-          const lineHeight = parseFloat(style.lineHeight) || fontSize * 1.5;
-          const paddingTop = parseFloat(style.paddingTop);
-          const paddingLeft = parseFloat(style.paddingLeft);
-          
-          // Calculate line number and position
-          const lines = textBeforeCursor.split('\n');
-          const currentLineIndex = lines.length - 1;
-          const currentLine = lines[currentLineIndex];
-          
-          // Calculate approximate character width (rough estimate for monospace-like behavior)
-          const charWidth = fontSize * 0.6;
-          const textWidth = (currentLine.length) * charWidth;
-          
-          setMentionPosition({
-            top: rect.top + paddingTop + (currentLineIndex * lineHeight) + lineHeight + window.scrollY,
-            left: rect.left + paddingLeft + textWidth,
-          });
-        }
+        // Position will be handled by absolute positioning relative to parent
+        // No need to calculate complex positions since we use top: 100%
+        setMentionPosition({ top: 0, left: 0 });
       } else {
         setShowMentions(false);
       }

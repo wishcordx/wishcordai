@@ -48,12 +48,11 @@ export default function MentionAutocomplete({
   return (
     <div
       ref={listRef}
-      className="fixed z-[9999] bg-[#1e1f22] border border-indigo-500 rounded-lg shadow-2xl max-h-64 overflow-y-auto w-[calc(100vw-2rem)] sm:w-auto"
+      className="absolute z-[9999] bg-[#1e1f22] border border-indigo-500 rounded-lg shadow-2xl max-h-64 overflow-y-auto w-[250px]"
       style={{
-        top: `${position.top}px`,
-        left: `${Math.min(position.left, window.innerWidth - 270)}px`,
-        minWidth: '250px',
-        maxWidth: 'calc(100vw - 2rem)',
+        top: '100%',
+        left: 0,
+        marginTop: '4px',
       }}
     >
       {mentions.map((mention, index) => (
