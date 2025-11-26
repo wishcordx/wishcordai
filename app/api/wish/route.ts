@@ -133,7 +133,9 @@ export async function POST(request: NextRequest) {
       
       // Fire and forget - generate AI response in background
       (async () => {
+        const startTime = Date.now();
         try {
+          console.log(`⏱️ [${wish.id}] Starting AI generation at ${new Date().toISOString()}`);
           let aiReply: string | null = null;
           let aiAudioUrl: string | undefined;
           let aiAudioPath: string | undefined;
@@ -150,6 +152,7 @@ export async function POST(request: NextRequest) {
           console.log(`🖼️ Has image: ${!!imageUrl}`);
 
           // Generate AI response with full context
+          console.log(`⏱️ [${wish.id}] Calling aiRouter.generateModResponse...`);
           aiReply = await aiRouter.generateModResponse(
             personaConfig.systemPrompt,
             wishText || '[No text, see attached media]',
@@ -157,7 +160,8 @@ export async function POST(request: NextRequest) {
             undefined
           );
 
-          console.log(`✅ ${personaConfig.name} responded!`);
+          const elapsed = ((Date.now() - startTime) / 1000).toFixed(2);
+          console.log(`✅ [${wish.id}] ${personaConfig.name} responded in ${elapsed}s!`);
 
           // Generate voice response if user sent voice message
           if (audioUrl && aiReply) {
@@ -207,6 +211,7 @@ export async function POST(request: NextRequest) {
           }
 
           // Update wish with AI response
+          console.log(`⏱️ [${wish.id}] Updating database with AI response...`);
           const { error: updateError } = await supabase
             .from('wishes')
             .update({
@@ -218,22 +223,24 @@ export async function POST(request: NextRequest) {
             .eq('id', wish.id);
 
           if (updateError) {
-            console.error('❌ Failed to update wish with AI response:', updateError);
+            console.error(`❌ [${wish.id}] Failed to update wish with AI response:`, updateError);
             // Mark as failed
             await supabase
               .from('wishes')
               .update({ ai_status: 'failed' })
               .eq('id', wish.id);
           } else {
-            console.log(`✅ Wish ${wish.id} updated with AI response`);
+            const totalElapsed = ((Date.now() - startTime) / 1000).toFixed(2);
+            console.log(`✅✅✅ [${wish.id}] COMPLETE! Database updated in ${totalElapsed}s total`);
           }
         } catch (error) {
-          console.error('❌ AI generation error:', error);
+          console.error(`❌ [${wish.id}] AI generation error:`, error);
           // Mark as failed
           await supabase
             .from('wishes')
             .update({ ai_status: 'failed' })
             .eq('id', wish.id);
+          console.log(`⚠️ [${wish.id}] Marked as failed in database`);
         }
       })();
     } else {
