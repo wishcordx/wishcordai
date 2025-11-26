@@ -233,25 +233,28 @@ export default function WishCard({ wish }: WishCardProps) {
   // Handle reply text change with @mention detection
   const handleReplyTextChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const newText = e.target.value;
-    const cursorPos = e.target.selectionStart || 0;
-    
     setReplyText(newText);
-    setCursorPosition(cursorPos);
-
-    // Detect @ mention trigger
-    const textBeforeCursor = newText.substring(0, cursorPos);
-    const lastAtIndex = textBeforeCursor.lastIndexOf('@');
     
-    if (lastAtIndex !== -1) {
-      const textAfterAt = textBeforeCursor.substring(lastAtIndex + 1);
-      // Check if there's no space after @
-      if (!textAfterAt.includes(' ') && textAfterAt.length <= 20) {
-        setMentionSearch(textAfterAt.toLowerCase());
-        setShowMentions(true);
-        setSelectedMentionIndex(0);
-        
-        // Calculate position for dropdown
-        if (replyInputRef.current) {
+    // Use a slight delay to ensure cursor position is updated
+    setTimeout(() => {
+      if (!replyInputRef.current) return;
+      
+      const cursorPos = replyInputRef.current.selectionStart || 0;
+      setCursorPosition(cursorPos);
+
+      // Detect @ mention trigger
+      const textBeforeCursor = newText.substring(0, cursorPos);
+      const lastAtIndex = textBeforeCursor.lastIndexOf('@');
+      
+      if (lastAtIndex !== -1) {
+        const textAfterAt = textBeforeCursor.substring(lastAtIndex + 1);
+        // Check if there's no space after @
+        if (!textAfterAt.includes(' ') && textAfterAt.length <= 20) {
+          setMentionSearch(textAfterAt.toLowerCase());
+          setShowMentions(true);
+          setSelectedMentionIndex(0);
+          
+          // Calculate position for dropdown
           const input = replyInputRef.current;
           const rect = input.getBoundingClientRect();
           
@@ -259,13 +262,13 @@ export default function WishCard({ wish }: WishCardProps) {
             top: rect.bottom + window.scrollY + 4,
             left: rect.left + window.scrollX,
           });
+        } else {
+          setShowMentions(false);
         }
       } else {
         setShowMentions(false);
       }
-    } else {
-      setShowMentions(false);
-    }
+    }, 0);
   };
 
   // Handle keyboard navigation for mentions
