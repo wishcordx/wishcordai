@@ -59,6 +59,7 @@ export default function WishCard({ wish }: WishCardProps) {
   const [aiAudioUrl, setAiAudioUrl] = useState(wish.ai_audio_url);
   const [lastReplyCount, setLastReplyCount] = useState(0);
   const [shouldPollReplies, setShouldPollReplies] = useState(false);
+  const [expectedModUsername, setExpectedModUsername] = useState<string | null>(null);
   
   useEffect(() => {
     // Fetch reactions and reply count in parallel for faster loading
@@ -115,18 +116,21 @@ export default function WishCard({ wish }: WishCardProps) {
           
           // If we got a new reply, update and stop polling
           if (newReplyCount > lastReplyCount) {
+            console.log('✅ New reply detected! Updating...');
             setReplies(data.replies);
             setReplyCount(newReplyCount);
             setLastReplyCount(newReplyCount);
             setShouldPollReplies(false);
+            setExpectedModUsername(null);
             clearInterval(pollInterval);
           }
         }
         
         // Stop polling after max attempts
         if (pollCount >= maxPolls) {
-          console.log('Stopped polling for replies after 60 seconds');
+          console.log('⏱️ Stopped polling for replies after 60 seconds');
           setShouldPollReplies(false);
+          setExpectedModUsername(null);
           clearInterval(pollInterval);
         }
       } catch (error) {
@@ -341,7 +345,9 @@ export default function WishCard({ wish }: WishCardProps) {
 
     // Check if user @mentioned a mod
     const mentionRegex = /@(SantaMod69|xX_Krampus_Xx|elfgirluwu|FrostyTheCoder|DasherSpeedrun|SantaKumar|JingBells叮噹鈴)/;
-    const hasMention = mentionRegex.test(replyText);
+    const match = replyText.match(mentionRegex);
+    const hasMention = match !== null;
+    const mentionedMod = match ? match[1] : null;
 
     try {
       const response = await fetch('/api/replies', {
@@ -362,11 +368,12 @@ export default function WishCard({ wish }: WishCardProps) {
         // Refresh replies to show user's new reply
         await fetchReplies();
         
-        // If mod was mentioned, start polling for AI response
-        if (hasMention) {
+        // If mod was mentioned, start polling for AI response and show typing
+        if (hasMention && mentionedMod) {
+          setExpectedModUsername(mentionedMod);
           setLastReplyCount(replies.length + 1); // +1 for the reply we just posted
           setShouldPollReplies(true);
-          console.log('🔄 Started polling for mod AI response...');
+          console.log(`🔄 Started polling for @${mentionedMod} AI response...`);
         }
       }
     } catch (error) {
@@ -647,6 +654,33 @@ export default function WishCard({ wish }: WishCardProps) {
               </div>
             </div>
           ))}
+
+          {/* Typing Indicator for expected mod reply */}
+          {expectedModUsername && (
+            <div className="flex gap-1.5 sm:gap-2 animate-pulse">
+              <div className="w-6 h-6 sm:w-7 sm:h-7 rounded-full flex items-center justify-center bg-gradient-to-br from-indigo-500 to-purple-500 flex-shrink-0">
+                <span className="text-xs sm:text-sm">
+                  {expectedModUsername === 'SantaMod69' ? '🎅' : 
+                   expectedModUsername === 'xX_Krampus_Xx' ? '😈' :
+                   expectedModUsername === 'elfgirluwu' ? '🧝‍♀️' :
+                   expectedModUsername === 'FrostyTheCoder' ? '⛄' :
+                   expectedModUsername === 'DasherSpeedrun' ? '🦌' :
+                   expectedModUsername === 'SantaKumar' ? '🤖' :
+                   expectedModUsername === 'JingBells叮噹鈴' ? '🔔' : '💬'}
+                </span>
+              </div>
+              <div className="flex-1 min-w-0">
+                <div className="flex items-center gap-2 text-gray-400 text-xs sm:text-sm italic">
+                  <span>{expectedModUsername} is typing</span>
+                  <div className="flex gap-1">
+                    <span className="animate-bounce" style={{ animationDelay: '0ms' }}>.</span>
+                    <span className="animate-bounce" style={{ animationDelay: '150ms' }}>.</span>
+                    <span className="animate-bounce" style={{ animationDelay: '300ms' }}>.</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
 
           {/* Reply Input */}
           <div className="flex gap-1.5 sm:gap-2 mt-2 sm:mt-3">
