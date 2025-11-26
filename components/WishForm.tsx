@@ -363,33 +363,110 @@ export default function WishForm({ onWishSubmitted }: WishFormProps) {
       />
 
       <form onSubmit={handleSubmit} className="space-y-3 sm:space-y-4">
-        <div className="space-y-2 relative">
-          <textarea
-            ref={textareaRef}
-            id="wish"
-            value={wishText}
-            onChange={handleTextChange}
-            onKeyDown={handleKeyDown}
-            placeholder="Message #xmas-wishes (use @SantaMod69 to tag specific mods)"
-            className="w-full px-3 py-2 sm:px-4 sm:py-3 rounded-lg bg-[#1a1b1e] text-sm sm:text-base text-white placeholder:text-gray-500 border border-[#0f1011] focus:outline-none focus:border-indigo-500 resize-none min-h-[80px]"
-            rows={3}
-            maxLength={500}
-            disabled={isSubmitting}
-          />
-          
-          {/* @Mention Autocomplete */}
-          {showMentions && (
-            <MentionAutocomplete
-              mentions={MODS.filter(mod =>
-                mod.name.toLowerCase().includes(mentionSearch)
+        {/* Professional Message Input Container */}
+        <div className="relative bg-[#313338] rounded-lg border border-[#1e1f22] focus-within:border-[#3e4047] transition-colors">
+          {/* Main input area with action buttons */}
+          <div className="relative flex items-end gap-2 p-2">
+            {/* Text input area */}
+            <div className="flex-1 relative">
+              <textarea
+                ref={textareaRef}
+                id="wish"
+                value={wishText}
+                onChange={handleTextChange}
+                onKeyDown={handleKeyDown}
+                placeholder="Message #xmas-wishes (use @SantaMod69 to tag)"
+                className="w-full min-h-[44px] max-h-[200px] px-3 py-2.5 bg-transparent text-white placeholder-gray-400 resize-none focus:outline-none text-sm disabled:opacity-50 scrollbar-thin scrollbar-thumb-[#1e1f22] scrollbar-track-transparent"
+                style={{ lineHeight: '1.5' }}
+                maxLength={500}
+                disabled={isSubmitting}
+              />
+              
+              {/* @Mention Autocomplete */}
+              {showMentions && (
+                <MentionAutocomplete
+                  mentions={MODS.filter(mod =>
+                    mod.name.toLowerCase().includes(mentionSearch)
+                  )}
+                  onSelect={handleMentionSelect}
+                  position={mentionPosition}
+                  selectedIndex={selectedMentionIndex}
+                />
               )}
-              onSelect={handleMentionSelect}
-              position={mentionPosition}
-              selectedIndex={selectedMentionIndex}
-            />
-          )}
-          
-          <div className="flex items-center justify-between">
+            </div>
+
+            {/* Action buttons */}
+            <div className="flex items-center gap-1 pb-1">
+              {/* Hidden file input */}
+              <input
+                ref={fileInputRef}
+                type="file"
+                accept="image/*"
+                onChange={handleImageUpload}
+                className="hidden"
+              />
+
+              {/* Add Image button */}
+              <button
+                type="button"
+                onClick={() => fileInputRef.current?.click()}
+                disabled={isSubmitting || !!imageUrl}
+                title="Add Image"
+                className="relative group p-2 rounded-md hover:bg-[#3e4047] transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                <svg className="w-5 h-5 text-gray-400 group-hover:text-gray-300 group-disabled:text-gray-600" fill="currentColor" viewBox="0 0 24 24">
+                  <path d="M19 3H5C3.9 3 3 3.9 3 5V19C3 20.1 3.9 21 5 21H19C20.1 21 21 20.1 21 19V5C21 3.9 20.1 3 19 3ZM19 19H5V5H19V19Z" />
+                  <path d="M13.96 12.29L11.21 15.83L9.25 13.47L6.5 17H17.5L13.96 12.29Z" />
+                </svg>
+              </button>
+
+              {/* Voice button */}
+              <button
+                type="button"
+                onClick={isRecording ? stopRecording : startRecording}
+                disabled={isSubmitting || !!audioBlob}
+                title={isRecording ? `Stop Recording (${recordingTime}s)` : 'Voice Message'}
+                className={`relative group p-2 rounded-md transition-colors disabled:opacity-50 disabled:cursor-not-allowed ${
+                  isRecording 
+                    ? 'bg-red-600 hover:bg-red-700 animate-pulse' 
+                    : 'hover:bg-[#3e4047]'
+                }`}
+              >
+                {isRecording ? (
+                  <svg className="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M6 6H18V18H6V6Z" />
+                  </svg>
+                ) : (
+                  <svg className="w-5 h-5 text-gray-400 group-hover:text-gray-300 group-disabled:text-gray-600" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M12 14C13.66 14 15 12.66 15 11V5C15 3.34 13.66 2 12 2C10.34 2 9 3.34 9 5V11C9 12.66 10.34 14 12 14Z" />
+                    <path d="M17 11C17 14 14.76 16.1 12 16.1C9.24 16.1 7 14 7 11H5C5 14.41 7.72 17.23 11 17.72V21H13V17.72C16.28 17.24 19 14.42 19 11H17Z" />
+                  </svg>
+                )}
+              </button>
+
+              {/* Send button */}
+              <button
+                type="submit"
+                disabled={isSubmitting || (!wishText.trim() && !imageUrl && !audioBlob)}
+                title="Send Message"
+                className="relative group p-2 rounded-md bg-indigo-600 hover:bg-indigo-700 transition-colors disabled:opacity-30 disabled:cursor-not-allowed ml-1"
+              >
+                {isSubmitting ? (
+                  <svg className="w-5 h-5 text-white animate-spin" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M12 2C6.48 2 2 6.48 2 12C2 17.52 6.48 22 12 22C17.52 22 22 17.52 22 12C22 6.48 17.52 2 12 2ZM12 20C7.59 20 4 16.41 4 12C4 7.59 7.59 4 12 4C16.41 4 20 7.59 20 12C20 16.41 16.41 20 12 20Z" opacity="0.3" />
+                    <path d="M12 4C7.59 4 4 7.59 4 12H2C2 6.48 6.48 2 12 2V4Z" />
+                  </svg>
+                ) : (
+                  <svg className="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M2.01 21L23 12L2.01 3L2 10L17 12L2 14L2.01 21Z" />
+                  </svg>
+                )}
+              </button>
+            </div>
+          </div>
+
+          {/* Bottom status bar */}
+          <div className="flex items-center justify-between px-4 pb-2">
             <div className="flex items-center gap-2">
               {isTyping && wishText.length > 0 && (
                 <div className="flex items-center gap-1 text-xs text-gray-400">
@@ -400,48 +477,10 @@ export default function WishForm({ onWishSubmitted }: WishFormProps) {
                 </div>
               )}
             </div>
-            <p className="text-xs text-gray-500">
+            <p className="text-[10px] text-gray-500 font-medium">
               {wishText.length}/500
             </p>
           </div>
-        </div>
-
-        {/* Media Attachments Section */}
-        <div className="flex flex-wrap items-center gap-2">
-          {/* Image Upload Button */}
-          <input
-            ref={fileInputRef}
-            type="file"
-            accept="image/*"
-            onChange={handleImageUpload}
-            className="hidden"
-          />
-          <button
-            type="button"
-            onClick={() => fileInputRef.current?.click()}
-            disabled={isSubmitting || !!imageUrl}
-            className="px-3 py-2 bg-[#1e1f22] hover:bg-[#202225] text-gray-300 rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2 text-sm"
-          >
-            📷 <span className="hidden sm:inline">Add Image</span>
-          </button>
-
-          {/* Voice Recording Button */}
-          <button
-            type="button"
-            onClick={isRecording ? stopRecording : startRecording}
-            disabled={isSubmitting || !!audioBlob}
-            className={`px-3 py-2 rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2 text-sm ${
-              isRecording 
-                ? 'bg-red-600 hover:bg-red-700 text-white animate-pulse' 
-                : 'bg-[#1e1f22] hover:bg-[#202225] text-gray-300'
-            }`}
-          >
-            {isRecording ? (
-              <>🔴 <span className="hidden sm:inline">{recordingTime}s</span></>
-            ) : (
-              <>🎤 <span className="hidden sm:inline">Voice</span></>
-            )}
-          </button>
         </div>
 
         {/* Image Preview */}
@@ -498,77 +537,6 @@ export default function WishForm({ onWishSubmitted }: WishFormProps) {
           </p>
         </div>
       )}
-
-      <button
-        type="submit"
-        disabled={isSubmitting || (!wishText.trim() && !imageUrl && !audioBlob)}
-        className="send-message-button relative w-full min-h-[68px] px-5 py-4 rounded-[14px] bg-[#2e2e2e] text-white font-semibold text-base sm:text-lg border-none cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300"
-        style={{
-          textShadow: '0 1px 1px rgba(0, 0, 0, 0.3)',
-          boxShadow: '0 0.5px 0.5px 1px rgba(0, 0, 0, 0.2), 0 10px 20px rgba(0, 0, 0, 0.2), 0 4px 5px 0px rgba(0, 0, 0, 0.05)'
-        }}
-      >
-        {/* Outline effect */}
-        <div className="send-btn-outline absolute inset-[-2px_-3.5px] rounded-[14px] overflow-hidden opacity-0 transition-opacity duration-400 pointer-events-none">
-          <div className="absolute inset-[-100%] animate-spin-slow" style={{
-            background: 'conic-gradient(from 180deg, transparent 60%, rgb(22, 22, 22) 80%, transparent 100%)',
-            animationPlayState: isSubmitting ? 'paused' : 'running'
-          }} />
-        </div>
-        
-        {/* Border effect */}
-        <div className="absolute inset-0 rounded-[14px] border-[2.5px] border-transparent pointer-events-none" style={{
-          background: 'linear-gradient(#2e2e2e, #1a1a1a) padding-box, linear-gradient(to bottom, rgba(0, 0, 0, 0.1), rgba(0, 0, 0, 0.45)) border-box'
-        }} />
-        
-        {/* Inner glow */}
-        <div className="absolute inset-[7px_6px_6px_6px] rounded-[30px] pointer-events-none z-[2]" style={{
-          background: 'linear-gradient(to top, #2e2e2e, #1a1a1a)',
-          filter: 'blur(0.5px)'
-        }} />
-        
-        {/* Content */}
-        <div className="relative z-[3] flex items-center justify-center gap-2">
-          {isSubmitting ? (
-            <>
-              <svg className="w-5 h-5 animate-spin" fill="currentColor" viewBox="0 0 24 24">
-                <path d="M12 22.75C6.07 22.75 1.25 17.93 1.25 12C1.25 6.07 6.07 1.25 12 1.25C17.93 1.25 22.75 6.07 22.75 12C22.75 17.93 17.93 22.75 12 22.75ZM12 2.75C6.9 2.75 2.75 6.9 2.75 12C2.75 17.1 6.9 21.25 12 21.25C17.1 21.25 21.25 17.1 21.25 12C21.25 6.9 17.1 2.75 12 2.75Z" />
-                <path d="M10.5795 15.5801C10.3795 15.5801 10.1895 15.5001 10.0495 15.3601L7.21945 12.5301C6.92945 12.2401 6.92945 11.7601 7.21945 11.4701C7.50945 11.1801 7.98945 11.1801 8.27945 11.4701L10.5795 13.7701L15.7195 8.6301C16.0095 8.3401 16.4895 8.3401 16.7795 8.6301C17.0695 8.9201 17.0695 9.4001 16.7795 9.6901L11.1095 15.3601C10.9695 15.5001 10.7795 15.5801 10.5795 15.5801Z" />
-              </svg>
-              <span>Sending...</span>
-            </>
-          ) : (
-            <>
-              <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
-                <path d="M14.2199 21.63C13.0399 21.63 11.3699 20.8 10.0499 16.83L9.32988 14.67L7.16988 13.95C3.20988 12.63 2.37988 10.96 2.37988 9.78001C2.37988 8.61001 3.20988 6.93001 7.16988 5.60001L15.6599 2.77001C17.7799 2.06001 19.5499 2.27001 20.6399 3.35001C21.7299 4.43001 21.9399 6.21001 21.2299 8.33001L18.3999 16.82C17.0699 20.8 15.3999 21.63 14.2199 21.63ZM7.63988 7.03001C4.85988 7.96001 3.86988 9.06001 3.86988 9.78001C3.86988 10.5 4.85988 11.6 7.63988 12.52L10.1599 13.36C10.3799 13.43 10.5599 13.61 10.6299 13.83L11.4699 16.35C12.3899 19.13 13.4999 20.12 14.2199 20.12C14.9399 20.12 16.0399 19.13 16.9699 16.35L19.7999 7.86001C20.3099 6.32001 20.2199 5.06001 19.5699 4.41001C18.9199 3.76001 17.6599 3.68001 16.1299 4.19001L7.63988 7.03001Z" />
-                <path d="M10.11 14.4C9.92005 14.4 9.73005 14.33 9.58005 14.18C9.29005 13.89 9.29005 13.41 9.58005 13.12L13.16 9.53C13.45 9.24 13.93 9.24 14.22 9.53C14.51 9.82 14.51 10.3 14.22 10.59L10.64 14.18C10.5 14.33 10.3 14.4 10.11 14.4Z" />
-              </svg>
-              <span>Send Message</span>
-            </>
-          )}
-        </div>
-      </button>
-      
-      <style jsx>{`
-        .send-message-button:hover:not(:disabled) {
-          transform: scale(1.02);
-          box-shadow: 0 0 1px 2px rgba(255, 255, 255, 0.3), 0 15px 30px rgba(0, 0, 0, 0.3), 0 10px 3px -3px rgba(0, 0, 0, 0.04);
-        }
-        .send-message-button:hover:not(:disabled) .send-btn-outline {
-          opacity: 1;
-        }
-        .send-message-button:active:not(:disabled) {
-          transform: scale(1);
-          box-shadow: 0 0 1px 2px rgba(255, 255, 255, 0.3), 0 10px 3px -3px rgba(0, 0, 0, 0.2);
-        }
-        @keyframes spin-slow {
-          from { transform: rotate(0deg); }
-          to { transform: rotate(360deg); }
-        }
-        .animate-spin-slow {
-          animation: spin-slow 2s linear infinite;
-        }
-      `}</style>
     </form>
     </>
   );
