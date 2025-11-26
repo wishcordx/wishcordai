@@ -285,10 +285,15 @@ export default function WishForm({ onWishSubmitted }: WishFormProps) {
         if (uploadData.success) {
           audioUrl = uploadData.audioUrl;
           audioPath = uploadData.audioPath;
-          // Use transcribed text if no text was typed
-          if (!transcribedText && uploadData.text) {
-            transcribedText = uploadData.text;
+          // Always use transcribed text when audio exists, append to any typed text
+          if (uploadData.text) {
+            // If user typed something AND recorded, combine them
+            transcribedText = transcribedText 
+              ? `${transcribedText} ${uploadData.text}` 
+              : uploadData.text;
           }
+          console.log('🎤 Transcribed audio:', uploadData.text);
+          console.log('📝 Final text:', transcribedText);
         } else {
           throw new Error(uploadData.error || 'Failed to process audio');
         }
