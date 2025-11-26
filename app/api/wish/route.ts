@@ -91,10 +91,8 @@ export async function POST(request: NextRequest) {
     
     const mentionedPersonaIds = mentions.map(m => usernameToPersonaMap[m] || m.toLowerCase()).filter(Boolean);
 
-    // Only respond if this persona was mentioned
-    // Or if no mentions but there's text (backward compatibility for simple text wishes)
-    const hasTextOnly = wishText && wishText.trim().length > 0 && !audioUrl && !imageUrl;
-    const shouldRespond = mentionedPersonaIds.includes(persona) || (mentionedPersonaIds.length === 0 && hasTextOnly);
+    // Only respond if this persona was mentioned (no mentions = no AI response)
+    const shouldRespond = mentionedPersonaIds.includes(persona);
     
     console.log('🏷️ Mentions detected:', mentions);
     console.log('🎭 Persona IDs:', mentionedPersonaIds);
