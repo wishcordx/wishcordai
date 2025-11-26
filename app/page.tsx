@@ -8,6 +8,7 @@ import VoiceCallAgent from '@/components/VoiceCallAgent';
 import MembersList from '@/components/MembersList';
 import ModProfileModal from '@/components/ModProfileModal';
 import MobileSidebar from '@/components/MobileSidebar';
+import SocialMediaPopup from '@/components/SocialMediaPopup';
 import type { Persona } from '@/typings/types';
 
 export default function HomePage() {
@@ -192,6 +193,9 @@ export default function HomePage() {
         onModClick={handleModClick}
         totalMessages={totalMessages}
       />
+
+      {/* Social Media Popup */}
+      <SocialMediaPopup />
     </main>
   );
 }
