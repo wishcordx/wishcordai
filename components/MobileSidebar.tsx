@@ -13,6 +13,7 @@ interface MobileSidebarProps {
 
 export default function MobileSidebar({ isOpen, onClose, onModClick, totalMessages }: MobileSidebarProps) {
   const mods = [
+    { name: 'BarryJingle', emoji: '🎄', role: 'Helper', color: 'text-green-400', persona: 'barry' as Persona },
     { name: 'SantaMod69', emoji: '🎅', role: 'Mod', color: 'text-red-400', persona: 'santa' as Persona },
     { name: 'xX_Krampus_Xx', emoji: '💀', role: 'Mod', color: 'text-purple-400', persona: 'grinch' as Persona },
     { name: 'elfgirluwu', emoji: '🧝', role: 'Mod', color: 'text-pink-400', persona: 'elf' as Persona },
@@ -92,7 +93,7 @@ export default function MobileSidebar({ isOpen, onClose, onModClick, totalMessag
               <div className="mb-6">
                 <h3 className="text-white font-semibold mb-4 flex items-center gap-2">
                   <span className="w-2 h-2 bg-green-500 rounded-full"></span>
-                  Mods Online — 6
+                  Mods Online — 8
                 </h3>
                 <div className="space-y-3">
                   {mods.map((mod) => (

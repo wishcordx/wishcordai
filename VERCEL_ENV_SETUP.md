@@ -128,15 +128,57 @@ Example: mQJemUdtNfAfUYHccHzZ
 
 ---
 
-## **5. BarryJingle Agent ID**
+## **5. ElevenLabs Agent IDs (for Voice Calls)**
 
-### `ELEVENLABS_BARRY_AGENT_ID`
+### `NEXT_PUBLIC_ELEVENLABS_AGENT_SANTA`
 ```
-Agent ID for BarryJingle conversational AI
+Agent ID for SantaMod69
+Example: agent_xxxxx...
+```
+
+### `NEXT_PUBLIC_ELEVENLABS_AGENT_GRINCH`
+```
+Agent ID for xX_Krampus_Xx
+Example: agent_xxxxx...
+```
+
+### `NEXT_PUBLIC_ELEVENLABS_AGENT_ELF`
+```
+Agent ID for elfgirluwu
+Example: agent_xxxxx...
+```
+
+### `NEXT_PUBLIC_ELEVENLABS_AGENT_SNOWMAN`
+```
+Agent ID for FrostyTheCoder
+Example: agent_xxxxx...
+```
+
+### `NEXT_PUBLIC_ELEVENLABS_AGENT_REINDEER`
+```
+Agent ID for DasherSpeedrun
+Example: agent_xxxxx...
+```
+
+### `NEXT_PUBLIC_ELEVENLABS_AGENT_SCAMMER`
+```
+Agent ID for SantaKumar
+Example: agent_xxxxx...
+```
+
+### `NEXT_PUBLIC_ELEVENLABS_AGENT_JINGBELLS`
+```
+Agent ID for JingBells叮噹鈴
+Example: agent_xxxxx...
+```
+
+### `NEXT_PUBLIC_ELEVENLABS_AGENT_BARRY`
+```
+Agent ID for BarryJingle
 Example: agent_9001kb09fjj7enh88s7w59m63172
 ```
 
-**Where to find:** ElevenLabs → Conversational AI → BarryJingle → URL contains agent ID
+**Where to find:** ElevenLabs → Conversational AI → Click agent → URL contains agent ID (or check agent settings)
 
 ---
 
@@ -182,24 +224,35 @@ After deployment, test these features:
 
 ## **Summary of Required Variables:**
 
-**Must Have (11 variables):**
+**Must Have (19 variables):**
+
+**Core APIs:**
 1. `NEXT_PUBLIC_SUPABASE_URL`
 2. `NEXT_PUBLIC_SUPABASE_ANON_KEY`
 3. `SUPABASE_SERVICE_ROLE_KEY`
 4. `OPENAI_API_KEY`
 5. `ANTHROPIC_API_KEY`
 6. `ELEVENLABS_API_KEY`
+
+**Voice IDs (8 mods):**
 7. `ELEVENLABS_SANTA_VOICE_ID`
 8. `ELEVENLABS_KRAMPUS_VOICE_ID`
 9. `ELEVENLABS_ELF_VOICE_ID`
-10. `ELEVENLABS_BARRY_VOICE_ID`
-11. `ELEVENLABS_BARRY_AGENT_ID`
+10. `ELEVENLABS_FROSTY_VOICE_ID`
+11. `ELEVENLABS_DASHER_VOICE_ID`
+12. `ELEVENLABS_SCAMMER_VOICE_ID`
+13. `ELEVENLABS_JINGBELLS_VOICE_ID`
+14. `ELEVENLABS_BARRY_VOICE_ID`
 
-**Optional (5 more voice IDs):**
-- `ELEVENLABS_FROSTY_VOICE_ID`
-- `ELEVENLABS_DASHER_VOICE_ID`
-- `ELEVENLABS_SCAMMER_VOICE_ID`
-- `ELEVENLABS_JINGBELLS_VOICE_ID`
+**Agent IDs (for voice calls):**
+15. `NEXT_PUBLIC_ELEVENLABS_AGENT_SANTA`
+16. `NEXT_PUBLIC_ELEVENLABS_AGENT_GRINCH`
+17. `NEXT_PUBLIC_ELEVENLABS_AGENT_ELF`
+18. `NEXT_PUBLIC_ELEVENLABS_AGENT_SNOWMAN`
+19. `NEXT_PUBLIC_ELEVENLABS_AGENT_REINDEER`
+20. `NEXT_PUBLIC_ELEVENLABS_AGENT_SCAMMER`
+21. `NEXT_PUBLIC_ELEVENLABS_AGENT_JINGBELLS`
+22. `NEXT_PUBLIC_ELEVENLABS_AGENT_BARRY`
 
 ---
 
