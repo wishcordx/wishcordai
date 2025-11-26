@@ -82,7 +82,12 @@ export default function WishCard({ wish }: WishCardProps) {
       console.log(`🔄 Starting to poll for wish ${wish.id} AI response...`);
       hasPolledRef.current = true;
       
+      let pollCount = 0;
+      const maxPolls = 30; // Stop after 60 seconds (30 * 2s)
+      
       const pollInterval = setInterval(async () => {
+        pollCount++;
+        
         try {
           const response = await fetch(`/api/wishes/${wish.id}`, {
             cache: 'no-store'
@@ -96,6 +101,9 @@ export default function WishCard({ wish }: WishCardProps) {
             setAiStatus(data.ai_status);
             setAiReply(data.ai_reply);
             setAiAudioUrl(data.ai_audio_url);
+            clearInterval(pollInterval);
+          } else if (pollCount >= maxPolls) {
+            console.log(`⏱️ Stopped polling for wish ${wish.id} after 60 seconds - will show on next refresh`);
             clearInterval(pollInterval);
           }
         } catch (error) {
