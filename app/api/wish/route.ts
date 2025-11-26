@@ -25,6 +25,7 @@ const VOICE_MAP: Record<Persona, string> = {
   'reindeer': process.env.ELEVENLABS_DASHER_VOICE_ID || 'VR6AewLTigWG4xSOukaG',
   'scammer': process.env.ELEVENLABS_SCAMMER_VOICE_ID || 'pqHfZKP75CvOlQylNhV4',
   'jingbells': process.env.ELEVENLABS_JINGBELLS_VOICE_ID || 'pNInz6obpgDQGcFmaJgB',
+  'barry': process.env.ELEVENLABS_BARRY_VOICE_ID || 'mQJemUdtNfAfUYHccHzZ',
 };
 
 export async function POST(request: NextRequest) {
