@@ -301,6 +301,20 @@ export default function WishCard({ wish }: WishCardProps) {
               </span>
             </div>
             <p className="text-gray-300 text-xs sm:text-sm leading-relaxed whitespace-pre-wrap">{wish.ai_reply}</p>
+            
+            {/* AI Voice Response */}
+            {wish.ai_audio_url && (
+              <div className="mt-2">
+                <audio
+                  controls
+                  src={wish.ai_audio_url}
+                  className="w-full max-w-md h-8 sm:h-10"
+                  preload="metadata"
+                >
+                  Your browser does not support audio playback.
+                </audio>
+              </div>
+            )}
           </div>
         </div>
       )}

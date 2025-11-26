@@ -12,6 +12,8 @@ export interface Wish {
   wish_text: string;
   persona: string;
   ai_reply: string | null;
+  ai_audio_url?: string;
+  ai_audio_path?: string;
   judge_responses?: Record<string, string>;
   final_verdict?: string;
   image_url?: string;

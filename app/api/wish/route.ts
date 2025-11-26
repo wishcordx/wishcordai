@@ -4,7 +4,28 @@ import { createWish } from '@/lib/supabase';
 import { getPersonaConfig } from '@/lib/personas';
 import { generateAnonymousName } from '@/lib/utils';
 import aiRouter from '@/lib/ai-router';
-import type { WishSubmitPayload, WishResponse } from '@/typings/types';
+import type { WishSubmitPayload, WishResponse, Persona } from '@/typings/types';
+import { ElevenLabsClient } from '@elevenlabs/elevenlabs-js';
+import { createClient } from '@supabase/supabase-js';
+
+const elevenlabs = new ElevenLabsClient({
+  apiKey: process.env.ELEVENLABS_API_KEY!,
+});
+
+const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
+const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY!;
+const supabase = createClient(supabaseUrl, supabaseServiceKey);
+
+// Voice IDs for each mod
+const VOICE_MAP: Record<Persona, string> = {
+  'santa': process.env.ELEVENLABS_SANTA_VOICE_ID || 'pNInz6obpgDQGcFmaJgB',
+  'grinch': process.env.ELEVENLABS_KRAMPUS_VOICE_ID || 'onwK4e9ZLuTAKqWW03F9',
+  'elf': process.env.ELEVENLABS_ELF_VOICE_ID || 'EXAVITQu4vr4xnSDxMaL',
+  'snowman': process.env.ELEVENLABS_FROSTY_VOICE_ID || 'TxGEqnHWrfWFTfGW9XjX',
+  'reindeer': process.env.ELEVENLABS_DASHER_VOICE_ID || 'VR6AewLTigWG4xSOukaG',
+  'scammer': process.env.ELEVENLABS_SCAMMER_VOICE_ID || 'pqHfZKP75CvOlQylNhV4',
+  'jingbells': process.env.ELEVENLABS_JINGBELLS_VOICE_ID || 'pNInz6obpgDQGcFmaJgB',
+};
 
 export async function POST(request: NextRequest) {
   try {
@@ -73,6 +94,8 @@ export async function POST(request: NextRequest) {
     console.log('💭 Should respond:', shouldRespond);
 
     let aiReply: string | null = null;
+    let aiAudioUrl: string | null = null;
+    let aiAudioPath: string | null = null;
     let imageDescription: string | undefined;
     let audioTranscript: string | undefined;
 
@@ -97,6 +120,54 @@ export async function POST(request: NextRequest) {
       );
 
       console.log(`✅ ${personaConfig.name} responded!`);
+
+      // If user sent a voice message, respond with voice too
+      if (audioUrl && aiReply) {
+        try {
+          console.log(`🎙️ Generating voice response for ${personaConfig.name}...`);
+          
+          const voiceId = VOICE_MAP[persona];
+          const audio = await elevenlabs.textToSpeech.convert(voiceId, {
+            text: aiReply,
+            modelId: 'eleven_turbo_v2_5',
+            outputFormat: 'mp3_22050_32',
+          });
+
+          // Convert audio stream to buffer
+          const chunks: Uint8Array[] = [];
+          const reader = audio.getReader();
+          while (true) {
+            const { done, value } = await reader.read();
+            if (done) break;
+            chunks.push(value);
+          }
+          const audioBuffer = Buffer.concat(chunks);
+
+          // Upload to Supabase Storage
+          const fileName = `ai-voice-${Date.now()}.mp3`;
+          const { data: uploadData, error: uploadError } = await supabase.storage
+            .from('wish-audio')
+            .upload(fileName, audioBuffer, {
+              contentType: 'audio/mpeg',
+              cacheControl: '3600',
+            });
+
+          if (!uploadError) {
+            const { data: { publicUrl } } = supabase.storage
+              .from('wish-audio')
+              .getPublicUrl(fileName);
+            
+            aiAudioUrl = publicUrl;
+            aiAudioPath = fileName;
+            console.log(`✅ Voice response uploaded: ${publicUrl}`);
+          } else {
+            console.error('❌ Failed to upload AI voice:', uploadError);
+          }
+        } catch (voiceError) {
+          console.error('❌ Voice generation failed:', voiceError);
+          // Continue anyway with text response
+        }
+      }
     } else {
       console.log(`⏭️ ${personaConfig.name} not mentioned, skipping response`);
     }
@@ -109,6 +180,8 @@ export async function POST(request: NextRequest) {
       wish_text: wishText || '[Media message]',
       persona,
       ai_reply: aiReply,
+      ai_audio_url: aiAudioUrl,
+      ai_audio_path: aiAudioPath,
       image_url: imageUrl,
       image_path: imagePath,
       audio_url: audioUrl,
