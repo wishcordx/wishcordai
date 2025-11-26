@@ -18,6 +18,15 @@ export default function Feed({ refreshTrigger, newWish }: FeedProps) {
     fetchWishes();
   }, [refreshTrigger]);
 
+  // Background sync every 5 seconds - silently updates wishes without UI disruption
+  useEffect(() => {
+    const syncInterval = setInterval(() => {
+      silentSync();
+    }, 5000); // Sync every 5 seconds
+
+    return () => clearInterval(syncInterval);
+  }, [wishes]);
+
   // Optimistically add new wish to top of feed
   useEffect(() => {
     if (newWish) {
@@ -29,6 +38,36 @@ export default function Feed({ refreshTrigger, newWish }: FeedProps) {
       });
     }
   }, [newWish]);
+
+  const silentSync = async () => {
+    try {
+      const response = await fetch(`/api/wishes?t=${Date.now()}`, {
+        cache: 'no-store'
+      });
+      const data = await response.json();
+
+      if (data.success && data.wishes) {
+        setWishes(prev => {
+          // Merge strategy: Keep existing order, only update changed wishes
+          return prev.map(existingWish => {
+            const updatedWish = data.wishes.find((w: Wish) => w.id === existingWish.id);
+            // Only update if ai_status or ai_reply changed
+            if (updatedWish && (
+              updatedWish.ai_status !== existingWish.ai_status ||
+              updatedWish.ai_reply !== existingWish.ai_reply
+            )) {
+              console.log(`🔄 Silently updated wish ${existingWish.id}`);
+              return updatedWish;
+            }
+            return existingWish;
+          });
+        });
+      }
+    } catch (err) {
+      // Silently fail - don't disrupt UX
+      console.error('Background sync failed:', err);
+    }
+  };
 
   const fetchWishes = async () => {
     try {
