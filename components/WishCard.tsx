@@ -197,11 +197,15 @@ export default function WishCard({ wish }: WishCardProps) {
     const textBeforeCursor = newText.substring(0, cursorPos);
     const lastAtIndex = textBeforeCursor.lastIndexOf('@');
     
+    console.log('[Reply @] text:', newText, 'cursor:', cursorPos, 'lastAt:', lastAtIndex);
+    
     if (lastAtIndex !== -1) {
       const textAfterAt = textBeforeCursor.substring(lastAtIndex + 1);
+      console.log('[Reply @] after @:', textAfterAt, 'hasSpace:', textAfterAt.includes(' '));
       
       // Show mentions if we just typed @ or are typing a name (no space yet)
       if (!textAfterAt.includes(' ')) {
+        console.log('[Reply @] SHOWING AUTOCOMPLETE');
         setMentionSearch(textAfterAt.toLowerCase());
         setShowMentions(true);
         setSelectedMentionIndex(0);
@@ -213,9 +217,11 @@ export default function WishCard({ wish }: WishCardProps) {
           left: rect.left + window.scrollX,
         });
       } else {
+        console.log('[Reply @] hiding - space found');
         setShowMentions(false);
       }
     } else {
+      console.log('[Reply @] hiding - no @');
       setShowMentions(false);
     }
   };
@@ -608,16 +614,24 @@ export default function WishCard({ wish }: WishCardProps) {
               />
               
               {/* @Mention Autocomplete */}
-              {showMentions && (
-                <MentionAutocomplete
-                  mentions={MODS.filter(mod =>
+              {(() => {
+                console.log('[Reply @] Render check - showMentions:', showMentions);
+                if (showMentions) {
+                  const filtered = MODS.filter(mod =>
                     mod.name.toLowerCase().includes(mentionSearch)
-                  )}
-                  onSelect={handleMentionSelect}
-                  position={mentionPosition}
-                  selectedIndex={selectedMentionIndex}
-                />
-              )}
+                  );
+                  console.log('[Reply @] Rendering autocomplete with', filtered.length, 'mods');
+                  return (
+                    <MentionAutocomplete
+                      mentions={filtered}
+                      onSelect={handleMentionSelect}
+                      position={mentionPosition}
+                      selectedIndex={selectedMentionIndex}
+                    />
+                  );
+                }
+                return null;
+              })()}
             </div>
             <button
               onClick={handlePostReply}

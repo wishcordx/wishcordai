@@ -70,18 +70,6 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    // If mod mentioned, generate AI response (will be done async below)
-    let modReplyId: string | undefined;
-    if (hasMention && personaId && mentionedUsername) {
-      const personaConfig = getPersonaConfig(personaId);
-      
-      if (personaConfig) {
-        console.log(`🏷️ Mod @${mentionedUsername} mentioned, will generate response...`);
-        // We'll generate the AI response in the background
-        // For now, just note that we need to generate it
-      }
-    }
-
     // ==========================================
     // STEP 2: Return response IMMEDIATELY
     // ==========================================
@@ -96,10 +84,17 @@ export async function POST(req: NextRequest) {
     if (hasMention && personaId && mentionedUsername) {
       const personaConfig = getPersonaConfig(personaId);
       
+      if (!personaConfig) {
+        console.error(`❌ No persona config found for ${personaId}`);
+        return response;
+      }
+      
+      console.log(`🏷️ Starting async AI generation for @${mentionedUsername} (${personaConfig.name})`);
+      
       // Fire and forget - generate AI response async
       (async () => {
         try {
-          console.log(`🤖 Generating AI response from ${personaConfig!.name}...`);
+          console.log(`🤖 [ASYNC] Generating AI response from ${personaConfig.name}...`);
           
           // Fetch the original wish to get context and media
           const { data: originalWish } = await supabase
