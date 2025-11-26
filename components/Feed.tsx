@@ -53,19 +53,32 @@ export default function Feed({ refreshTrigger, newWish }: FeedProps) {
 
       if (data.success && data.wishes) {
         setWishes(prev => {
-          // Merge strategy: Keep existing order, only update changed wishes
-          return prev.map(existingWish => {
-            const updatedWish = data.wishes.find((w: Wish) => w.id === existingWish.id);
-            // Only update if ai_status or ai_reply changed
-            if (updatedWish && (
-              updatedWish.ai_status !== existingWish.ai_status ||
-              updatedWish.ai_reply !== existingWish.ai_reply
+          const newWishes: Wish[] = [];
+          const existingIds = new Set(prev.map(w => w.id));
+          
+          // Find new wishes that don't exist locally
+          data.wishes.forEach((wish: Wish) => {
+            if (!existingIds.has(wish.id)) {
+              newWishes.push(wish);
+              console.log(`✨ New wish detected: ${wish.id}`);
+            }
+          });
+          
+          // Update existing wishes
+          const updated = prev.map(existingWish => {
+            const serverWish = data.wishes.find((w: Wish) => w.id === existingWish.id);
+            if (serverWish && (
+              serverWish.ai_status !== existingWish.ai_status ||
+              serverWish.ai_reply !== existingWish.ai_reply
             )) {
-              console.log(`🔄 Silently updated wish ${existingWish.id}`);
-              return updatedWish;
+              console.log(`🔄 Updated wish ${existingWish.id}`);
+              return serverWish;
             }
             return existingWish;
           });
+          
+          // Prepend new wishes to the top
+          return [...newWishes, ...updated];
         });
       }
     } catch (err) {

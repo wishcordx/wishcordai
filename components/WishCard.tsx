@@ -72,6 +72,17 @@ export default function WishCard({ wish }: WishCardProps) {
     }
   }, [showReplies]);
 
+  // Auto-refresh replies every 5 seconds when replies are visible
+  useEffect(() => {
+    if (showReplies) {
+      const replyRefreshInterval = setInterval(() => {
+        fetchReplies();
+      }, 5000);
+
+      return () => clearInterval(replyRefreshInterval);
+    }
+  }, [showReplies]);
+
   // Poll for AI response if status is pending
   useEffect(() => {
     if (aiStatus === 'pending') {
