@@ -10,7 +10,7 @@ export default function AboutPage() {
         {/* Hero Section */}
         <div className="text-center mb-16">
           <h1 className="text-4xl sm:text-5xl font-bold mb-4 bg-gradient-to-r from-indigo-400 to-purple-400 bg-clip-text text-transparent">
-            About WishAI
+            About WishCord
           </h1>
           <p className="text-xl text-gray-300">
             Where AI meets the holiday spirit 🎄✨
@@ -21,14 +21,14 @@ export default function AboutPage() {
         <div className="space-y-12">
           {/* What is WishAI */}
           <section className="bg-[#1e1f22] rounded-lg p-8 border border-[#0f1011]">
-            <h2 className="text-3xl font-bold mb-4 text-indigo-400">🎅 What is WishAI?</h2>
+            <h2 className="text-3xl font-bold mb-4 text-indigo-400">🎅 What is WishCord?</h2>
             <p className="text-gray-300 leading-relaxed mb-4">
-              WishAI is a revolutionary social platform that combines the magic of the holiday season with cutting-edge AI technology. 
+              WishCord is a revolutionary social platform that combines the magic of the holiday season with cutting-edge AI technology. 
               Share your Christmas wishes, create festive memes, send voice messages, and interact with AI-powered Christmas characters 
               who respond in unique, entertaining personalities.
             </p>
             <p className="text-gray-300 leading-relaxed">
-              Built on the Solana blockchain with Web3 integration, WishAI creates a decentralized community where every wish is 
+              Built on the Solana blockchain with Web3 integration, WishCord creates a decentralized community where every wish is 
               permanently recorded and every interaction is authentic.
             </p>
           </section>
@@ -42,61 +42,61 @@ export default function AboutPage() {
                   🎅 <span className="text-red-400">SantaMod69</span>
                 </h3>
                 <p className="text-sm text-gray-400">
-                  The jolly judge who reviews wishes with Christmas spirit. Will your wish be granted or will you get coal?
+                  The boomer admin of WishCord since 1823. Types in ALL CAPS occasionally. Everything reminds him of "BACK IN MY DAY." Supportive but completely out of touch with modern life.
                 </p>
               </div>
 
               <div className="bg-[#202225] rounded-lg p-4 border border-[#0f1011]">
                 <h3 className="text-xl font-semibold mb-2 flex items-center gap-2">
-                  👺 <span className="text-green-400">GrinchMod</span>
+                  💀 <span className="text-purple-400">xX_Krampus_Xx</span>
                 </h3>
                 <p className="text-sm text-gray-400">
-                  The grumpy critic who sees through fake wishes. Brutally honest and hilariously cynical.
+                  The edgelord who thinks he's terrifying but tries too hard. Roasts wishes with 2000s scene kid energy and excessive Xs in his name. Actually pretty wholesome underneath.
                 </p>
               </div>
 
               <div className="bg-[#202225] rounded-lg p-4 border border-[#0f1011]">
                 <h3 className="text-xl font-semibold mb-2 flex items-center gap-2">
-                  🧝 <span className="text-yellow-400">ElfMod</span>
+                  🧝 <span className="text-pink-400">elfgirluwu</span>
                 </h3>
                 <p className="text-sm text-gray-400">
-                  The cheerful helper who provides constructive wish advice with endless enthusiasm.
+                  The extremely online e-girl who loves anime and kawaii culture. Uses "uwu" and "owo" unironically. Actually gives good advice between the keysmashes and kaomojis.
                 </p>
               </div>
 
               <div className="bg-[#202225] rounded-lg p-4 border border-[#0f1011]">
                 <h3 className="text-xl font-semibold mb-2 flex items-center gap-2">
-                  ⛄ <span className="text-blue-400">FrostyMod</span>
+                  ☃️ <span className="text-cyan-400">FrostyTheCoder</span>
                 </h3>
                 <p className="text-sm text-gray-400">
-                  The cool philosopher who drops wisdom while staying chill about everything.
+                  The tech bro snowman who speaks in startup buzzwords and programming references. Everything is "scalable" and "optimized." Actually brilliant but unbearably corporate.
                 </p>
               </div>
 
               <div className="bg-[#202225] rounded-lg p-4 border border-[#0f1011]">
                 <h3 className="text-xl font-semibold mb-2 flex items-center gap-2">
-                  🦌 <span className="text-orange-400">RudolphMod</span>
+                  🦌 <span className="text-orange-400">DasherSpeedrun</span>
                 </h3>
                 <p className="text-sm text-gray-400">
-                  The motivational leader who inspires you to reach for the stars with your wishes.
+                  The hyperactive gamer reindeer obsessed with speedrunning everything. Speaks in gaming terms, frame-perfect timing, and splits. Constantly trying to optimize life.
                 </p>
               </div>
 
               <div className="bg-[#202225] rounded-lg p-4 border border-[#0f1011]">
                 <h3 className="text-xl font-semibold mb-2 flex items-center gap-2">
-                  🎁 <span className="text-pink-400">ScammerMod</span>
+                  🕉️ <span className="text-yellow-400">SantaKumar</span>
                 </h3>
                 <p className="text-sm text-gray-400">
-                  The chaotic trickster who might give great advice or lead you totally astray. Good luck!
+                  The "tech support" scammer who pretends to help but tries to get your wallet seed phrase. Obvious scam attempts mixed with broken English. Comic relief warning.
                 </p>
               </div>
 
               <div className="bg-[#202225] rounded-lg p-4 border border-[#0f1011]">
                 <h3 className="text-xl font-semibold mb-2 flex items-center gap-2">
-                  🔔 <span className="text-yellow-300">JingBells叮噹鈴</span>
+                  🔔 <span className="text-red-400">JingBells叮噹鈴</span>
                 </h3>
                 <p className="text-sm text-gray-400">
-                  The savvy Chinese trader who mixes market wisdom with festive fortune cookies.
+                  The multilingual Chinese mod who mixes English with Mandarin. Drops wisdom about family, tradition, and crypto trading. Wholesome but will roast your portfolio.
                 </p>
               </div>
             </div>
@@ -207,7 +207,7 @@ export default function AboutPage() {
           <section className="bg-gradient-to-r from-indigo-600/20 to-purple-600/20 rounded-lg p-8 border border-indigo-500/30">
             <h2 className="text-3xl font-bold mb-4 text-indigo-300">💎 $WISH Token</h2>
             <p className="text-gray-300 leading-relaxed mb-4">
-              $WISH is the native token powering the WishAI ecosystem. Hold $WISH to access premium features, 
+              $WISH is the native token powering the WishCord ecosystem. Hold $WISH to access premium features, 
               exclusive AI personalities, and participate in governance decisions.
             </p>
             <Link 

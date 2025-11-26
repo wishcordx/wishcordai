@@ -13,7 +13,7 @@ export default function HowItWorksPage() {
             How It Works
           </h1>
           <p className="text-xl text-gray-300">
-            Your complete guide to WishAI ✨
+            Your complete guide to WishCord ✨
           </p>
         </div>
 
@@ -37,7 +37,7 @@ export default function HowItWorksPage() {
                   <li>$WISH token integration</li>
                 </ul>
                 <p className="text-sm text-gray-500 mt-4 italic">
-                  💡 Tip: You can also use WishAI anonymously without connecting a wallet!
+                  💡 Tip: You can also use WishCord anonymously without connecting a wallet!
                 </p>
               </div>
             </div>
@@ -155,19 +155,31 @@ export default function HowItWorksPage() {
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                   <div className="bg-[#202225] rounded-lg p-3 border border-[#0f1011]">
                     <p className="font-semibold text-red-400">🎅 SantaMod69</p>
-                    <p className="text-xs text-gray-400">Jolly & judgemental</p>
+                    <p className="text-xs text-gray-400">Boomer admin - ALL CAPS energy</p>
                   </div>
                   <div className="bg-[#202225] rounded-lg p-3 border border-[#0f1011]">
-                    <p className="font-semibold text-green-400">👺 GrinchMod</p>
-                    <p className="text-xs text-gray-400">Grumpy & cynical</p>
+                    <p className="font-semibold text-purple-400">💀 xX_Krampus_Xx</p>
+                    <p className="text-xs text-gray-400">Edgelord with 2000s vibes</p>
                   </div>
                   <div className="bg-[#202225] rounded-lg p-3 border border-[#0f1011]">
-                    <p className="font-semibold text-yellow-400">🧝 ElfMod</p>
-                    <p className="text-xs text-gray-400">Cheerful & helpful</p>
+                    <p className="font-semibold text-pink-400">🧝 elfgirluwu</p>
+                    <p className="text-xs text-gray-400">Anime e-girl - uwu master</p>
                   </div>
                   <div className="bg-[#202225] rounded-lg p-3 border border-[#0f1011]">
-                    <p className="font-semibold text-blue-400">⛄ FrostyMod</p>
-                    <p className="text-xs text-gray-400">Cool & philosophical</p>
+                    <p className="font-semibold text-cyan-400">☃️ FrostyTheCoder</p>
+                    <p className="text-xs text-gray-400">Tech bro - startup buzzwords</p>
+                  </div>
+                  <div className="bg-[#202225] rounded-lg p-3 border border-[#0f1011]">
+                    <p className="font-semibold text-orange-400">🦌 DasherSpeedrun</p>
+                    <p className="text-xs text-gray-400">Gamer - speedrun everything</p>
+                  </div>
+                  <div className="bg-[#202225] rounded-lg p-3 border border-[#0f1011]">
+                    <p className="font-semibold text-yellow-400">🕉️ SantaKumar</p>
+                    <p className="text-xs text-gray-400">Scammer - wants your seed phrase</p>
+                  </div>
+                  <div className="bg-[#202225] rounded-lg p-3 border border-[#0f1011]">
+                    <p className="font-semibold text-red-400">🔔 JingBells叮噹鈴</p>
+                    <p className="text-xs text-gray-400">Multilingual - wisdom & crypto</p>
                   </div>
                 </div>
                 <p className="text-sm text-gray-500 mt-4 italic">
@@ -294,16 +306,16 @@ export default function HowItWorksPage() {
             <h2 className="text-2xl font-bold mb-6 text-indigo-400">❓ Frequently Asked Questions</h2>
             <div className="space-y-4">
               <details className="bg-[#202225] rounded-lg p-4 border border-[#0f1011] cursor-pointer">
-                <summary className="font-semibold text-white">Is WishAI free to use?</summary>
+                <summary className="font-semibold text-white">Is WishCord free to use?</summary>
                 <p className="text-gray-400 mt-2 text-sm">
                   Yes! Basic features are completely free. $WISH token holders get access to premium features and exclusive content.
                 </p>
               </details>
 
               <details className="bg-[#202225] rounded-lg p-4 border border-[#0f1011] cursor-pointer">
-                <summary className="font-semibold text-white">Do I need a wallet to use WishAI?</summary>
+                <summary className="font-semibold text-white">Do I need a wallet to use WishCord?</summary>
                 <p className="text-gray-400 mt-2 text-sm">
-                  No, you can use WishAI anonymously. However, connecting a wallet gives you profile features, wish history, and token benefits.
+                  No, you can use WishCord anonymously. However, connecting a wallet gives you profile features, wish history, and token benefits.
                 </p>
               </details>
 
