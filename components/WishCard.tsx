@@ -55,9 +55,10 @@ export default function WishCard({ wish }: WishCardProps) {
   const replyInputRef = useRef<HTMLInputElement>(null);
 
   const personaConfig = PERSONAS[wish.persona as keyof typeof PERSONAS];
-  const [aiStatus, setAiStatus] = useState(wish.ai_status);
-  const [aiReply, setAiReply] = useState(wish.ai_reply);
-  const [aiAudioUrl, setAiAudioUrl] = useState(wish.ai_audio_url);
+  // Use wish props directly - Realtime updates the parent which re-renders this component
+  const aiStatus = wish.ai_status;
+  const aiReply = wish.ai_reply;
+  const aiAudioUrl = wish.ai_audio_url;
   const [lastReplyCount, setLastReplyCount] = useState(0);
   const [shouldPollReplies, setShouldPollReplies] = useState(false);
   const [expectedModUsername, setExpectedModUsername] = useState<string | null>(null);
@@ -128,43 +129,7 @@ export default function WishCard({ wish }: WishCardProps) {
     }
   }, [showReplies, wish.id]);
 
-  // Poll for AI response if status is pending
-  useEffect(() => {
-    if (aiStatus === 'pending') {
-      console.log(`🔄 Starting to poll for wish ${wish.id} AI response...`);
-      
-      let pollCount = 0;
-      const maxPolls = 30; // Stop after 60 seconds (30 * 2s)
-      
-      const pollInterval = setInterval(async () => {
-        pollCount++;
-        
-        try {
-          const response = await fetch(`/api/wishes/${wish.id}`, {
-            cache: 'no-store'
-          });
-          const data = await response.json();
-          
-          console.log(`📊 Poll result for wish ${wish.id}:`, data);
-          
-          if (data.success && data.ai_status !== 'pending') {
-            console.log(`✅ AI response complete for wish ${wish.id}!`);
-            setAiStatus(data.ai_status);
-            setAiReply(data.ai_reply);
-            setAiAudioUrl(data.ai_audio_url);
-            clearInterval(pollInterval);
-          } else if (pollCount >= maxPolls) {
-            console.log(`⏱️ Stopped polling for wish ${wish.id} after 60 seconds - will show on next refresh`);
-            clearInterval(pollInterval);
-          }
-        } catch (error) {
-          console.error('Failed to poll AI status:', error);
-        }
-      }, 2000); // Poll every 2 seconds
-
-      return () => clearInterval(pollInterval);
-    }
-  }, [aiStatus, wish.id]);
+  // No need to poll - Realtime updates the wish prop automatically!
 
   // Poll for new replies when expecting AI response
   useEffect(() => {
