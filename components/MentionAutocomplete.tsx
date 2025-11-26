@@ -48,7 +48,7 @@ export default function MentionAutocomplete({
   return (
     <div
       ref={listRef}
-      className="fixed z-50 bg-[#1e1f22] border border-[#0f1011] rounded-lg shadow-xl max-h-64 overflow-y-auto w-[calc(100vw-2rem)] sm:w-auto"
+      className="fixed z-[9999] bg-[#1e1f22] border border-indigo-500 rounded-lg shadow-2xl max-h-64 overflow-y-auto w-[calc(100vw-2rem)] sm:w-auto"
       style={{
         top: `${position.top}px`,
         left: `${Math.min(position.left, window.innerWidth - 270)}px`,
