@@ -276,15 +276,16 @@ export default function WishForm({ onWishSubmitted }: WishFormProps) {
       : 'santa';
 
     try {
-      // If audio exists, upload it first
+      // If audio exists, upload and transcribe it first
       let audioUrl = null;
       let audioPath = null;
+      let transcribedText = wishText.trim();
       
       if (audioBlob) {
         const formData = new FormData();
         formData.append('audio', audioBlob, 'voice-message.webm');
         
-        // Upload audio to Supabase via API
+        // Upload audio to Supabase and transcribe via API
         const uploadResponse = await fetch('/api/voice/transcribe', {
           method: 'POST',
           body: formData,
@@ -294,6 +295,12 @@ export default function WishForm({ onWishSubmitted }: WishFormProps) {
         if (uploadData.success) {
           audioUrl = uploadData.audioUrl;
           audioPath = uploadData.audioPath;
+          // Use transcribed text if no text was typed
+          if (!transcribedText && uploadData.text) {
+            transcribedText = uploadData.text;
+          }
+        } else {
+          throw new Error(uploadData.error || 'Failed to process audio');
         }
       }
 
@@ -303,7 +310,7 @@ export default function WishForm({ onWishSubmitted }: WishFormProps) {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          wishText: wishText.trim(),
+          wishText: transcribedText,
           persona,
           walletAddress: walletAddress || '',
           username: profile?.username || 'Anonymous',
