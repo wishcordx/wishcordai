@@ -57,6 +57,8 @@ export default function WishCard({ wish }: WishCardProps) {
   const [aiStatus, setAiStatus] = useState(wish.ai_status);
   const [aiReply, setAiReply] = useState(wish.ai_reply);
   const [aiAudioUrl, setAiAudioUrl] = useState(wish.ai_audio_url);
+  const [lastReplyCount, setLastReplyCount] = useState(0);
+  const [shouldPollReplies, setShouldPollReplies] = useState(false);
   
   useEffect(() => {
     // Fetch reactions and reply count in parallel for faster loading
@@ -91,6 +93,49 @@ export default function WishCard({ wish }: WishCardProps) {
       return () => clearInterval(pollInterval);
     }
   }, [aiStatus, wish.id]);
+
+  // Poll for new replies when expecting AI response
+  useEffect(() => {
+    if (!shouldPollReplies) return;
+
+    let pollCount = 0;
+    const maxPolls = 30; // Poll for up to 60 seconds (30 * 2s)
+
+    const pollInterval = setInterval(async () => {
+      pollCount++;
+      
+      try {
+        const response = await fetch(`/api/replies?wish_id=${wish.id}`, {
+          cache: 'no-store'
+        });
+        const data = await response.json();
+        
+        if (data.success && data.replies) {
+          const newReplyCount = data.replies.length;
+          
+          // If we got a new reply, update and stop polling
+          if (newReplyCount > lastReplyCount) {
+            setReplies(data.replies);
+            setReplyCount(newReplyCount);
+            setLastReplyCount(newReplyCount);
+            setShouldPollReplies(false);
+            clearInterval(pollInterval);
+          }
+        }
+        
+        // Stop polling after max attempts
+        if (pollCount >= maxPolls) {
+          console.log('Stopped polling for replies after 60 seconds');
+          setShouldPollReplies(false);
+          clearInterval(pollInterval);
+        }
+      } catch (error) {
+        console.error('Failed to poll replies:', error);
+      }
+    }, 2000); // Poll every 2 seconds
+
+    return () => clearInterval(pollInterval);
+  }, [shouldPollReplies, wish.id, lastReplyCount]);
 
 
 
@@ -294,6 +339,10 @@ export default function WishCard({ wish }: WishCardProps) {
     const profileData = localStorage.getItem('userProfile');
     const profile = profileData ? JSON.parse(profileData) : null;
 
+    // Check if user @mentioned a mod
+    const mentionRegex = /@(SantaMod69|xX_Krampus_Xx|elfgirluwu|FrostyTheCoder|DasherSpeedrun|SantaKumar|JingBells叮噹鈴)/;
+    const hasMention = mentionRegex.test(replyText);
+
     try {
       const response = await fetch('/api/replies', {
         method: 'POST',
@@ -311,7 +360,14 @@ export default function WishCard({ wish }: WishCardProps) {
         setReplyText('');
         
         // Refresh replies to show user's new reply
-        fetchReplies();
+        await fetchReplies();
+        
+        // If mod was mentioned, start polling for AI response
+        if (hasMention) {
+          setLastReplyCount(replies.length + 1); // +1 for the reply we just posted
+          setShouldPollReplies(true);
+          console.log('🔄 Started polling for mod AI response...');
+        }
       }
     } catch (error) {
       console.error('Failed to post reply:', error);
