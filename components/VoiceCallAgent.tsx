@@ -132,7 +132,7 @@ export default function VoiceCallAgent({ persona, onClose }: VoiceCallAgentProps
         },
         onError: (error) => {
           console.error('❌ Conversation error:', error);
-          setError(`Connection error: ${error.message || 'Unknown error'}`);
+          setError(typeof error === 'string' ? error : 'Connection error');
           endCall();
         },
         onModeChange: (mode) => {
