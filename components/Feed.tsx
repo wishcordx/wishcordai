@@ -20,12 +20,17 @@ export default function Feed({ refreshTrigger, newWish }: FeedProps) {
 
   // Background sync every 5 seconds - silently updates wishes without UI disruption
   useEffect(() => {
+    console.log('🔄 Starting background sync interval...');
     const syncInterval = setInterval(() => {
+      console.log('⏰ Running silent sync...');
       silentSync();
     }, 5000); // Sync every 5 seconds
 
-    return () => clearInterval(syncInterval);
-  }, [wishes]);
+    return () => {
+      console.log('🛑 Stopping background sync interval');
+      clearInterval(syncInterval);
+    };
+  }, []); // Empty dependency - only run once on mount
 
   // Optimistically add new wish to top of feed
   useEffect(() => {
