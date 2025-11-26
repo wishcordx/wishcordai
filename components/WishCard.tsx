@@ -53,6 +53,9 @@ export default function WishCard({ wish }: WishCardProps) {
   const replyInputRef = useRef<HTMLInputElement>(null);
 
   const personaConfig = PERSONAS[wish.persona as keyof typeof PERSONAS];
+  const [aiStatus, setAiStatus] = useState(wish.ai_status);
+  const [aiReply, setAiReply] = useState(wish.ai_reply);
+  const [aiAudioUrl, setAiAudioUrl] = useState(wish.ai_audio_url);
   
   useEffect(() => {
     // Fetch reactions and reply count in parallel for faster loading
@@ -64,6 +67,29 @@ export default function WishCard({ wish }: WishCardProps) {
       fetchReplies();
     }
   }, [showReplies]);
+
+  // Poll for AI response if status is pending
+  useEffect(() => {
+    if (aiStatus === 'pending') {
+      const pollInterval = setInterval(async () => {
+        try {
+          const response = await fetch(`/api/wishes/${wish.id}`);
+          const data = await response.json();
+          
+          if (data.success && data.ai_status !== 'pending') {
+            setAiStatus(data.ai_status);
+            setAiReply(data.ai_reply);
+            setAiAudioUrl(data.ai_audio_url);
+            clearInterval(pollInterval);
+          }
+        } catch (error) {
+          console.error('Failed to poll AI status:', error);
+        }
+      }, 2000); // Poll every 2 seconds
+
+      return () => clearInterval(pollInterval);
+    }
+  }, [aiStatus, wish.id]);
 
   const fetchInitialData = async () => {
     try {
@@ -400,7 +426,7 @@ export default function WishCard({ wish }: WishCardProps) {
       )}
 
       {/* Mod Response */}
-      {wish.ai_reply && (
+      {(aiReply || aiStatus === 'pending') && (
         <div className="flex gap-2 sm:gap-3 pl-4 sm:pl-6 border-l-2 border-indigo-600/30 ml-4 sm:ml-6 mb-2 sm:mb-3">
           <span className="text-xl sm:text-2xl flex-shrink-0">{personaConfig?.emoji || '🤖'}</span>
           <div className="flex-1 min-w-0">
@@ -409,23 +435,42 @@ export default function WishCard({ wish }: WishCardProps) {
               <span className="px-1.5 sm:px-2 py-0.5 rounded text-xs font-semibold bg-indigo-600/20 text-indigo-400 border border-indigo-600/30">
                 MOD
               </span>
-              <span className={`px-1.5 sm:px-2 py-0.5 rounded text-xs font-bold border ${verdictColors[verdict as keyof typeof verdictColors]}`}>
-                {verdict}
-              </span>
+              {aiReply && (
+                <span className={`px-1.5 sm:px-2 py-0.5 rounded text-xs font-bold border ${verdictColors[verdict as keyof typeof verdictColors]}`}>
+                  {verdict}
+                </span>
+              )}
             </div>
             
+            {/* Show typing indicator when AI is generating response */}
+            {aiStatus === 'pending' && (
+              <div className="flex items-center gap-2 text-gray-400 text-xs sm:text-sm italic">
+                <span>{personaConfig?.emoji || '🤖'} {personaConfig?.name || 'Mod'} is typing</span>
+                <div className="flex gap-1">
+                  <span className="inline-block w-1 h-1 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '0ms' }}></span>
+                  <span className="inline-block w-1 h-1 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '150ms' }}></span>
+                  <span className="inline-block w-1 h-1 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '300ms' }}></span>
+                </div>
+              </div>
+            )}
+
+            {/* Show error message if AI generation failed */}
+            {aiStatus === 'failed' && (
+              <p className="text-red-400 text-xs sm:text-sm italic">Failed to generate response. Please try again.</p>
+            )}
+            
             {/* Only show text if there's no AI audio, otherwise hide transcription */}
-            {!wish.ai_audio_url && (
-              <p className="text-gray-300 text-xs sm:text-sm leading-relaxed whitespace-pre-wrap">{wish.ai_reply}</p>
+            {aiReply && !aiAudioUrl && aiStatus === 'completed' && (
+              <p className="text-gray-300 text-xs sm:text-sm leading-relaxed whitespace-pre-wrap">{aiReply}</p>
             )}
             
             {/* AI Voice Response - Show audio player only */}
-            {wish.ai_audio_url && (
+            {aiAudioUrl && aiStatus === 'completed' && (
               <div className="mt-2 bg-[#202225] rounded-lg p-2 border border-indigo-600/20 flex items-center gap-2">
                 <span className="text-xl">{personaConfig?.emoji || '🤖'}</span>
                 <audio
                   controls
-                  src={wish.ai_audio_url}
+                  src={aiAudioUrl}
                   className="flex-1 h-8"
                   preload="metadata"
                 >
