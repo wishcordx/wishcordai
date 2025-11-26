@@ -66,6 +66,17 @@ export default function VoiceCallAgent({ persona, onClose }: VoiceCallAgentProps
 
   const startCallSequence = async () => {
     try {
+      console.log('🎤 Starting call for persona:', persona);
+      console.log('📋 Agent ID:', agentId);
+      
+      // Check if agent ID exists
+      if (!agentId || agentId === 'undefined') {
+        console.error('❌ Agent ID is missing or undefined for persona:', persona);
+        setError(`Agent ID not configured for ${persona}. Please check environment variables.`);
+        setCallState('ended');
+        return;
+      }
+
       // Request microphone permission first
       console.log('🎤 Requesting microphone permission...');
       try {
@@ -75,7 +86,7 @@ export default function VoiceCallAgent({ persona, onClose }: VoiceCallAgentProps
         stream.getTracks().forEach(track => track.stop());
       } catch (err) {
         console.error('❌ Microphone permission denied:', err);
-        setError('Microphone permission required');
+        setError('Microphone permission required. Please allow microphone access.');
         setCallState('ended');
         return;
       }
@@ -100,8 +111,9 @@ export default function VoiceCallAgent({ persona, onClose }: VoiceCallAgentProps
         agentId: agentId,
         connectionType: "websocket",
         onConnect: () => {
-          console.log('✅ Connected to agent');
+          console.log('✅ Connected to agent:', persona);
           setCallState('connected');
+          setError(''); // Clear any errors
           
           // Stop ringtone
           if (ringToneRef.current) {
@@ -120,7 +132,7 @@ export default function VoiceCallAgent({ persona, onClose }: VoiceCallAgentProps
         },
         onError: (error) => {
           console.error('❌ Conversation error:', error);
-          setError('Connection error');
+          setError(`Connection error: ${error.message || 'Unknown error'}`);
           endCall();
         },
         onModeChange: (mode) => {
@@ -131,10 +143,13 @@ export default function VoiceCallAgent({ persona, onClose }: VoiceCallAgentProps
       });
 
       conversationRef.current = conversation;
+      console.log('✅ Conversation session started successfully');
       
-    } catch (err) {
-      console.error('Call start error:', err);
-      setError('Failed to start call');
+    } catch (err: any) {
+      console.error('❌ Call start error:', err);
+      const errorMsg = err?.message || 'Failed to start call. Please try again.';
+      setError(errorMsg);
+      setCallState('ended');
       if (ringToneRef.current) {
         ringToneRef.current.pause();
       }

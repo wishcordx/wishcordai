@@ -172,13 +172,15 @@ Agent ID for JingBells叮噹鈴
 Example: agent_xxxxx...
 ```
 
-### `NEXT_PUBLIC_ELEVENLABS_AGENT_BARRY`
+### `ELEVENLABS_AGENT_BARRY`
 ```
-Agent ID for BarryJingle
+Agent ID for BarryJingle (will be mapped to NEXT_PUBLIC_ELEVENLABS_AGENT_BARRY automatically)
 Example: agent_9001kb09fjj7enh88s7w59m63172
 ```
 
 **Where to find:** ElevenLabs → Conversational AI → Click agent → URL contains agent ID (or check agent settings)
+
+**IMPORTANT:** In Vercel, name this variable `ELEVENLABS_AGENT_BARRY` (without NEXT_PUBLIC_ prefix). The next.config.js will automatically map it to the correct client-side variable.
 
 ---
 
@@ -245,14 +247,16 @@ After deployment, test these features:
 14. `ELEVENLABS_BARRY_VOICE_ID`
 
 **Agent IDs (for voice calls):**
-15. `NEXT_PUBLIC_ELEVENLABS_AGENT_SANTA`
-16. `NEXT_PUBLIC_ELEVENLABS_AGENT_GRINCH`
-17. `NEXT_PUBLIC_ELEVENLABS_AGENT_ELF`
-18. `NEXT_PUBLIC_ELEVENLABS_AGENT_SNOWMAN`
-19. `NEXT_PUBLIC_ELEVENLABS_AGENT_REINDEER`
-20. `NEXT_PUBLIC_ELEVENLABS_AGENT_SCAMMER`
-21. `NEXT_PUBLIC_ELEVENLABS_AGENT_JINGBELLS`
-22. `NEXT_PUBLIC_ELEVENLABS_AGENT_BARRY`
+⚠️ **NOTE:** In Vercel, use the names WITHOUT `NEXT_PUBLIC_` prefix. Next.config.js automatically maps them.
+
+15. `ELEVENLABS_AGENT_SANTA`
+16. `ELEVENLABS_AGENT_GRINCH`
+17. `ELEVENLABS_AGENT_ELF`
+18. `ELEVENLABS_AGENT_SNOWMAN`
+19. `ELEVENLABS_AGENT_REINDEER`
+20. `ELEVENLABS_AGENT_SCAMMER`
+21. `ELEVENLABS_AGENT_JINGBELLS`
+22. `ELEVENLABS_AGENT_BARRY`
 
 ---
 
