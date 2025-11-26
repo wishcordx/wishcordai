@@ -44,9 +44,12 @@ export default function Feed({ refreshTrigger, newWish }: FeedProps) {
         (payload) => {
           console.log('🔄 Wish updated via Realtime:', payload.new);
           const updatedWish = payload.new as Wish;
-          setWishes(prev =>
-            prev.map(w => (w.id === updatedWish.id ? updatedWish : w))
-          );
+          console.log('📝 AI Status:', updatedWish.ai_status, 'Reply:', updatedWish.ai_reply?.substring(0, 50));
+          setWishes(prev => {
+            const updated = prev.map(w => (w.id === updatedWish.id ? updatedWish : w));
+            console.log('✅ Wishes state updated');
+            return updated;
+          });
         }
       )
       .subscribe((status) => {
