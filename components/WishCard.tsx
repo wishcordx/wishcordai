@@ -237,7 +237,11 @@ export default function WishCard({ wish }: WishCardProps) {
               {formatDiscordTimestamp(wish.created_at)}
             </span>
           </div>
-          <p className="text-gray-300 text-xs sm:text-sm leading-relaxed">{wish.wish_text}</p>
+          
+          {/* Only show text if there's no audio, otherwise hide transcription */}
+          {!wish.audio_url && (
+            <p className="text-gray-300 text-xs sm:text-sm leading-relaxed">{wish.wish_text}</p>
+          )}
           
           {/* Image Attachment */}
           {wish.image_url && (
@@ -251,9 +255,9 @@ export default function WishCard({ wish }: WishCardProps) {
             </div>
           )}
 
-          {/* Audio Attachment */}
+          {/* Audio Attachment - Show audio player only */}
           {wish.audio_url && (
-            <div className="mt-3 bg-[#202225] rounded-lg p-3 border border-[#0f1011] flex items-center gap-2">
+            <div className="mt-2 bg-[#202225] rounded-lg p-3 border border-[#0f1011] flex items-center gap-2">
               <span className="text-xl">🎤</span>
               <audio controls className="flex-1 h-8">
                 <source src={wish.audio_url} type="audio/webm" />
@@ -300,15 +304,20 @@ export default function WishCard({ wish }: WishCardProps) {
                 {verdict}
               </span>
             </div>
-            <p className="text-gray-300 text-xs sm:text-sm leading-relaxed whitespace-pre-wrap">{wish.ai_reply}</p>
             
-            {/* AI Voice Response */}
+            {/* Only show text if there's no AI audio, otherwise hide transcription */}
+            {!wish.ai_audio_url && (
+              <p className="text-gray-300 text-xs sm:text-sm leading-relaxed whitespace-pre-wrap">{wish.ai_reply}</p>
+            )}
+            
+            {/* AI Voice Response - Show audio player only */}
             {wish.ai_audio_url && (
-              <div className="mt-2">
+              <div className="mt-2 bg-[#202225] rounded-lg p-2 border border-indigo-600/20 flex items-center gap-2">
+                <span className="text-xl">{personaConfig?.emoji || '🤖'}</span>
                 <audio
                   controls
                   src={wish.ai_audio_url}
-                  className="w-full max-w-md h-8 sm:h-10"
+                  className="flex-1 h-8"
                   preload="metadata"
                 >
                   Your browser does not support audio playback.
