@@ -121,10 +121,11 @@ export async function POST(request: NextRequest) {
 
       console.log(`✅ ${personaConfig.name} responded!`);
 
-      // If user sent a voice message, respond with voice too
+      // ONLY generate voice response if user sent a voice message (audioUrl exists)
+      // Text-only messages with @mention will get text-only responses
       if (audioUrl && aiReply) {
         try {
-          console.log(`🎙️ Generating voice response for ${personaConfig.name}...`);
+          console.log(`🎙️ User sent voice, generating voice response for ${personaConfig.name}...`);
           
           const voiceId = VOICE_MAP[persona];
           const audio = await elevenlabs.textToSpeech.convert(voiceId, {
