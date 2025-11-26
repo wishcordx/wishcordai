@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import WishCard from './WishCard';
+import { supabase } from '@/lib/supabase';
 import type { Wish } from '@/typings/types';
 
 interface FeedProps {
@@ -18,21 +19,49 @@ export default function Feed({ refreshTrigger, newWish }: FeedProps) {
     fetchWishes();
   }, [refreshTrigger]);
 
-  // Background sync every 5 seconds - silently updates wishes without UI disruption
+  // Supabase Realtime - Listen for new wishes and updates
   useEffect(() => {
-    console.log('🔄 Starting background sync interval...');
-    const syncInterval = setInterval(() => {
-      console.log('⏰ Running silent sync...');
-      silentSync();
-    }, 5000); // Sync every 5 seconds
+    console.log('🔌 Connecting to Supabase Realtime...');
+    
+    const channel = supabase
+      .channel('wishes-realtime')
+      .on(
+        'postgres_changes',
+        { event: 'INSERT', schema: 'public', table: 'wishes' },
+        (payload) => {
+          console.log('✨ New wish via Realtime:', payload.new);
+          const newWish = payload.new as Wish;
+          setWishes(prev => {
+            // Avoid duplicates
+            if (prev.some(w => w.id === newWish.id)) return prev;
+            return [newWish, ...prev];
+          });
+        }
+      )
+      .on(
+        'postgres_changes',
+        { event: 'UPDATE', schema: 'public', table: 'wishes' },
+        (payload) => {
+          console.log('🔄 Wish updated via Realtime:', payload.new);
+          const updatedWish = payload.new as Wish;
+          setWishes(prev =>
+            prev.map(w => (w.id === updatedWish.id ? updatedWish : w))
+          );
+        }
+      )
+      .subscribe((status) => {
+        if (status === 'SUBSCRIBED') {
+          console.log('✅ Realtime connected!');
+        }
+      });
 
     return () => {
-      console.log('🛑 Stopping background sync interval');
-      clearInterval(syncInterval);
+      console.log('🔌 Disconnecting from Supabase Realtime...');
+      supabase.removeChannel(channel);
     };
-  }, []); // Empty dependency - only run once on mount
+  }, []);
 
-  // Optimistically add new wish to top of feed
+  // Optimistically add new wish to top of feed (for immediate feedback)
   useEffect(() => {
     if (newWish) {
       setWishes(prev => {
@@ -43,49 +72,6 @@ export default function Feed({ refreshTrigger, newWish }: FeedProps) {
       });
     }
   }, [newWish]);
-
-  const silentSync = async () => {
-    try {
-      const response = await fetch(`/api/wishes?t=${Date.now()}`, {
-        cache: 'no-store'
-      });
-      const data = await response.json();
-
-      if (data.success && data.wishes) {
-        setWishes(prev => {
-          const newWishes: Wish[] = [];
-          const existingIds = new Set(prev.map(w => w.id));
-          
-          // Find new wishes that don't exist locally
-          data.wishes.forEach((wish: Wish) => {
-            if (!existingIds.has(wish.id)) {
-              newWishes.push(wish);
-              console.log(`✨ New wish detected: ${wish.id}`);
-            }
-          });
-          
-          // Update existing wishes
-          const updated = prev.map(existingWish => {
-            const serverWish = data.wishes.find((w: Wish) => w.id === existingWish.id);
-            if (serverWish && (
-              serverWish.ai_status !== existingWish.ai_status ||
-              serverWish.ai_reply !== existingWish.ai_reply
-            )) {
-              console.log(`🔄 Updated wish ${existingWish.id}`);
-              return serverWish;
-            }
-            return existingWish;
-          });
-          
-          // Prepend new wishes to the top
-          return [...newWishes, ...updated];
-        });
-      }
-    } catch (err) {
-      // Silently fail - don't disrupt UX
-      console.error('Background sync failed:', err);
-    }
-  };
 
   const fetchWishes = async () => {
     try {

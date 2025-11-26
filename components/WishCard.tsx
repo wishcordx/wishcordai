@@ -6,6 +6,7 @@ import { PERSONAS } from '@/lib/personas';
 import { truncateAddress } from '@/lib/utils';
 import { formatDiscordTimestamp, formatRelativeTime } from '@/lib/time-utils';
 import { useWallet } from '@/lib/wallet-context';
+import { supabase } from '@/lib/supabase';
 import MentionAutocomplete, { MODS, type Mention } from './MentionAutocomplete';
 import type { Wish } from '@/typings/types';
 
@@ -72,16 +73,60 @@ export default function WishCard({ wish }: WishCardProps) {
     }
   }, [showReplies]);
 
-  // Auto-refresh replies every 5 seconds when replies are visible
+  // Supabase Realtime - Listen for new replies on this wish
   useEffect(() => {
     if (showReplies) {
-      const replyRefreshInterval = setInterval(() => {
-        fetchReplies();
-      }, 5000);
+      console.log(`🔌 Listening for replies on wish ${wish.id}...`);
+      
+      const channel = supabase
+        .channel(`replies-${wish.id}`)
+        .on(
+          'postgres_changes',
+          {
+            event: 'INSERT',
+            schema: 'public',
+            table: 'replies',
+            filter: `wish_id=eq.${wish.id}`,
+          },
+          (payload) => {
+            console.log('✨ New reply via Realtime:', payload.new);
+            const newReply = payload.new as Reply;
+            setReplies(prev => {
+              // Avoid duplicates
+              if (prev.some(r => r.id === newReply.id)) return prev;
+              return [...prev, newReply];
+            });
+            setReplyCount(prev => prev + 1);
+          }
+        )
+        .on(
+          'postgres_changes',
+          {
+            event: 'UPDATE',
+            schema: 'public',
+            table: 'replies',
+            filter: `wish_id=eq.${wish.id}`,
+          },
+          (payload) => {
+            console.log('🔄 Reply updated via Realtime:', payload.new);
+            const updatedReply = payload.new as Reply;
+            setReplies(prev =>
+              prev.map(r => (r.id === updatedReply.id ? updatedReply : r))
+            );
+          }
+        )
+        .subscribe((status) => {
+          if (status === 'SUBSCRIBED') {
+            console.log(`✅ Realtime connected for replies on wish ${wish.id}`);
+          }
+        });
 
-      return () => clearInterval(replyRefreshInterval);
+      return () => {
+        console.log(`🔌 Disconnecting from replies on wish ${wish.id}`);
+        supabase.removeChannel(channel);
+      };
     }
-  }, [showReplies]);
+  }, [showReplies, wish.id]);
 
   // Poll for AI response if status is pending
   useEffect(() => {
