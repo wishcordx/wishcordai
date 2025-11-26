@@ -60,13 +60,10 @@ export default function WishCard({ wish }: WishCardProps) {
   const [lastReplyCount, setLastReplyCount] = useState(0);
   const [shouldPollReplies, setShouldPollReplies] = useState(false);
   const [expectedModUsername, setExpectedModUsername] = useState<string | null>(null);
+  const hasPolledRef = useRef(false);
   
-  // Sync state with prop changes (for when wish is updated from parent)
-  useEffect(() => {
-    setAiStatus(wish.ai_status);
-    setAiReply(wish.ai_reply);
-    setAiAudioUrl(wish.ai_audio_url);
-  }, [wish.id, wish.ai_status, wish.ai_reply, wish.ai_audio_url]);
+  // Don't sync props after initial mount - polling handles updates
+  // This prevents background refresh from overriding poll results
   
   useEffect(() => {
     // Fetch reactions and reply count in parallel for faster loading
@@ -81,8 +78,10 @@ export default function WishCard({ wish }: WishCardProps) {
 
   // Poll for AI response if status is pending
   useEffect(() => {
-    if (aiStatus === 'pending') {
+    if (aiStatus === 'pending' && !hasPolledRef.current) {
       console.log(`🔄 Starting to poll for wish ${wish.id} AI response...`);
+      hasPolledRef.current = true;
+      
       const pollInterval = setInterval(async () => {
         try {
           const response = await fetch(`/api/wishes/${wish.id}`, {
