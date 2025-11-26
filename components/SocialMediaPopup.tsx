@@ -44,7 +44,8 @@ export default function SocialMediaPopup() {
             initial={{ opacity: 0, scale: 0.9, y: 20 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.9, y: 20 }}
-            className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-[9999]"
+            className="fixed top-1/2 left-1/2 z-[9999]"
+            style={{ transform: 'translate(-50%, -50%)' }}
           >
             <div className="social-card">
               <style jsx>{`
