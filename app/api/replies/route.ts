@@ -58,43 +58,27 @@ export async function POST(req: NextRequest) {
         username: username || 'Anonymous',
         avatar: avatar || '👤',
         reply_text,
-        ai_status: null, // User replies don't need AI status
       })
       .select()
       .single();
 
     if (userError) {
+      console.error('❌ Error inserting user reply:', userError);
       return NextResponse.json(
         { success: false, error: userError.message },
         { status: 500 }
       );
     }
 
-    // If mod mentioned, create placeholder reply for AI response
+    // If mod mentioned, generate AI response (will be done async below)
     let modReplyId: string | undefined;
     if (hasMention && personaId && mentionedUsername) {
       const personaConfig = getPersonaConfig(personaId);
       
       if (personaConfig) {
-        console.log(`🏷️ Mod @${mentionedUsername} mentioned, creating placeholder...`);
-        
-        // Create placeholder mod reply with pending status
-        const { data: modReply, error: modError } = await supabase
-          .from('replies')
-          .insert({
-            wish_id,
-            wallet_address: personaConfig.name.toLowerCase().replace(/\s+/g, '_'),
-            username: mentionedUsername,
-            avatar: personaConfig.emoji,
-            reply_text: '', // Empty for now
-            ai_status: 'pending', // Mark as pending
-          })
-          .select()
-          .single();
-
-        if (!modError && modReply) {
-          modReplyId = modReply.id;
-        }
+        console.log(`🏷️ Mod @${mentionedUsername} mentioned, will generate response...`);
+        // We'll generate the AI response in the background
+        // For now, just note that we need to generate it
       }
     }
 
@@ -104,13 +88,12 @@ export async function POST(req: NextRequest) {
     const response = NextResponse.json({ 
       success: true, 
       reply: userReply,
-      mod_reply_id: modReplyId, // Return ID of pending mod reply
     });
 
     // ==========================================
-    // STEP 3: Generate AI response in background
+    // STEP 3: Generate AI response in background (if mod mentioned)
     // ==========================================
-    if (modReplyId && personaId && mentionedUsername) {
+    if (hasMention && personaId && mentionedUsername) {
       const personaConfig = getPersonaConfig(personaId);
       
       // Fire and forget - generate AI response async
@@ -174,27 +157,19 @@ export async function POST(req: NextRequest) {
             undefined
           );
           
-          // Update the placeholder reply with actual AI response
-          await supabase
-            .from('replies')
-            .update({
-              reply_text: aiReply,
-              ai_status: 'completed',
-            })
-            .eq('id', modReplyId);
+          // Insert mod's reply directly
+          await supabase.from('replies').insert({
+            wish_id,
+            wallet_address: personaConfig!.name.toLowerCase().replace(/\s+/g, '_'),
+            username: mentionedUsername,
+            avatar: personaConfig!.emoji,
+            reply_text: aiReply,
+          });
           
           console.log(`✅ ${personaConfig!.name} responded to reply with full context!`);
         } catch (aiError) {
           console.error('❌ Failed to generate AI reply:', aiError);
-          
-          // Update status to failed
-          await supabase
-            .from('replies')
-            .update({
-              reply_text: '⚠️ Sorry, I encountered an error generating my response.',
-              ai_status: 'failed',
-            })
-            .eq('id', modReplyId);
+          // Don't fail the whole request if AI fails
         }
       })();
     }
