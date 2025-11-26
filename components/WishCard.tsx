@@ -25,6 +25,7 @@ interface Reply {
   username: string;
   avatar: string;
   reply_text: string;
+  ai_status?: 'pending' | 'completed' | 'failed' | null;
   created_at: string;
 }
 
@@ -56,6 +57,9 @@ export default function WishCard({ wish }: WishCardProps) {
   const [aiStatus, setAiStatus] = useState(wish.ai_status);
   const [aiReply, setAiReply] = useState(wish.ai_reply);
   const [aiAudioUrl, setAiAudioUrl] = useState(wish.ai_audio_url);
+  
+  // Track replies with pending AI responses
+  const [pendingReplies, setPendingReplies] = useState<Set<string>>(new Set());
   
   useEffect(() => {
     // Fetch reactions and reply count in parallel for faster loading
@@ -90,6 +94,51 @@ export default function WishCard({ wish }: WishCardProps) {
       return () => clearInterval(pollInterval);
     }
   }, [aiStatus, wish.id]);
+
+  // Poll for pending reply AI responses
+  useEffect(() => {
+    if (pendingReplies.size === 0) return;
+
+    const pollInterval = setInterval(async () => {
+      const updatedReplies = [...replies];
+      let hasUpdates = false;
+
+      for (const replyId of pendingReplies) {
+        try {
+          const response = await fetch(`/api/replies/${replyId}`);
+          const data = await response.json();
+
+          if (data.success && data.ai_status !== 'pending') {
+            // Update the reply in the list
+            const index = updatedReplies.findIndex(r => r.id === replyId);
+            if (index !== -1) {
+              updatedReplies[index] = {
+                ...updatedReplies[index],
+                reply_text: data.reply_text,
+                ai_status: data.ai_status,
+              };
+              hasUpdates = true;
+
+              // Remove from pending set
+              setPendingReplies(prev => {
+                const newSet = new Set(prev);
+                newSet.delete(replyId);
+                return newSet;
+              });
+            }
+          }
+        } catch (error) {
+          console.error(`Failed to poll reply ${replyId} status:`, error);
+        }
+      }
+
+      if (hasUpdates) {
+        setReplies(updatedReplies);
+      }
+    }, 2000); // Poll every 2 seconds
+
+    return () => clearInterval(pollInterval);
+  }, [pendingReplies, replies]);
 
   const fetchInitialData = async () => {
     try {
@@ -308,7 +357,15 @@ export default function WishCard({ wish }: WishCardProps) {
       });
 
       if (response.ok) {
+        const data = await response.json();
         setReplyText('');
+        
+        // If there's a pending mod reply, add it to tracking
+        if (data.mod_reply_id) {
+          setPendingReplies(prev => new Set(prev).add(data.mod_reply_id));
+        }
+        
+        // Refresh replies to show user's new reply + placeholder mod reply
         fetchReplies();
       }
     } catch (error) {
@@ -585,7 +642,22 @@ export default function WishCard({ wish }: WishCardProps) {
                     {formatDiscordTimestamp(reply.created_at)}
                   </span>
                 </div>
-                <p className="text-gray-300 text-xs sm:text-sm leading-relaxed">{reply.reply_text}</p>
+                
+                {/* Show typing indicator for pending AI replies */}
+                {reply.ai_status === 'pending' ? (
+                  <div className="flex items-center gap-2 text-gray-400 text-xs sm:text-sm italic">
+                    <span>{reply.username} is typing</span>
+                    <div className="flex gap-1">
+                      <span className="animate-bounce" style={{ animationDelay: '0ms' }}>.</span>
+                      <span className="animate-bounce" style={{ animationDelay: '150ms' }}>.</span>
+                      <span className="animate-bounce" style={{ animationDelay: '300ms' }}>.</span>
+                    </div>
+                  </div>
+                ) : reply.ai_status === 'failed' ? (
+                  <p className="text-red-400 text-xs sm:text-sm">⚠️ Failed to generate response</p>
+                ) : (
+                  <p className="text-gray-300 text-xs sm:text-sm leading-relaxed">{reply.reply_text}</p>
+                )}
               </div>
             </div>
           ))}

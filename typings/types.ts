@@ -58,3 +58,14 @@ export interface WishesResponse {
   wishes?: Wish[];
   error?: string;
 }
+
+export interface Reply {
+  id: string;
+  wish_id: string;
+  wallet_address: string;
+  username: string;
+  avatar: string;
+  reply_text: string;
+  ai_status?: 'pending' | 'completed' | 'failed' | null;
+  created_at: string;
+}
