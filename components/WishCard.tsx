@@ -1,11 +1,12 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
 import { PERSONAS } from '@/lib/personas';
 import { truncateAddress } from '@/lib/utils';
 import { formatDiscordTimestamp, formatRelativeTime } from '@/lib/time-utils';
 import { useWallet } from '@/lib/wallet-context';
+import MentionAutocomplete, { MODS, type Mention } from './MentionAutocomplete';
 import type { Wish } from '@/typings/types';
 
 interface WishCardProps {
@@ -41,6 +42,15 @@ export default function WishCard({ wish }: WishCardProps) {
   const [shareCount, setShareCount] = useState(0);
   const [isLoadingData, setIsLoadingData] = useState(true);
   const [showImageLightbox, setShowImageLightbox] = useState(false);
+
+  // @Mention autocomplete state for replies
+  const [showMentions, setShowMentions] = useState(false);
+  const [mentionSearch, setMentionSearch] = useState('');
+  const [mentionPosition, setMentionPosition] = useState({ top: 0, left: 0 });
+  const [selectedMentionIndex, setSelectedMentionIndex] = useState(0);
+  const [cursorPosition, setCursorPosition] = useState(0);
+  
+  const replyInputRef = useRef<HTMLInputElement>(null);
 
   const personaConfig = PERSONAS[wish.persona as keyof typeof PERSONAS];
   
@@ -143,6 +153,105 @@ export default function WishCard({ wish }: WishCardProps) {
       // Revert on error
       fetchInitialData();
     }
+  };
+
+  // Handle reply text change with @mention detection
+  const handleReplyTextChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const newText = e.target.value;
+    const cursorPos = e.target.selectionStart || 0;
+    
+    setReplyText(newText);
+    setCursorPosition(cursorPos);
+
+    // Detect @ mention trigger
+    const textBeforeCursor = newText.substring(0, cursorPos);
+    const lastAtIndex = textBeforeCursor.lastIndexOf('@');
+    
+    if (lastAtIndex !== -1) {
+      const textAfterAt = textBeforeCursor.substring(lastAtIndex + 1);
+      // Check if there's no space after @
+      if (!textAfterAt.includes(' ') && textAfterAt.length <= 20) {
+        setMentionSearch(textAfterAt.toLowerCase());
+        setShowMentions(true);
+        setSelectedMentionIndex(0);
+        
+        // Calculate position for dropdown
+        if (replyInputRef.current) {
+          const input = replyInputRef.current;
+          const rect = input.getBoundingClientRect();
+          
+          setMentionPosition({
+            top: rect.bottom + window.scrollY + 4,
+            left: rect.left + window.scrollX,
+          });
+        }
+      } else {
+        setShowMentions(false);
+      }
+    } else {
+      setShowMentions(false);
+    }
+  };
+
+  // Handle keyboard navigation for mentions
+  const handleReplyKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (showMentions) {
+      const filteredMentions = MODS.filter(mod =>
+        mod.name.toLowerCase().includes(mentionSearch)
+      );
+
+      if (e.key === 'ArrowDown') {
+        e.preventDefault();
+        setSelectedMentionIndex(prev => 
+          prev < filteredMentions.length - 1 ? prev + 1 : 0
+        );
+      } else if (e.key === 'ArrowUp') {
+        e.preventDefault();
+        setSelectedMentionIndex(prev => 
+          prev > 0 ? prev - 1 : filteredMentions.length - 1
+        );
+      } else if (e.key === 'Enter') {
+        if (filteredMentions.length > 0) {
+          e.preventDefault();
+          handleMentionSelect(filteredMentions[selectedMentionIndex]);
+        }
+      } else if (e.key === 'Tab') {
+        if (filteredMentions.length > 0) {
+          e.preventDefault();
+          handleMentionSelect(filteredMentions[selectedMentionIndex]);
+        }
+      } else if (e.key === 'Escape') {
+        e.preventDefault();
+        setShowMentions(false);
+      }
+    } else if (e.key === 'Enter' && !isPostingReply) {
+      handlePostReply();
+    }
+  };
+
+  // Insert selected mention
+  const handleMentionSelect = (mention: Mention) => {
+    const textBeforeCursor = replyText.substring(0, cursorPosition);
+    const textAfterCursor = replyText.substring(cursorPosition);
+    const lastAtIndex = textBeforeCursor.lastIndexOf('@');
+    
+    const newText = 
+      replyText.substring(0, lastAtIndex) + 
+      mention.id + ' ' + 
+      textAfterCursor;
+    
+    setReplyText(newText);
+    setShowMentions(false);
+    
+    // Set cursor after mention
+    setTimeout(() => {
+      if (replyInputRef.current) {
+        const newCursorPos = lastAtIndex + mention.id.length + 1;
+        replyInputRef.current.selectionStart = newCursorPos;
+        replyInputRef.current.selectionEnd = newCursorPos;
+        replyInputRef.current.focus();
+      }
+    }, 0);
   };
 
   const handlePostReply = async () => {
@@ -438,16 +547,29 @@ export default function WishCard({ wish }: WishCardProps) {
 
           {/* Reply Input */}
           <div className="flex gap-1.5 sm:gap-2 mt-2 sm:mt-3">
-            <div className="flex-1">
+            <div className="flex-1 relative">
               <input
+                ref={replyInputRef}
                 type="text"
                 value={replyText}
-                onChange={(e) => setReplyText(e.target.value)}
-                onKeyPress={(e) => e.key === 'Enter' && !isPostingReply && handlePostReply()}
+                onChange={handleReplyTextChange}
+                onKeyDown={handleReplyKeyDown}
                 placeholder="Write a reply..."
                 disabled={!walletAddress || isPostingReply}
                 className="w-full bg-[#1e1f22] border border-[#35373c] rounded px-2 sm:px-3 py-1.5 sm:py-2 text-xs sm:text-sm text-white placeholder-gray-500 focus:outline-none focus:border-indigo-500 disabled:opacity-50"
               />
+              
+              {/* @Mention Autocomplete */}
+              {showMentions && (
+                <MentionAutocomplete
+                  mentions={MODS.filter(mod =>
+                    mod.name.toLowerCase().includes(mentionSearch)
+                  )}
+                  onSelect={handleMentionSelect}
+                  position={mentionPosition}
+                  selectedIndex={selectedMentionIndex}
+                />
+              )}
             </div>
             <button
               onClick={handlePostReply}
