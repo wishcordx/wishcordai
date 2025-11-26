@@ -255,12 +255,6 @@ export default function WishForm({ onWishSubmitted }: WishFormProps) {
     const profileData = localStorage.getItem('userProfile');
     const profile = profileData ? JSON.parse(profileData) : null;
 
-    // Parse @mentions to determine persona
-    const mentionRegex = /@(SantaMod69|xX_Krampus_Xx|elfgirluwu|FrostyTheCoder|DasherSpeedrun|SantaKumar|JingBells叮噹鈴)/g;
-    const matches = wishText.match(mentionRegex);
-    const mentionedPersonas = matches ? matches.map(m => m.substring(1)) : [];
-    
-    // Map first mentioned mod to persona, or default to santa
     const personaMap: Record<string, Persona> = {
       'SantaMod69': 'santa',
       'xX_Krampus_Xx': 'grinch',
@@ -270,10 +264,6 @@ export default function WishForm({ onWishSubmitted }: WishFormProps) {
       'SantaKumar': 'scammer',
       'JingBells叮噹鈴': 'jingbells',
     };
-    
-    const persona = mentionedPersonas.length > 0 
-      ? personaMap[mentionedPersonas[0]] || 'santa'
-      : 'santa';
 
     try {
       // If audio exists, upload and transcribe it first
@@ -303,6 +293,16 @@ export default function WishForm({ onWishSubmitted }: WishFormProps) {
           throw new Error(uploadData.error || 'Failed to process audio');
         }
       }
+
+      // Parse @mentions from the final text (typed or transcribed)
+      const mentionRegex = /@(SantaMod69|xX_Krampus_Xx|elfgirluwu|FrostyTheCoder|DasherSpeedrun|SantaKumar|JingBells叮噹鈴)/g;
+      const matches = transcribedText.match(mentionRegex);
+      const mentionedPersonas = matches ? matches.map(m => m.substring(1)) : [];
+      
+      // Determine persona from first mention, or default to santa only if there's text/media
+      const persona = mentionedPersonas.length > 0 
+        ? personaMap[mentionedPersonas[0]] || 'santa'
+        : 'santa';
 
       const response = await fetch('/api/wish', {
         method: 'POST',
