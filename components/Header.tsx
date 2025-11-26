@@ -49,33 +49,32 @@ export default function Header({ onMenuClick }: HeaderProps = {}) {
             </div>
           </Link>
           
-          <nav className="flex items-center gap-2 sm:gap-4 text-sm">
+          <nav className="flex items-center gap-2 sm:gap-3 text-sm">
             {/* About Link */}
             <Link
               href="/about"
-              className="hidden md:flex items-center gap-1 px-3 py-2 text-gray-300 hover:text-white hover:bg-[#202225] rounded-lg transition-colors"
+              className="hidden md:flex items-center gap-1.5 px-3 py-2 text-gray-400 hover:text-white hover:bg-[#2a2d31] rounded-md transition-all duration-200"
             >
-              ℹ️ <span>About</span>
+              <span className="text-base">ℹ️</span>
+              <span className="font-medium">About</span>
             </Link>
 
             {/* How It Works Link */}
             <Link
               href="/how-it-works"
-              className="hidden md:flex items-center gap-1 px-3 py-2 text-gray-300 hover:text-white hover:bg-[#202225] rounded-lg transition-colors"
+              className="hidden md:flex items-center gap-1.5 px-3 py-2 text-gray-400 hover:text-white hover:bg-[#2a2d31] rounded-md transition-all duration-200"
             >
-              ❓ <span>How It Works</span>
+              <span className="text-base">❓</span>
+              <span className="font-medium">How It Works</span>
             </Link>
 
-            {/* $WISH Token Link */}
+            {/* $WISH Token Button */}
             <Link
               href="/wishtoken"
-              className="pushable-button relative border-none bg-transparent p-0 outline-none cursor-pointer"
+              className="hidden sm:flex items-center gap-1.5 px-4 py-2 bg-gradient-to-r from-yellow-500 to-orange-500 hover:from-yellow-400 hover:to-orange-400 text-white font-bold rounded-md transition-all duration-200 shadow-lg hover:shadow-xl hover:scale-105 active:scale-95"
             >
-              <span className="absolute top-0 left-0 w-full h-full bg-black/25 rounded-lg translate-y-[2px] transition-transform duration-[600ms] cubic-bezier-[0.3,0.7,0.4,1] hover:translate-y-[4px] hover:duration-[250ms] active:translate-y-[1px] active:duration-[34ms]"></span>
-              <span className="absolute top-0 left-0 w-full h-full rounded-lg bg-gradient-to-l from-yellow-700 via-yellow-600 to-yellow-700"></span>
-              <span className="relative flex items-center justify-center px-3 py-2 sm:px-4 sm:py-2.5 text-xs sm:text-sm font-bold text-white bg-gradient-to-r from-yellow-500 to-orange-500 rounded-lg -translate-y-1 transition-transform duration-[600ms] cubic-bezier-[0.3,0.7,0.4,1] hover:-translate-y-[6px] hover:duration-[250ms] active:-translate-y-[2px] active:duration-[34ms] select-none">
-                $WISH
-              </span>
+              <span className="text-sm">💎</span>
+              <span>$WISH</span>
             </Link>
 
             {/* Wallet Connection */}
@@ -89,14 +88,11 @@ export default function Header({ onMenuClick }: HeaderProps = {}) {
               <button
                 onClick={connectWallet}
                 disabled={isConnecting}
-                className="pushable-button relative border-none bg-transparent p-0 outline-none cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
+                className="flex items-center gap-2 px-4 py-2 bg-indigo-600 hover:bg-indigo-500 text-white font-semibold rounded-md transition-all duration-200 shadow-md hover:shadow-lg hover:scale-105 active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100"
               >
-                <span className="absolute top-0 left-0 w-full h-full bg-black/25 rounded-lg translate-y-[2px] transition-transform duration-[600ms] cubic-bezier-[0.3,0.7,0.4,1] hover:translate-y-[4px] hover:duration-[250ms] active:translate-y-[1px] active:duration-[34ms]"></span>
-                <span className="absolute top-0 left-0 w-full h-full rounded-lg bg-gradient-to-l from-indigo-900 via-indigo-700 to-indigo-900"></span>
-                <span className="relative flex items-center justify-center px-3 py-2 sm:px-6 sm:py-2.5 text-xs sm:text-sm font-medium text-white bg-indigo-600 rounded-lg -translate-y-1 transition-transform duration-[600ms] cubic-bezier-[0.3,0.7,0.4,1] hover:-translate-y-[6px] hover:duration-[250ms] active:-translate-y-[2px] active:duration-[34ms] select-none">
-                  <span className="hidden sm:inline">{isConnecting ? 'Connecting...' : '🔗 Connect Wallet'}</span>
-                  <span className="sm:hidden">{isConnecting ? '...' : '🔗 Connect'}</span>
-                </span>
+                <span className="text-base">🔗</span>
+                <span className="hidden sm:inline">{isConnecting ? 'Connecting...' : 'Connect Wallet'}</span>
+                <span className="sm:hidden">{isConnecting ? '...' : 'Connect'}</span>
               </button>
             )}
 
