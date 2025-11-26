@@ -13,7 +13,7 @@ interface MobileSidebarProps {
 
 export default function MobileSidebar({ isOpen, onClose, onModClick, totalMessages }: MobileSidebarProps) {
   const mods = [
-    { name: 'SantaMod69', emoji: '🎅', role: 'Admin', color: 'text-red-400', persona: 'santa' as Persona },
+    { name: 'SantaMod69', emoji: '🎅', role: 'Mod', color: 'text-red-400', persona: 'santa' as Persona },
     { name: 'xX_Krampus_Xx', emoji: '💀', role: 'Mod', color: 'text-purple-400', persona: 'grinch' as Persona },
     { name: 'elfgirluwu', emoji: '🧝', role: 'Mod', color: 'text-pink-400', persona: 'elf' as Persona },
     { name: 'FrostyTheCoder', emoji: '☃️', role: 'Mod', color: 'text-cyan-400', persona: 'snowman' as Persona },
