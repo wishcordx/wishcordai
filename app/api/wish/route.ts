@@ -97,7 +97,6 @@ export async function POST(request: NextRequest) {
     let aiAudioUrl: string | undefined;
     let aiAudioPath: string | undefined;
     let imageDescription: string | undefined;
-    let audioTranscript: string | undefined;
 
     if (shouldRespond) {
       console.log(`💬 ${personaConfig.name} is typing...`);
@@ -108,15 +107,18 @@ export async function POST(request: NextRequest) {
         imageDescription = await aiRouter.analyzeMeme(imageUrl, 'claude');
       }
 
-      // Note: Audio transcription should be done in the frontend before upload
-      // The audioUrl here is already transcribed audio, stored for playback
+      // The wishText already contains the transcribed audio text from the frontend
+      // audioUrl is just the audio file URL for playback
+      console.log(`📝 Message content: "${wishText}"`);
+      console.log(`🎤 Has audio: ${!!audioUrl}`);
+      console.log(`🖼️ Has image: ${!!imageUrl}`);
 
       // Generate AI response with full context
       aiReply = await aiRouter.generateModResponse(
         personaConfig.systemPrompt,
         wishText || '[No text, see attached media]',
         imageDescription,
-        audioTranscript
+        undefined // audioTranscript not needed - wishText already contains the transcription
       );
 
       console.log(`✅ ${personaConfig.name} responded!`);
