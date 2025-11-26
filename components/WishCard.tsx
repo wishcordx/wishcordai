@@ -210,12 +210,13 @@ export default function WishCard({ wish }: WishCardProps) {
         setShowMentions(true);
         setSelectedMentionIndex(0);
         
-        // Calculate position for dropdown
+        // Calculate position for dropdown - use fixed positioning relative to viewport
         const rect = input.getBoundingClientRect();
         setMentionPosition({
-          top: rect.bottom + window.scrollY + 4,
-          left: rect.left + window.scrollX,
+          top: rect.bottom + 4, // Just below the input
+          left: rect.left, // Align with left edge of input
         });
+        console.log('[Reply @] Position set:', { top: rect.bottom + 4, left: rect.left });
       } else {
         console.log('[Reply @] hiding - space found');
         setShowMentions(false);
