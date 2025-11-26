@@ -3,27 +3,14 @@
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 
-export default function SocialMediaPopup() {
-  const [isOpen, setIsOpen] = useState(false);
+interface SocialMediaPopupProps {
+  isOpen: boolean;
+  onClose: () => void;
+}
 
-  useEffect(() => {
-    // Check if user has seen the popup before
-    const hasSeenPopup = localStorage.getItem('hasSeenSocialPopup');
-    
-    if (!hasSeenPopup) {
-      // Show popup after a short delay
-      const timer = setTimeout(() => {
-        setIsOpen(true);
-      }, 1000);
-
-      return () => clearTimeout(timer);
-    }
-  }, []);
-
+export default function SocialMediaPopup({ isOpen, onClose }: SocialMediaPopupProps) {
   const handleClose = () => {
-    setIsOpen(false);
-    // Remember that user has seen the popup
-    localStorage.setItem('hasSeenSocialPopup', 'true');
+    onClose();
   };
 
   return (

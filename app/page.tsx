@@ -9,6 +9,7 @@ import MembersList from '@/components/MembersList';
 import ModProfileModal from '@/components/ModProfileModal';
 import MobileSidebar from '@/components/MobileSidebar';
 import SocialMediaPopup from '@/components/SocialMediaPopup';
+import BarryCallPopup from '@/components/BarryCallPopup';
 import type { Persona } from '@/typings/types';
 
 export default function HomePage() {
@@ -19,6 +20,8 @@ export default function HomePage() {
   const [selectedMod, setSelectedMod] = useState<Persona | null>(null);
   const [isMobileSidebarOpen, setIsMobileSidebarOpen] = useState(false);
   const [newWish, setNewWish] = useState<any>(null);
+  const [showSocialPopup, setShowSocialPopup] = useState(false);
+  const [showBarryCall, setShowBarryCall] = useState(false);
 
   const handleWishSubmitted = (wish: any) => {
     // Add new wish to feed instantly
@@ -67,6 +70,44 @@ export default function HomePage() {
       })
       .catch(err => console.error('Failed to fetch count:', err));
   }, [refreshTrigger]);
+
+  // Handle popup sequence
+  useEffect(() => {
+    const hasSeenSocialPopup = localStorage.getItem('hasSeenSocialPopup');
+    const hasSeenBarryCall = localStorage.getItem('hasSeenBarryCall');
+
+    // Show social popup first (for all visitors)
+    if (!hasSeenSocialPopup) {
+      setTimeout(() => setShowSocialPopup(true), 1000);
+    } else if (!hasSeenBarryCall) {
+      // If already seen social, show Barry call directly
+      setTimeout(() => setShowBarryCall(true), 2000);
+    }
+  }, []);
+
+  const handleSocialClose = () => {
+    setShowSocialPopup(false);
+    localStorage.setItem('hasSeenSocialPopup', 'true');
+    
+    // Show Barry call 2 seconds after closing social popup
+    const hasSeenBarryCall = localStorage.getItem('hasSeenBarryCall');
+    if (!hasSeenBarryCall) {
+      setTimeout(() => setShowBarryCall(true), 2000);
+    }
+  };
+
+  const handleBarryAccept = () => {
+    setShowBarryCall(false);
+    localStorage.setItem('hasSeenBarryCall', 'true');
+    // TODO: Start Barry voice call
+    console.log('Barry call accepted! Starting voice call...');
+    window.open('https://elevenlabs.io/app/talk-to?agent_id=agent_9001kb09fjj7enh88s7w59m63172', '_blank');
+  };
+
+  const handleBarryReject = () => {
+    setShowBarryCall(false);
+    localStorage.setItem('hasSeenBarryCall', 'true');
+  };
 
   return (
     <main className="min-h-screen">
@@ -195,7 +236,15 @@ export default function HomePage() {
       />
 
       {/* Social Media Popup */}
-      <SocialMediaPopup />
+      <SocialMediaPopup isOpen={showSocialPopup} onClose={handleSocialClose} />
+
+      {/* Barry Call Popup */}
+      {showBarryCall && (
+        <BarryCallPopup
+          onAccept={handleBarryAccept}
+          onReject={handleBarryReject}
+        />
+      )}
     </main>
   );
 }
