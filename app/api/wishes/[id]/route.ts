@@ -25,13 +25,20 @@ export async function GET(
       );
     }
 
-    return NextResponse.json({
-      success: true,
-      ai_reply: wish.ai_reply,
-      ai_status: wish.ai_status,
-      ai_audio_url: wish.ai_audio_url,
-      ai_audio_path: wish.ai_audio_path,
-    });
+    return NextResponse.json(
+      {
+        success: true,
+        ai_reply: wish.ai_reply,
+        ai_status: wish.ai_status,
+        ai_audio_url: wish.ai_audio_url,
+        ai_audio_path: wish.ai_audio_path,
+      },
+      {
+        headers: {
+          'Cache-Control': 'no-store, no-cache, must-revalidate',
+        },
+      }
+    );
   } catch (error) {
     console.error('Error fetching wish status:', error);
     return NextResponse.json(
