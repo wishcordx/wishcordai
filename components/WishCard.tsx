@@ -60,10 +60,6 @@ export default function WishCard({ wish }: WishCardProps) {
   const [lastReplyCount, setLastReplyCount] = useState(0);
   const [shouldPollReplies, setShouldPollReplies] = useState(false);
   const [expectedModUsername, setExpectedModUsername] = useState<string | null>(null);
-  const hasPolledRef = useRef(false);
-  
-  // Don't sync props after initial mount - polling handles updates
-  // This prevents background refresh from overriding poll results
   
   useEffect(() => {
     // Fetch reactions and reply count in parallel for faster loading
@@ -78,9 +74,8 @@ export default function WishCard({ wish }: WishCardProps) {
 
   // Poll for AI response if status is pending
   useEffect(() => {
-    if (aiStatus === 'pending' && !hasPolledRef.current) {
+    if (aiStatus === 'pending') {
       console.log(`🔄 Starting to poll for wish ${wish.id} AI response...`);
-      hasPolledRef.current = true;
       
       let pollCount = 0;
       const maxPolls = 30; // Stop after 60 seconds (30 * 2s)
