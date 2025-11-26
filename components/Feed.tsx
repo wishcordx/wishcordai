@@ -46,9 +46,12 @@ export default function Feed({ refreshTrigger, newWish }: FeedProps) {
           const updatedWish = payload.new as Wish;
           console.log('📝 AI Status:', updatedWish.ai_status, 'Reply:', updatedWish.ai_reply?.substring(0, 50));
           setWishes(prev => {
-            const updated = prev.map(w => (w.id === updatedWish.id ? updatedWish : w));
-            console.log('✅ Wishes state updated');
-            return updated;
+            // Force new array reference for React to detect change
+            const updated = prev.map(w => 
+              w.id === updatedWish.id ? { ...updatedWish } : w
+            );
+            console.log('✅ Wishes state updated, forcing re-render');
+            return [...updated]; // New array reference
           });
         }
       )
