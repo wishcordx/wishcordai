@@ -71,42 +71,26 @@ export default function HomePage() {
       .catch(err => console.error('Failed to fetch count:', err));
   }, [refreshTrigger]);
 
-  // Handle popup sequence
+  // Handle popup sequence - Show to ALL users on every visit
   useEffect(() => {
-    const hasSeenSocialPopup = localStorage.getItem('hasSeenSocialPopup');
-    const hasSeenBarryCall = localStorage.getItem('hasSeenBarryCall');
-
-    // Show social popup first (for all visitors)
-    if (!hasSeenSocialPopup) {
-      setTimeout(() => setShowSocialPopup(true), 1000);
-    } else if (!hasSeenBarryCall) {
-      // If already seen social, show Barry call directly
-      setTimeout(() => setShowBarryCall(true), 2000);
-    }
+    // Show social popup first (1 second delay)
+    setTimeout(() => setShowSocialPopup(true), 1000);
   }, []);
 
   const handleSocialClose = () => {
     setShowSocialPopup(false);
-    localStorage.setItem('hasSeenSocialPopup', 'true');
-    
     // Show Barry call 2 seconds after closing social popup
-    const hasSeenBarryCall = localStorage.getItem('hasSeenBarryCall');
-    if (!hasSeenBarryCall) {
-      setTimeout(() => setShowBarryCall(true), 2000);
-    }
+    setTimeout(() => setShowBarryCall(true), 2000);
   };
 
   const handleBarryAccept = () => {
     setShowBarryCall(false);
-    localStorage.setItem('hasSeenBarryCall', 'true');
-    // TODO: Start Barry voice call
-    console.log('Barry call accepted! Starting voice call...');
+    // Open Barry's ElevenLabs agent in new tab
     window.open('https://elevenlabs.io/app/talk-to?agent_id=agent_9001kb09fjj7enh88s7w59m63172', '_blank');
   };
 
   const handleBarryReject = () => {
     setShowBarryCall(false);
-    localStorage.setItem('hasSeenBarryCall', 'true');
   };
 
   return (
