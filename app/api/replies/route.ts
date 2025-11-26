@@ -124,14 +124,12 @@ export async function POST(req: NextRequest) {
             }
           }
           
-          // Add conversation thread (excluding the pending reply we just created)
+          // Add conversation thread
           if (previousReplies && previousReplies.length > 0) {
             contextMessage += `\n[CONVERSATION THREAD]:\n`;
-            previousReplies
-              .filter(r => r.id !== modReplyId) // Exclude the placeholder
-              .forEach(r => {
-                contextMessage += `${r.username}: ${r.reply_text}\n`;
-              });
+            previousReplies.forEach(r => {
+              contextMessage += `${r.username}: ${r.reply_text}\n`;
+            });
           }
           
           // Add current reply
