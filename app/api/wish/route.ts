@@ -43,6 +43,14 @@ export async function POST(request: NextRequest) {
       mentionedPersonas 
     } = body;
 
+    // DEBUG: Log incoming request
+    console.log('📥 INCOMING WISH REQUEST:');
+    console.log('  📝 wishText:', wishText);
+    console.log('  🎭 persona:', persona);
+    console.log('  👥 mentionedPersonas:', mentionedPersonas);
+    console.log('  🎤 audioUrl:', audioUrl);
+    console.log('  🖼️ imageUrl:', imageUrl);
+
     // Validate input - allow empty text if media is present
     if (!wishText?.trim() && !imageUrl && !audioUrl) {
       return NextResponse.json<WishResponse>(
