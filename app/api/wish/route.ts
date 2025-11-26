@@ -94,8 +94,8 @@ export async function POST(request: NextRequest) {
     console.log('💭 Should respond:', shouldRespond);
 
     let aiReply: string | null = null;
-    let aiAudioUrl: string | null = null;
-    let aiAudioPath: string | null = null;
+    let aiAudioUrl: string | undefined;
+    let aiAudioPath: string | undefined;
     let imageDescription: string | undefined;
     let audioTranscript: string | undefined;
 
