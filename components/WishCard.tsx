@@ -656,31 +656,39 @@ export default function WishCard({ wish }: WishCardProps) {
           ))}
 
           {/* Typing Indicator for expected mod reply */}
-          {expectedModUsername && (
-            <div className="flex gap-1.5 sm:gap-2 animate-pulse">
-              <div className="w-6 h-6 sm:w-7 sm:h-7 rounded-full flex items-center justify-center bg-gradient-to-br from-indigo-500 to-purple-500 flex-shrink-0">
-                <span className="text-xs sm:text-sm">
-                  {expectedModUsername === 'SantaMod69' ? '🎅' : 
-                   expectedModUsername === 'xX_Krampus_Xx' ? '😈' :
-                   expectedModUsername === 'elfgirluwu' ? '🧝‍♀️' :
-                   expectedModUsername === 'FrostyTheCoder' ? '⛄' :
-                   expectedModUsername === 'DasherSpeedrun' ? '🦌' :
-                   expectedModUsername === 'SantaKumar' ? '🤖' :
-                   expectedModUsername === 'JingBells叮噹鈴' ? '🔔' : '💬'}
-                </span>
-              </div>
-              <div className="flex-1 min-w-0">
-                <div className="flex items-center gap-2 text-gray-400 text-xs sm:text-sm italic">
-                  <span>{expectedModUsername} is typing</span>
-                  <div className="flex gap-1">
-                    <span className="animate-bounce" style={{ animationDelay: '0ms' }}>.</span>
-                    <span className="animate-bounce" style={{ animationDelay: '150ms' }}>.</span>
-                    <span className="animate-bounce" style={{ animationDelay: '300ms' }}>.</span>
+          {expectedModUsername && (() => {
+            // Map mod username to correct avatar and role color
+            const modInfo = {
+              'SantaMod69': { avatar: '🎅', color: 'from-red-500 to-green-500' },
+              'xX_Krampus_Xx': { avatar: '😈', color: 'from-red-600 to-gray-800' },
+              'elfgirluwu': { avatar: '🧝‍♀️', color: 'from-green-400 to-emerald-500' },
+              'FrostyTheCoder': { avatar: '⛄', color: 'from-blue-400 to-cyan-400' },
+              'DasherSpeedrun': { avatar: '🦌', color: 'from-amber-600 to-yellow-500' },
+              'SantaKumar': { avatar: '🤖', color: 'from-purple-500 to-indigo-500' },
+              'JingBells叮噹鈴': { avatar: '🔔', color: 'from-yellow-400 to-amber-500' },
+            }[expectedModUsername] || { avatar: '💬', color: 'from-gray-500 to-gray-600' };
+            
+            return (
+              <div className="flex gap-1.5 sm:gap-2 animate-pulse">
+                <div className={`w-6 h-6 sm:w-7 sm:h-7 rounded-full flex items-center justify-center bg-gradient-to-br ${modInfo.color} flex-shrink-0`}>
+                  <span className="text-xs sm:text-sm">{modInfo.avatar}</span>
+                </div>
+                <div className="flex-1 min-w-0">
+                  <div className="flex items-baseline gap-1 sm:gap-2 mb-1">
+                    <span className="text-white font-medium text-xs">{expectedModUsername}</span>
+                  </div>
+                  <div className="flex items-center gap-2 text-gray-400 text-xs sm:text-sm italic">
+                    <span>{expectedModUsername} is typing</span>
+                    <div className="flex gap-1">
+                      <span className="animate-bounce" style={{ animationDelay: '0ms' }}>.</span>
+                      <span className="animate-bounce" style={{ animationDelay: '150ms' }}>.</span>
+                      <span className="animate-bounce" style={{ animationDelay: '300ms' }}>.</span>
+                    </div>
                   </div>
                 </div>
               </div>
-            </div>
-          )}
+            );
+          })()}
 
           {/* Reply Input */}
           <div className="flex gap-1.5 sm:gap-2 mt-2 sm:mt-3">
