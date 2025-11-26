@@ -24,6 +24,7 @@ export default function ModProfileModal({ isOpen, persona, onClose, onCall }: Mo
     'DasherSpeedrun': { responded: 1923, grantRate: 51, favoriteVerdict: 'GRANTED' },
     'SantaKumar': { responded: 892, grantRate: 8, favoriteVerdict: 'DENIED' },
     'JingBells叮噹鈴': { responded: 1523, grantRate: 88, favoriteVerdict: 'GRANTED' },
+    'BarryJingle': { responded: 0, grantRate: 100, favoriteVerdict: 'HELPER' },
   };
 
   const modStats = stats[personaConfig.name as keyof typeof stats] || { responded: 0, grantRate: 0, favoriteVerdict: 'PENDING' };

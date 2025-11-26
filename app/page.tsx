@@ -9,7 +9,6 @@ import MembersList from '@/components/MembersList';
 import ModProfileModal from '@/components/ModProfileModal';
 import MobileSidebar from '@/components/MobileSidebar';
 import SocialMediaPopup from '@/components/SocialMediaPopup';
-import BarryCallPopup from '@/components/BarryCallPopup';
 import type { Persona } from '@/typings/types';
 
 export default function HomePage() {
@@ -21,7 +20,6 @@ export default function HomePage() {
   const [isMobileSidebarOpen, setIsMobileSidebarOpen] = useState(false);
   const [newWish, setNewWish] = useState<any>(null);
   const [showSocialPopup, setShowSocialPopup] = useState(false);
-  const [showBarryCall, setShowBarryCall] = useState(false);
 
   const handleWishSubmitted = (wish: any) => {
     // Add new wish to feed instantly
@@ -79,18 +77,6 @@ export default function HomePage() {
 
   const handleSocialClose = () => {
     setShowSocialPopup(false);
-    // Show Barry call 2 seconds after closing social popup
-    setTimeout(() => setShowBarryCall(true), 2000);
-  };
-
-  const handleBarryAccept = () => {
-    setShowBarryCall(false);
-    // Start embedded voice call with Barry
-    setActiveCall('barry');
-  };
-
-  const handleBarryReject = () => {
-    setShowBarryCall(false);
   };
 
   return (
@@ -222,14 +208,6 @@ export default function HomePage() {
 
       {/* Social Media Popup */}
       <SocialMediaPopup isOpen={showSocialPopup} onClose={handleSocialClose} />
-
-      {/* Barry Call Popup */}
-      {showBarryCall && (
-        <BarryCallPopup
-          onAccept={handleBarryAccept}
-          onReject={handleBarryReject}
-        />
-      )}
     </main>
   );
 }
