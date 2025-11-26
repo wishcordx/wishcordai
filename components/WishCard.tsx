@@ -233,42 +233,43 @@ export default function WishCard({ wish }: WishCardProps) {
   // Handle reply text change with @mention detection
   const handleReplyTextChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const newText = e.target.value;
-    setReplyText(newText);
+    const input = e.target;
+    const cursorPos = input.selectionStart || newText.length;
     
-    // Use a slight delay to ensure cursor position is updated
-    setTimeout(() => {
-      if (!replyInputRef.current) return;
-      
-      const cursorPos = replyInputRef.current.selectionStart || 0;
-      setCursorPosition(cursorPos);
+    setReplyText(newText);
+    setCursorPosition(cursorPos);
 
-      // Detect @ mention trigger
-      const textBeforeCursor = newText.substring(0, cursorPos);
-      const lastAtIndex = textBeforeCursor.lastIndexOf('@');
+    // Detect @ mention trigger
+    const textBeforeCursor = newText.substring(0, cursorPos);
+    const lastAtIndex = textBeforeCursor.lastIndexOf('@');
+    
+    console.log('Reply text change:', { newText, cursorPos, lastAtIndex, textBeforeCursor });
+    
+    if (lastAtIndex !== -1) {
+      const textAfterAt = textBeforeCursor.substring(lastAtIndex + 1);
+      console.log('Text after @:', textAfterAt);
       
-      if (lastAtIndex !== -1) {
-        const textAfterAt = textBeforeCursor.substring(lastAtIndex + 1);
-        // Check if there's no space after @
-        if (!textAfterAt.includes(' ') && textAfterAt.length <= 20) {
-          setMentionSearch(textAfterAt.toLowerCase());
-          setShowMentions(true);
-          setSelectedMentionIndex(0);
-          
-          // Calculate position for dropdown
-          const input = replyInputRef.current;
-          const rect = input.getBoundingClientRect();
-          
-          setMentionPosition({
-            top: rect.bottom + window.scrollY + 4,
-            left: rect.left + window.scrollX,
-          });
-        } else {
-          setShowMentions(false);
-        }
+      // Check if there's no space after @
+      if (!textAfterAt.includes(' ') && textAfterAt.length <= 20) {
+        console.log('Showing mentions with search:', textAfterAt.toLowerCase());
+        setMentionSearch(textAfterAt.toLowerCase());
+        setShowMentions(true);
+        setSelectedMentionIndex(0);
+        
+        // Calculate position for dropdown
+        const rect = input.getBoundingClientRect();
+        setMentionPosition({
+          top: rect.bottom + window.scrollY + 4,
+          left: rect.left + window.scrollX,
+        });
       } else {
+        console.log('Hiding mentions - space found or too long');
         setShowMentions(false);
       }
-    }, 0);
+    } else {
+      console.log('Hiding mentions - no @ found');
+      setShowMentions(false);
+    }
   };
 
   // Handle keyboard navigation for mentions
