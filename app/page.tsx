@@ -75,7 +75,7 @@ export default function HomePage() {
         {/* Discord Channel Header */}
         <div className="mb-4 sm:mb-6">
           <div className="flex items-center gap-2 mb-2 sm:mb-3">
-            <span className="text-xl sm:text-2xl">#</span>
+            <span className="text-xl sm:text-2xl text-gray-400">#</span>
             <h2 className="text-xl sm:text-2xl font-bold text-white">xmas-wishes</h2>
           </div>
           <p className="text-gray-400 text-xs sm:text-sm">
