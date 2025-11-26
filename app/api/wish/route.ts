@@ -125,9 +125,16 @@ export async function POST(request: NextRequest) {
       // Text-only messages with @mention will get text-only responses
       if (audioUrl && aiReply) {
         try {
-          console.log(`🎙️ User sent voice, generating voice response for ${personaConfig.name}...`);
+          console.log(`🎙️ User sent voice (${audioUrl}), generating voice response for ${personaConfig.name}...`);
+          
+          if (!process.env.ELEVENLABS_API_KEY) {
+            console.error('❌ ELEVENLABS_API_KEY not found in environment variables!');
+            throw new Error('ElevenLabs API key not configured');
+          }
           
           const voiceId = VOICE_MAP[persona];
+          console.log(`🎤 Using voice ID: ${voiceId} for persona: ${persona}`);
+          
           const audio = await elevenlabs.textToSpeech.convert(voiceId, {
             text: aiReply,
             modelId: 'eleven_turbo_v2_5',
