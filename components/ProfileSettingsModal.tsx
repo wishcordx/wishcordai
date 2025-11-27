@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 
 interface ProfileSettingsModalProps {
@@ -18,6 +18,21 @@ const emojiOptions = [
   '💎', '🚀', '🌟', '💫', '🎮', '🎨', '🎭', '🎪'
 ];
 
+const diceBearStyles = [
+  { id: 'avataaars', name: 'Avataaars', description: 'Cartoon characters' },
+  { id: 'adventurer', name: 'Adventurer', description: 'Cute adventurers' },
+  { id: 'lorelei', name: 'Lorelei', description: 'Elegant portraits' },
+  { id: 'micah', name: 'Micah', description: 'Simple faces' },
+  { id: 'pixel-art', name: 'Pixel Art', description: 'Retro 8-bit style' },
+  { id: 'bottts', name: 'Bottts', description: 'Cute robots' },
+  { id: 'fun-emoji', name: 'Fun Emoji', description: 'Emoji style faces' },
+  { id: 'big-smile', name: 'Big Smile', description: 'Happy characters' },
+  { id: 'croodles', name: 'Croodles', description: 'Doodle style' },
+  { id: 'notionists', name: 'Notionists', description: 'Notion-style' },
+  { id: 'personas', name: 'Personas', description: 'Professional' },
+  { id: 'thumbs', name: 'Thumbs', description: 'Thumbs up/down' },
+];
+
 export default function ProfileSettingsModal({
   isOpen,
   onClose,
@@ -28,11 +43,58 @@ export default function ProfileSettingsModal({
 }: ProfileSettingsModalProps) {
   const [username, setUsername] = useState(currentUsername);
   const [avatar, setAvatar] = useState(currentAvatar);
-  const [avatarMode, setAvatarMode] = useState<'emoji' | 'upload'>(
-    currentAvatar.startsWith('data:') ? 'upload' : 'emoji'
+  const [avatarMode, setAvatarMode] = useState<'emoji' | 'upload' | 'generate'>(
+    currentAvatar.startsWith('data:') ? 'upload' : 
+    currentAvatar.startsWith('https://api.dicebear.com') ? 'generate' : 
+    'emoji'
   );
   const [copied, setCopied] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
+  
+  // DiceBear state
+  const [selectedStyle, setSelectedStyle] = useState('avataaars');
+  const [seed, setSeed] = useState('');
+  
+  // Initialize seed from current DiceBear URL or username
+  useEffect(() => {
+    if (currentAvatar.startsWith('https://api.dicebear.com')) {
+      const match = currentAvatar.match(/seed=([^&]+)/);
+      if (match) {
+        setSeed(decodeURIComponent(match[1]));
+      }
+      const styleMatch = currentAvatar.match(/\/9\.x\/([^/]+)\//);
+      if (styleMatch) {
+        setSelectedStyle(styleMatch[1]);
+      }
+    } else {
+      setSeed(username || 'random');
+    }
+  }, [currentAvatar, username]);
+  
+  // Update seed when username changes in generate mode
+  useEffect(() => {
+    if (avatarMode === 'generate' && username) {
+      setSeed(username);
+    }
+  }, [username, avatarMode]);
+  
+  const generateDiceBearUrl = (style: string, seedValue: string) => {
+    const encodedSeed = encodeURIComponent(seedValue);
+    return `https://api.dicebear.com/9.x/${style}/svg?seed=${encodedSeed}`;
+  };
+  
+  const handleStyleChange = (style: string) => {
+    setSelectedStyle(style);
+    const newUrl = generateDiceBearUrl(style, seed || username || 'random');
+    setAvatar(newUrl);
+  };
+  
+  const randomizeSeed = () => {
+    const randomSeed = `${username || 'user'}-${Math.random().toString(36).substring(7)}`;
+    setSeed(randomSeed);
+    const newUrl = generateDiceBearUrl(selectedStyle, randomSeed);
+    setAvatar(newUrl);
+  };
 
   const handleSave = () => {
     if (username.trim().length === 0) {
@@ -138,7 +200,7 @@ export default function ProfileSettingsModal({
                   <div className="flex gap-2 mb-3">
                     <button
                       onClick={() => setAvatarMode('emoji')}
-                      className={`flex-1 px-4 py-2 rounded-lg font-medium transition-colors ${
+                      className={`flex-1 px-3 py-2 rounded-lg font-medium transition-colors text-sm ${
                         avatarMode === 'emoji'
                           ? 'bg-indigo-600 text-white'
                           : 'bg-[#11121c] text-slate-400 hover:text-white'
@@ -147,8 +209,22 @@ export default function ProfileSettingsModal({
                       🎨 Emoji
                     </button>
                     <button
+                      onClick={() => {
+                        setAvatarMode('generate');
+                        const newUrl = generateDiceBearUrl(selectedStyle, seed || username || 'random');
+                        setAvatar(newUrl);
+                      }}
+                      className={`flex-1 px-3 py-2 rounded-lg font-medium transition-colors text-sm ${
+                        avatarMode === 'generate'
+                          ? 'bg-indigo-600 text-white'
+                          : 'bg-[#11121c] text-slate-400 hover:text-white'
+                      }`}
+                    >
+                      ✨ Generate
+                    </button>
+                    <button
                       onClick={() => setAvatarMode('upload')}
-                      className={`flex-1 px-4 py-2 rounded-lg font-medium transition-colors ${
+                      className={`flex-1 px-3 py-2 rounded-lg font-medium transition-colors text-sm ${
                         avatarMode === 'upload'
                           ? 'bg-indigo-600 text-white'
                           : 'bg-[#11121c] text-slate-400 hover:text-white'
@@ -161,7 +237,7 @@ export default function ProfileSettingsModal({
                   {/* Avatar Preview */}
                   <div className="flex items-center gap-4 mb-3">
                     <div className="w-16 h-16 rounded-full bg-gradient-to-br from-indigo-500 to-purple-500 flex items-center justify-center overflow-hidden">
-                      {avatar.startsWith('data:') ? (
+                      {avatar.startsWith('data:') || avatar.startsWith('https://') ? (
                         <img src={avatar} alt="Avatar" className="w-full h-full object-cover" />
                       ) : (
                         <span className="text-3xl">{avatar}</span>
@@ -172,6 +248,54 @@ export default function ProfileSettingsModal({
                       <p className="text-xs text-slate-500">Preview</p>
                     </div>
                   </div>
+
+                  {/* Generate DiceBear Avatar */}
+                  {avatarMode === 'generate' && (
+                    <div className="space-y-3">
+                      {/* Randomize Button */}
+                      <button
+                        onClick={randomizeSeed}
+                        className="w-full px-4 py-2 bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 text-white rounded-lg transition-all flex items-center justify-center gap-2 font-medium"
+                      >
+                        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                        </svg>
+                        Randomize Avatar
+                      </button>
+                      
+                      {/* Style Selector */}
+                      <div className="space-y-2">
+                        <p className="text-sm font-semibold text-slate-300">Choose Style:</p>
+                        <div className="grid grid-cols-3 gap-2 max-h-64 overflow-y-auto p-2 bg-[#11121c] rounded-lg border border-white/10">
+                          {diceBearStyles.map((style) => (
+                            <button
+                              key={style.id}
+                              onClick={() => handleStyleChange(style.id)}
+                              className={`flex flex-col items-center gap-2 p-3 rounded-lg transition-all hover:scale-105 ${
+                                selectedStyle === style.id
+                                  ? 'bg-indigo-600 ring-2 ring-indigo-400'
+                                  : 'bg-[#1e1f2e] hover:bg-white/5'
+                              }`}
+                            >
+                              <img
+                                src={generateDiceBearUrl(style.id, seed || username || 'preview')}
+                                alt={style.name}
+                                className="w-12 h-12 rounded-full"
+                              />
+                              <div className="text-center">
+                                <p className="text-xs font-semibold text-white">{style.name}</p>
+                                <p className="text-[10px] text-slate-400">{style.description}</p>
+                              </div>
+                            </button>
+                          ))}
+                        </div>
+                      </div>
+                      
+                      <p className="text-xs text-slate-500 text-center">
+                        💡 Click "Randomize" for different variations or change your username for a new unique avatar!
+                      </p>
+                    </div>
+                  )}
 
                   {/* Emoji Grid */}
                   {avatarMode === 'emoji' && (

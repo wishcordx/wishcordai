@@ -107,10 +107,10 @@ export default function MembersList() {
               >
                 <div className="relative">
                   <div className="w-8 h-8 rounded-full flex items-center justify-center overflow-hidden bg-gradient-to-br from-indigo-500 to-purple-500">
-                    {member.avatar.startsWith('data:') ? (
+                    {member.avatar.startsWith('data:') || member.avatar.startsWith('https://') ? (
                       <img src={member.avatar} alt={member.username} className="w-full h-full object-cover" />
                     ) : (
-                      <span className="text-lg">{member.avatar}</span>
+                      <span className="text-2xl">{member.avatar}</span>
                     )}
                   </div>
                   <span className="absolute -bottom-0.5 -right-0.5 w-3 h-3 rounded-full border-2 border-[#11121c] bg-green-500"></span>
@@ -144,7 +144,7 @@ export default function MembersList() {
               >
                 <div className="relative">
                   <div className="w-8 h-8 rounded-full flex items-center justify-center overflow-hidden bg-gradient-to-br from-slate-500 to-slate-600">
-                    {member.avatar.startsWith('data:') ? (
+                    {member.avatar.startsWith('data:') || member.avatar.startsWith('https://') ? (
                       <img src={member.avatar} alt={member.username} className="w-full h-full object-cover" />
                     ) : (
                       <span className="text-lg">{member.avatar}</span>

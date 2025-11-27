@@ -455,7 +455,7 @@ export default function WishCard({ wish }: WishCardProps) {
       <div className="flex gap-2 sm:gap-3 mb-3 sm:mb-4">
         <div className="w-8 h-8 sm:w-10 sm:h-10 bg-gradient-to-br from-blue-500 to-purple-500 rounded-full flex items-center justify-center flex-shrink-0 overflow-hidden">
           {wish.avatar ? (
-            wish.avatar.startsWith('data:') ? (
+            wish.avatar.startsWith('data:') || wish.avatar.startsWith('https://') ? (
               <img src={wish.avatar} alt={wish.username || 'User'} className="w-full h-full object-cover" />
             ) : (
               <span className="text-base sm:text-lg">{wish.avatar}</span>
@@ -673,7 +673,7 @@ export default function WishCard({ wish }: WishCardProps) {
           {replies.map((reply) => (
             <div key={reply.id} className="flex gap-1.5 sm:gap-2">
               <div className="w-6 h-6 sm:w-7 sm:h-7 rounded-full flex items-center justify-center overflow-hidden bg-gradient-to-br from-green-500 to-emerald-500 flex-shrink-0">
-                {reply.avatar.startsWith('data:') ? (
+                {reply.avatar.startsWith('data:') || reply.avatar.startsWith('https://') ? (
                   <img src={reply.avatar} alt={reply.username} className="w-full h-full object-cover" />
                 ) : (
                   <span className="text-xs sm:text-sm">{reply.avatar}</span>

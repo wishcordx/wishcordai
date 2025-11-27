@@ -178,7 +178,7 @@ export default function HomePage() {
             <div className="flex items-center gap-2">
               <div className="relative">
                 <div className="w-8 h-8 rounded-full bg-gradient-to-br from-indigo-500 to-purple-500 flex items-center justify-center text-xs font-bold text-white overflow-hidden">
-                  {userProfile?.avatar && userProfile.avatar.startsWith('data:') ? (
+                  {userProfile?.avatar && (userProfile.avatar.startsWith('data:') || userProfile.avatar.startsWith('https://')) ? (
                     <img src={userProfile.avatar} alt={userProfile.username} className="w-full h-full object-cover" />
                   ) : (
                     <span>{userProfile?.avatar || '👤'}</span>

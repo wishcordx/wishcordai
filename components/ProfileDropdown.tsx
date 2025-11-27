@@ -76,8 +76,8 @@ export default function ProfileDropdown({ onDisconnect, onOpenSetup }: ProfileDr
             <div className="flex items-center gap-3">
               <div className="w-12 h-12 bg-gradient-to-br from-green-500 to-emerald-500 rounded-full flex items-center justify-center overflow-hidden">
                 {profile?.avatar ? (
-                  profile.avatar.startsWith('data:') ? (
-                    <img src={profile.avatar} alt="Avatar" className="w-full h-full object-cover" />
+                  profile.avatar.startsWith('data:') || profile.avatar.startsWith('https://') ? (
+                    <img src={profile.avatar} alt="Profile" className="w-full h-full object-cover" />
                   ) : (
                     <span className="text-2xl">{profile.avatar}</span>
                   )
