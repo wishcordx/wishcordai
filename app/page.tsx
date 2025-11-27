@@ -9,7 +9,6 @@ import ModProfileModal from '@/components/ModProfileModal';
 import SocialMediaPopup from '@/components/SocialMediaPopup';
 import MembersList from '@/components/MembersList';
 import ProfileSettingsModal from '@/components/ProfileSettingsModal';
-import ProfileSetupModal from '@/components/ProfileSetupModal';
 import WalletConnectModal from '@/components/WalletConnectModal';
 import { useWallet } from '@/lib/wallet-context';
 import type { Persona } from '@/typings/types';
@@ -28,7 +27,6 @@ export default function HomePage() {
   const [isMobileSidebarOpen, setIsMobileSidebarOpen] = useState(false);
   const [showProfileSettings, setShowProfileSettings] = useState(false);
   const [showWalletConnect, setShowWalletConnect] = useState(false);
-  const [showProfileSetup, setShowProfileSetup] = useState(false);
 
   const mods = [
     { name: 'BarryJingle', emoji: '🎄', role: 'Helper', color: 'text-emerald-400', persona: 'barry' as Persona, status: 'online' },
@@ -77,10 +75,11 @@ export default function HomePage() {
     return () => window.removeEventListener('profileUpdated', loadProfile);
   }, []);
 
-  // Show profile setup modal if wallet connected but no profile
+  // Show profile settings modal if wallet connected but no profile
   useEffect(() => {
     if (walletAddress && profileExists === false) {
-      setShowProfileSetup(true);
+      // For new users, show ProfileSettingsModal directly
+      setShowProfileSettings(true);
     }
   }, [walletAddress, profileExists]);
 
@@ -1284,12 +1283,12 @@ export default function HomePage() {
       <SocialMediaPopup isOpen={showSocialPopup} onClose={() => setShowSocialPopup(false)} />
 
       {/* Profile Settings Modal */}
-      {walletAddress && userProfile && (
+      {walletAddress && (
         <ProfileSettingsModal
           isOpen={showProfileSettings}
           onClose={() => setShowProfileSettings(false)}
-          currentUsername={userProfile.username}
-          currentAvatar={userProfile.avatar}
+          currentUsername={userProfile?.username || ''}
+          currentAvatar={userProfile?.avatar || '🎅'}
           walletAddress={walletAddress}
           onSave={handleProfileSave}
         />
@@ -1299,12 +1298,6 @@ export default function HomePage() {
       <WalletConnectModal
         isOpen={showWalletConnect}
         onClose={() => setShowWalletConnect(false)}
-      />
-
-      {/* Profile Setup Modal - Auto-show for new wallets */}
-      <ProfileSetupModal
-        isOpen={showProfileSetup}
-        onClose={() => setShowProfileSetup(false)}
       />
     </div>
   );

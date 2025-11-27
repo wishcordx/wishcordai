@@ -49,8 +49,9 @@ export default function ProfileSettingsModal({
   onSave,
 }: ProfileSettingsModalProps) {
   const { disconnectWallet } = useWallet();
-  const [username, setUsername] = useState(currentUsername);
-  const [avatar, setAvatar] = useState(currentAvatar);
+  const isNewUser = !currentUsername || currentUsername.length === 0;
+  const [username, setUsername] = useState(currentUsername || '');
+  const [avatar, setAvatar] = useState(currentAvatar || '🎅');
   const [avatarMode, setAvatarMode] = useState<'emoji' | 'upload' | 'generate'>(
     currentAvatar.startsWith('data:') ? 'upload' : 
     currentAvatar.startsWith('https://api.dicebear.com') ? 'generate' : 
@@ -177,6 +178,15 @@ export default function ProfileSettingsModal({
     onClose();
   };
 
+  const handleClose = () => {
+    // For new users, require them to save before closing
+    if (isNewUser && (!username.trim() || username.trim().length === 0)) {
+      alert('Please enter a username to continue');
+      return;
+    }
+    onClose();
+  };
+
   return (
     <AnimatePresence>
       {isOpen && (
@@ -186,7 +196,7 @@ export default function ProfileSettingsModal({
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            onClick={onClose}
+            onClick={handleClose}
             className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50"
           />
 
@@ -202,9 +212,16 @@ export default function ProfileSettingsModal({
             <div className="bg-[#1e1f2e] rounded-xl shadow-2xl w-full max-w-md max-h-[90vh] overflow-y-auto border border-white/10">
               {/* Header */}
               <div className="flex items-center justify-between p-6 border-b border-white/10">
-                <h2 className="text-xl font-bold text-white">Profile Settings</h2>
+                <div>
+                  <h2 className="text-xl font-bold text-white">
+                    {isNewUser ? 'Setup Your Profile' : 'Profile Settings'}
+                  </h2>
+                  {isNewUser && (
+                    <p className="text-sm text-slate-400 mt-1">Complete your profile to get started</p>
+                  )}
+                </div>
                 <button
-                  onClick={onClose}
+                  onClick={handleClose}
                   className="text-slate-400 hover:text-white transition-colors"
                 >
                   <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -433,17 +450,20 @@ export default function ProfileSettingsModal({
 
               {/* Footer */}
               <div className="flex gap-3 p-6 border-t border-white/10">
-                <button
-                  onClick={onClose}
-                  className="flex-1 px-6 py-3 bg-[#11121c] hover:bg-white/5 text-slate-300 rounded-lg font-medium transition-colors"
-                >
-                  Cancel
-                </button>
+                {!isNewUser && (
+                  <button
+                    onClick={handleClose}
+                    className="flex-1 px-6 py-3 bg-[#11121c] hover:bg-white/5 text-slate-300 rounded-lg font-medium transition-colors"
+                  >
+                    Cancel
+                  </button>
+                )}
                 <button
                   onClick={handleSave}
-                  className="flex-1 px-6 py-3 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg font-medium transition-colors"
+                  className={`${isNewUser ? 'w-full' : 'flex-1'} px-6 py-3 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg font-medium transition-colors disabled:opacity-50 disabled:cursor-not-allowed`}
+                  disabled={!username.trim()}
                 >
-                  Save Changes
+                  {isNewUser ? 'Complete Setup' : 'Save Changes'}
                 </button>
               </div>
             </div>
