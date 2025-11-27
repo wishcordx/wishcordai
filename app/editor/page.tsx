@@ -2,7 +2,7 @@
 
 import { useEffect, useState, useRef, Suspense } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
-import { fabric } from 'fabric';
+import * as fabric from 'fabric';
 import { motion } from 'framer-motion';
 
 function EditorContent() {
@@ -40,36 +40,38 @@ function EditorContent() {
   useEffect(() => {
     if (!canvasRef.current || !imageData) return;
 
+    const canvasWidth = window.innerWidth < 768 ? window.innerWidth - 32 : 800;
+    const canvasHeight = window.innerWidth < 768 ? window.innerHeight - 200 : 600;
+
     // Initialize Fabric canvas
     const canvas = new fabric.Canvas(canvasRef.current, {
+      width: canvasWidth,
+      height: canvasHeight,
       backgroundColor: '#1a1a1a',
     });
     fabricCanvasRef.current = canvas;
 
     // Load image
-    fabric.Image.fromURL(imageData, (img) => {
-      const canvasWidth = window.innerWidth < 768 ? window.innerWidth - 32 : 800;
-      const canvasHeight = window.innerWidth < 768 ? window.innerHeight - 200 : 600;
-      
-      canvas.setWidth(canvasWidth);
-      canvas.setHeight(canvasHeight);
-
+    const img = new Image();
+    img.crossOrigin = 'anonymous';
+    img.onload = () => {
+      const fabricImage = new fabric.Image(img);
       const scale = Math.min(
-        canvasWidth / (img.width || 1),
-        canvasHeight / (img.height || 1)
+        canvasWidth / img.width,
+        canvasHeight / img.height
       );
-
-      img.scale(scale);
-      img.set({
-        left: (canvasWidth - (img.width || 0) * scale) / 2,
-        top: (canvasHeight - (img.height || 0) * scale) / 2,
+      fabricImage.scale(scale);
+      fabricImage.set({
+        left: canvasWidth / 2,
+        top: canvasHeight / 2,
+        originX: 'center',
+        originY: 'center',
         selectable: false,
       });
-
-      canvas.add(img);
-      canvas.sendToBack(img);
+      canvas.add(fabricImage);
       canvas.renderAll();
-    });
+    };
+    img.src = imageData;
 
     return () => {
       canvas.dispose();
@@ -77,11 +79,14 @@ function EditorContent() {
   }, [imageData]);
 
   const addText = () => {
-    if (!fabricCanvasRef.current) return;
+    const canvas = fabricCanvasRef.current;
+    if (!canvas) return;
 
     const text = new fabric.IText('Your Text', {
-      left: 100,
-      top: 100,
+      left: canvas.width! / 2,
+      top: canvas.height! / 2,
+      originX: 'center',
+      originY: 'center',
       fontFamily: selectedFont,
       fontSize: fontSize,
       fill: textColor,
@@ -90,9 +95,9 @@ function EditorContent() {
       textAlign: 'center',
     });
 
-    fabricCanvasRef.current.add(text);
-    fabricCanvasRef.current.setActiveObject(text);
-    fabricCanvasRef.current.renderAll();
+    canvas.add(text);
+    canvas.setActiveObject(text);
+    canvas.renderAll();
   };
 
   const deleteSelected = () => {
@@ -114,15 +119,17 @@ function EditorContent() {
   };
 
   const handleSaveToFeed = async () => {
-    if (!fabricCanvasRef.current) return;
+    const canvas = fabricCanvasRef.current;
+    if (!canvas) return;
 
     setIsSaving(true);
 
     try {
       // Export canvas as base64
-      const dataURL = fabricCanvasRef.current.toDataURL({
+      const dataURL = canvas.toDataURL({
         format: 'png',
         quality: 0.9,
+        multiplier: 1,
       });
 
       // Store in session storage

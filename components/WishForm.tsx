@@ -498,43 +498,62 @@ export default function WishForm({ onWishSubmitted }: WishFormProps) {
             <button
               type="button"
               onClick={removeImage}
-              className="absolute top-1 right-1 bg-red-600 hover:bg-red-700 text-white rounded-full w-6 h-6 flex items-center justify-center text-sm"
+              className="absolute top-2 right-2 bg-red-600 hover:bg-red-700 text-white rounded-lg w-7 h-7 flex items-center justify-center transition-colors"
+              title="Remove image"
             >
-              ✕
+              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+              </svg>
             </button>
             <img
               src={imageUrl}
               alt="Attached meme"
               className="max-h-40 rounded-lg mx-auto"
             />
-            <p className="text-xs text-gray-400 text-center mt-2">🎨 Meme attached</p>
+            <div className="flex items-center justify-center gap-2 mt-2">
+              <svg className="w-4 h-4 text-indigo-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+              </svg>
+              <p className="text-xs text-gray-400">Image attached</p>
+            </div>
           </div>
         )}
 
         {/* Audio Preview */}
         {audioBlob && (
           <div className="relative bg-[#1e1f22] rounded-lg p-3 border border-[#0f1011] flex items-center justify-between">
-            <div className="flex items-center gap-2">
-              <span className="text-2xl">🎤</span>
+            <div className="flex items-center gap-3">
+              <div className="p-2 bg-indigo-600/20 rounded-lg">
+                <svg className="w-6 h-6 text-indigo-400" fill="currentColor" viewBox="0 0 24 24">
+                  <path d="M12 14C13.66 14 15 12.66 15 11V5C15 3.34 13.66 2 12 2C10.34 2 9 3.34 9 5V11C9 12.66 10.34 14 12 14Z" />
+                  <path d="M17 11C17 14 14.76 16.1 12 16.1C9.24 16.1 7 14 7 11H5C5 14.41 7.72 17.23 11 17.72V21H13V17.72C16.28 17.24 19 14.42 19 11H17Z" />
+                </svg>
+              </div>
               <div>
-                <p className="text-sm text-white">Voice message</p>
+                <p className="text-sm text-white font-medium">Voice message</p>
                 <p className="text-xs text-gray-400">{recordingTime} seconds</p>
               </div>
             </div>
             <button
               type="button"
               onClick={removeAudio}
-              className="bg-red-600 hover:bg-red-700 text-white rounded-full w-6 h-6 flex items-center justify-center text-sm"
+              className="bg-red-600 hover:bg-red-700 text-white rounded-lg w-7 h-7 flex items-center justify-center transition-colors"
+              title="Remove audio"
             >
-              ✕
+              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+              </svg>
             </button>
           </div>
         )}
 
       {success && (
-        <div className="bg-green-600/20 border border-green-600/30 px-3 py-2 sm:px-4 rounded-lg">
+        <div className="bg-green-600/20 border border-green-600/30 px-3 py-2 sm:px-4 rounded-lg flex items-center gap-2">
+          <svg className="w-4 h-4 text-green-400 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+          </svg>
           <p className="text-xs sm:text-sm text-green-400">
-            ✅ Message sent! Mod is typing...
+            Message sent! Mod is typing...
           </p>
         </div>
       )}
