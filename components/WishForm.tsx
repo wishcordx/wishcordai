@@ -61,30 +61,34 @@ export default function WishForm({ onWishSubmitted }: WishFormProps) {
       const response = await fetch(dataURL);
       const blob = await response.blob();
       
-      // Generate unique filename
-      const timestamp = Date.now();
-      const filename = `meme-${timestamp}.png`;
+      // Generate unique filename with subfolder path (like MemeEditor does)
+      const fileName = `${Date.now()}-${Math.random().toString(36).substring(7)}.png`;
+      const filePath = `wish-memes/${fileName}`;
       
-      // Upload directly to Supabase Storage
+      // Upload directly to Supabase Storage (correct bucket: wish-memes)
       const { data, error } = await supabase.storage
-        .from('wish-images')
-        .upload(filename, blob, {
+        .from('wish-memes')
+        .upload(filePath, blob, {
           contentType: 'image/png',
           cacheControl: '3600',
         });
       
-      if (error) throw error;
+      if (error) {
+        console.error('Supabase upload error:', error);
+        throw error;
+      }
       
       // Get public URL
       const { data: { publicUrl } } = supabase.storage
-        .from('wish-images')
-        .getPublicUrl(filename);
+        .from('wish-memes')
+        .getPublicUrl(filePath);
       
+      console.log('✅ Edited image uploaded successfully:', publicUrl);
       setImageUrl(publicUrl);
-      setImagePath(filename);
+      setImagePath(filePath);
     } catch (err) {
-      console.error('Failed to upload edited image:', err);
-      setError('Failed to upload edited image');
+      console.error('❌ Failed to upload edited image:', err);
+      setError('Failed to upload edited image. Please try again.');
     }
   };
 
