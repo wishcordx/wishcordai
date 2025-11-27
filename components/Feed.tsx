@@ -45,13 +45,22 @@ export default function Feed({ refreshTrigger, newWish }: FeedProps) {
           console.log('🔄 Wish updated via Realtime:', payload.new);
           const updatedWish = payload.new as Wish;
           console.log('📝 AI Status:', updatedWish.ai_status, 'Reply:', updatedWish.ai_reply?.substring(0, 50));
+          console.log('🆔 Updated wish ID:', updatedWish.id);
           setWishes(prev => {
-            // Force new array reference for React to detect change
-            const updated = prev.map(w => 
-              w.id === updatedWish.id ? { ...updatedWish } : w
-            );
-            console.log('✅ Wishes state updated, forcing re-render');
-            return [...updated]; // New array reference
+            console.log('📋 Current wishes count:', prev.length);
+            const foundIndex = prev.findIndex(w => w.id === updatedWish.id);
+            console.log('🔍 Found wish at index:', foundIndex);
+            
+            if (foundIndex === -1) {
+              console.warn('⚠️ Wish not found in current list!');
+              return prev;
+            }
+            
+            // Create completely new array with updated wish
+            const updated = [...prev];
+            updated[foundIndex] = { ...updatedWish };
+            console.log('✅ Wishes state updated, wish at index', foundIndex, 'status:', updated[foundIndex].ai_status);
+            return updated;
           });
         }
       )

@@ -60,6 +60,11 @@ export default function WishCard({ wish }: WishCardProps) {
   const [shouldPollReplies, setShouldPollReplies] = useState(false);
   const [expectedModUsername, setExpectedModUsername] = useState<string | null>(null);
   
+  // Debug: Log when wish prop updates
+  useEffect(() => {
+    console.log(`🔄 [WishCard ${wish.id}] Rendered with ai_status:`, wish.ai_status, 'ai_reply:', wish.ai_reply?.substring(0, 30));
+  }, [wish.ai_status, wish.ai_reply, wish.id]);
+  
   useEffect(() => {
     // Fetch reactions and reply count in parallel for faster loading
     fetchInitialData();
