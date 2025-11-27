@@ -2,6 +2,7 @@
 
 import { useState, useRef, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { useWallet } from '@/lib/wallet-context';
 
 interface ProfileSettingsModalProps {
   isOpen: boolean;
@@ -41,6 +42,7 @@ export default function ProfileSettingsModal({
   walletAddress,
   onSave,
 }: ProfileSettingsModalProps) {
+  const { disconnectWallet } = useWallet();
   const [username, setUsername] = useState(currentUsername);
   const [avatar, setAvatar] = useState(currentAvatar);
   const [avatarMode, setAvatarMode] = useState<'emoji' | 'upload' | 'generate'>(
@@ -132,6 +134,12 @@ export default function ProfileSettingsModal({
 
   const truncateAddress = (address: string) => {
     return `${address.slice(0, 8)}...${address.slice(-8)}`;
+  };
+
+  const handleLogout = () => {
+    disconnectWallet();
+    localStorage.removeItem('userProfile');
+    onClose();
   };
 
   return (
@@ -373,6 +381,19 @@ export default function ProfileSettingsModal({
                     </button>
                   </div>
                 </div>
+              </div>
+
+              {/* Logout Section */}
+              <div className="px-6 pb-4">
+                <button
+                  onClick={handleLogout}
+                  className="w-full flex items-center justify-center gap-2 px-6 py-3 bg-red-600/10 hover:bg-red-600/20 text-red-400 hover:text-red-300 rounded-lg font-medium transition-colors border border-red-600/20"
+                >
+                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+                  </svg>
+                  Logout
+                </button>
               </div>
 
               {/* Footer */}
