@@ -238,15 +238,6 @@ export default function HomePage() {
           </div>
 
           <div className="flex items-center gap-2">
-            {!walletAddress && (
-              <button 
-                onClick={handleConnectWallet}
-                className="bg-[#5865F2] hover:bg-[#4752c4] px-4 py-2 rounded-lg text-sm font-medium transition-colors shadow-lg shadow-indigo-500/20 flex items-center gap-2 text-white"
-              >
-                <span>🔗</span>
-                <span className="hidden sm:inline">Connect</span>
-              </button>
-            )}
             {/* Mobile sidebar toggle */}
             <button
               onClick={() => setIsMobileSidebarOpen(true)}
@@ -714,7 +705,7 @@ export default function HomePage() {
                   <div className="flex-1">
                     <h3 className="text-xl font-bold mb-2 text-indigo-400">Connect Your Wallet (Optional)</h3>
                     <p className="text-slate-300 mb-3">
-                      Click "Connect Wallet" in the top-right corner to link your Solana wallet. This gives you:
+                      Click "Connect Wallet" at the bottom-left corner of the page to link your Solana wallet. This gives you:
                     </p>
                     <ul className="list-disc list-inside space-y-1 text-slate-400 ml-4">
                       <li>Verified identity with your wallet address</li>
