@@ -88,6 +88,7 @@ export async function POST(request: NextRequest) {
       'DasherSpeedrun': 'reindeer',
       'SantaKumar': 'scammer',
       'JingBells叮噹鈴': 'jingbells',
+      'BarryJingle': 'barry',
     };
     
     const mentionedPersonaIds = mentions.map(m => usernameToPersonaMap[m] || m.toLowerCase()).filter(Boolean);

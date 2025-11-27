@@ -195,6 +195,8 @@ export const aiRouter = {
       jingbells: 'jingbells',
       jing: 'jingbells',
       叮噹鈴: 'jingbells',
+      barry: 'barry',
+      barryjingle: 'barry',
     };
 
     return [...new Set(mentions.map((m) => personaMap[m]).filter(Boolean))];

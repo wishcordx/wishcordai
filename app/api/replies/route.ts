@@ -24,7 +24,7 @@ export async function POST(req: NextRequest) {
     const supabase = createClient(supabaseUrl, supabaseServiceKey);
 
     // Check for @mentions in the reply
-    const mentionRegex = /@(SantaMod69|xX_Krampus_Xx|elfgirluwu|FrostyTheCoder|DasherSpeedrun|SantaKumar|JingBells叮噹鈴)/g;
+    const mentionRegex = /@(SantaMod69|xX_Krampus_Xx|elfgirluwu|FrostyTheCoder|DasherSpeedrun|SantaKumar|JingBells叮噹鈴|BarryJingle)/g;
     const matches = reply_text.match(mentionRegex);
     const hasMention = matches && matches.length > 0;
 
@@ -37,6 +37,7 @@ export async function POST(req: NextRequest) {
       'DasherSpeedrun': 'reindeer',
       'SantaKumar': 'scammer',
       'JingBells叮噹鈴': 'jingbells',
+      'BarryJingle': 'barry',
     };
 
     let mentionedUsername: string | undefined;
