@@ -23,6 +23,7 @@ const MODS: Mention[] = [
   { id: '@DasherSpeedrun', name: 'DasherSpeedrun', avatar: '🦌' },
   { id: '@SantaKumar', name: 'SantaKumar', avatar: '🤖' },
   { id: '@JingBells叮噹鈴', name: 'JingBells叮噹鈴', avatar: '🔔' },
+  { id: '@BarryJingle', name: 'BarryJingle', avatar: '🎄' },
 ];
 
 export default function MentionAutocomplete({

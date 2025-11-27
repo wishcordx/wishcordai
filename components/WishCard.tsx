@@ -49,6 +49,39 @@ const isOfficialMod = (username: string): boolean => {
   return OFFICIAL_MODS.includes(username);
 };
 
+// Helper function to render text with gold-colored @mentions
+const renderTextWithMentions = (text: string): React.ReactNode => {
+  // Match all @mentions of official mods
+  const mentionPattern = /@(SantaMod69|xX_Krampus_Xx|elfgirluwu|FrostyTheCoder|DasherSpeedrun|SantaKumar|JingBells叮噹鈴|BarryJingle)/g;
+  
+  const parts = [];
+  let lastIndex = 0;
+  let match;
+  
+  while ((match = mentionPattern.exec(text)) !== null) {
+    // Add text before the mention
+    if (match.index > lastIndex) {
+      parts.push(text.slice(lastIndex, match.index));
+    }
+    
+    // Add the mention with gold styling
+    parts.push(
+      <span key={match.index} className="text-amber-400 font-semibold animate-pulse">
+        {match[0]}
+      </span>
+    );
+    
+    lastIndex = match.index + match[0].length;
+  }
+  
+  // Add remaining text after the last mention
+  if (lastIndex < text.length) {
+    parts.push(text.slice(lastIndex));
+  }
+  
+  return parts.length > 0 ? parts : text;
+};
+
 export default function WishCard({ wish }: WishCardProps) {
   const { walletAddress } = useWallet();
   const [reactions, setReactions] = useState<Reaction[]>([]);
@@ -446,7 +479,7 @@ export default function WishCard({ wish }: WishCardProps) {
     const profile = profileData ? JSON.parse(profileData) : null;
 
     // Check if user @mentioned a mod
-    const mentionRegex = /@(SantaMod69|xX_Krampus_Xx|elfgirluwu|FrostyTheCoder|DasherSpeedrun|SantaKumar|JingBells叮噹鈴)/;
+    const mentionRegex = /@(SantaMod69|xX_Krampus_Xx|elfgirluwu|FrostyTheCoder|DasherSpeedrun|SantaKumar|JingBells叮噹鈴|BarryJingle)/;
     const match = replyText.match(mentionRegex);
     const hasMention = match !== null;
     const mentionedMod = match ? match[1] : null;
@@ -532,7 +565,7 @@ export default function WishCard({ wish }: WishCardProps) {
         </div>
         <div className="flex-1 min-w-0">
           <div className="flex items-center gap-1 sm:gap-2 mb-1 flex-wrap">
-            <span className="text-white font-medium text-xs sm:text-sm">
+            <span className={`font-medium text-xs sm:text-sm ${isOfficialMod(wish.username || '') ? 'text-amber-400 animate-pulse' : 'text-white'}`}>
               {wish.username || (wish.wallet_address ? truncateAddress(wish.wallet_address) : 'Anonymous')}
             </span>
             {isOfficialMod(wish.username || '') && (
@@ -550,7 +583,7 @@ export default function WishCard({ wish }: WishCardProps) {
           
           {/* Only show text if there's no audio, otherwise hide transcription */}
           {!wish.audio_url && (
-            <p className="text-gray-300 text-xs sm:text-sm leading-relaxed">{wish.wish_text}</p>
+            <p className="text-gray-300 text-xs sm:text-sm leading-relaxed">{renderTextWithMentions(wish.wish_text)}</p>
           )}
           
           {/* Image Attachment */}
@@ -606,7 +639,7 @@ export default function WishCard({ wish }: WishCardProps) {
           <span className="text-xl sm:text-2xl flex-shrink-0">{personaConfig?.emoji || '🤖'}</span>
           <div className="flex-1 min-w-0">
             <div className="flex items-center gap-1 sm:gap-2 mb-1 flex-wrap">
-              <span className="text-indigo-400 font-medium text-xs sm:text-sm">{personaConfig?.name || 'Mod'}</span>
+              <span className="text-amber-400 font-medium text-xs sm:text-sm animate-pulse">{personaConfig?.name || 'Mod'}</span>
               <span className="inline-flex items-center gap-0.5 px-1.5 sm:px-2 py-0.5 rounded text-[10px] sm:text-xs font-bold bg-gradient-to-r from-indigo-600 to-purple-600 text-white border border-indigo-400/30 shadow-sm">
                 <svg className="w-2.5 h-2.5" fill="currentColor" viewBox="0 0 24 24">
                   <path d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
@@ -639,7 +672,7 @@ export default function WishCard({ wish }: WishCardProps) {
             
             {/* Only show text if there's no AI audio, otherwise hide transcription */}
             {wish.ai_reply && !wish.ai_audio_url && wish.ai_status === 'completed' && (
-              <p className="text-gray-300 text-xs sm:text-sm leading-relaxed whitespace-pre-wrap">{wish.ai_reply}</p>
+              <p className="text-gray-300 text-xs sm:text-sm leading-relaxed whitespace-pre-wrap">{renderTextWithMentions(wish.ai_reply)}</p>
             )}
             
             {/* AI Voice Response - Show audio player only */}
@@ -758,7 +791,7 @@ export default function WishCard({ wish }: WishCardProps) {
               </div>
               <div className="flex-1 min-w-0">
                 <div className="flex items-center gap-1 sm:gap-2 mb-1 flex-wrap">
-                  <span className="text-white font-medium text-xs">{reply.username}</span>
+                  <span className={`font-medium text-xs ${isOfficialMod(reply.username) ? 'text-amber-400 animate-pulse' : 'text-white'}`}>{reply.username}</span>
                   {isOfficialMod(reply.username) && (
                     <span className="inline-flex items-center gap-0.5 px-1.5 py-0.5 rounded text-[10px] font-bold bg-gradient-to-r from-indigo-600 to-purple-600 text-white border border-indigo-400/30 shadow-sm">
                       <svg className="w-2.5 h-2.5" fill="currentColor" viewBox="0 0 24 24">
@@ -771,7 +804,7 @@ export default function WishCard({ wish }: WishCardProps) {
                     {formatDiscordTimestamp(reply.created_at)}
                   </span>
                 </div>
-                <p className="text-gray-300 text-xs sm:text-sm leading-relaxed">{reply.reply_text}</p>
+                <p className="text-gray-300 text-xs sm:text-sm leading-relaxed">{renderTextWithMentions(reply.reply_text)}</p>
               </div>
             </div>
           ))}
@@ -787,6 +820,7 @@ export default function WishCard({ wish }: WishCardProps) {
               'DasherSpeedrun': { avatar: '🦌', color: 'from-amber-600 to-yellow-500' },
               'SantaKumar': { avatar: '🤖', color: 'from-purple-500 to-indigo-500' },
               'JingBells叮噹鈴': { avatar: '🔔', color: 'from-yellow-400 to-amber-500' },
+              'BarryJingle': { avatar: '🎄', color: 'from-green-500 to-emerald-600' },
             }[expectedModUsername] || { avatar: '💬', color: 'from-gray-500 to-gray-600' };
             
             return (
@@ -796,7 +830,7 @@ export default function WishCard({ wish }: WishCardProps) {
                 </div>
                 <div className="flex-1 min-w-0">
                   <div className="flex items-baseline gap-1 sm:gap-2 mb-1">
-                    <span className="text-white font-medium text-xs">{expectedModUsername}</span>
+                    <span className="text-amber-400 font-medium text-xs animate-pulse">{expectedModUsername}</span>
                   </div>
                   <div className="flex items-center gap-2 text-gray-400 text-xs sm:text-sm italic">
                     <span>{expectedModUsername} is typing</span>
