@@ -1,14 +1,20 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import { motion, AnimatePresence, useDragControls, PanInfo } from 'framer-motion';
 import WishForm from '@/components/WishForm';
 import Feed from '@/components/Feed';
 import VoiceCallAgent from '@/components/VoiceCallAgent';
 import ModProfileModal from '@/components/ModProfileModal';
 import SocialMediaPopup from '@/components/SocialMediaPopup';
+import MembersList from '@/components/MembersList';
+import ProfileSettingsModal from '@/components/ProfileSettingsModal';
+import WalletConnectModal from '@/components/WalletConnectModal';
+import { useWallet } from '@/lib/wallet-context';
 import type { Persona } from '@/typings/types';
 
 export default function HomePage() {
+  const { walletAddress, disconnectWallet } = useWallet();
   const [refreshTrigger, setRefreshTrigger] = useState(0);
   const [totalMessages, setTotalMessages] = useState(0);
   const [activeCall, setActiveCall] = useState<Persona | null>(null);
@@ -18,6 +24,9 @@ export default function HomePage() {
   const [newWish, setNewWish] = useState<any>(null);
   const [activeTab, setActiveTab] = useState<'wishes' | 'about' | 'token' | 'how-it-works'>('wishes');
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [isMobileSidebarOpen, setIsMobileSidebarOpen] = useState(false);
+  const [showProfileSettings, setShowProfileSettings] = useState(false);
+  const [showWalletConnect, setShowWalletConnect] = useState(false);
 
   const mods = [
     { name: 'BarryJingle', emoji: '🎄', role: 'Helper', color: 'text-emerald-400', persona: 'barry' as Persona, status: 'online' },
@@ -54,6 +63,22 @@ export default function HomePage() {
       });
     }
   }, []);
+
+  const handleProfileSave = (username: string, avatar: string) => {
+    const profile = { username, avatar };
+    setUserProfile(profile);
+    localStorage.setItem('userProfile', JSON.stringify(profile));
+  };
+
+  const handleConnectWallet = () => {
+    setShowWalletConnect(true);
+  };
+
+  const handleDisconnectWallet = () => {
+    disconnectWallet();
+    setUserProfile(null);
+    localStorage.removeItem('userProfile');
+  };
 
   useEffect(() => {
     fetch(`/api/wishes?t=${Date.now()}`)
@@ -147,22 +172,46 @@ export default function HomePage() {
           </button>
         </nav>
 
-        {/* User Status */}
-        <div className="p-3 bg-[#0d0e14] flex items-center gap-3 border-t border-white/5">
-          <div className="relative">
-            <div className="w-8 h-8 rounded-full bg-gradient-to-br from-indigo-500 to-purple-500 flex items-center justify-center text-xs font-bold text-white overflow-hidden">
-              {userProfile?.avatar && userProfile.avatar.startsWith('data:') ? (
-                <img src={userProfile.avatar} alt={userProfile.username} className="w-full h-full object-cover" />
-              ) : (
-                <span>{userProfile?.avatar || '👤'}</span>
-              )}
+        {/* User Status / Wallet Connect */}
+        <div className="p-3 bg-[#0d0e14] border-t border-white/5">
+          {walletAddress ? (
+            <div className="flex items-center gap-2">
+              <div className="relative">
+                <div className="w-8 h-8 rounded-full bg-gradient-to-br from-indigo-500 to-purple-500 flex items-center justify-center text-xs font-bold text-white overflow-hidden">
+                  {userProfile?.avatar && userProfile.avatar.startsWith('data:') ? (
+                    <img src={userProfile.avatar} alt={userProfile.username} className="w-full h-full object-cover" />
+                  ) : (
+                    <span>{userProfile?.avatar || '👤'}</span>
+                  )}
+                </div>
+                <span className="absolute bottom-0 right-0 w-2.5 h-2.5 bg-green-500 border-2 border-[#0d0e14] rounded-full"></span>
+              </div>
+              <div className="flex-1 min-w-0">
+                <div className="text-sm font-semibold truncate text-white">{userProfile?.username || 'User'}</div>
+                <div className="text-xs text-slate-500 truncate">Online</div>
+              </div>
+              <button
+                onClick={() => setShowProfileSettings(true)}
+                className="p-1.5 hover:bg-white/5 rounded transition-colors text-slate-400 hover:text-white"
+                title="Settings"
+              >
+                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                </svg>
+              </button>
             </div>
-            <span className="absolute bottom-0 right-0 w-2.5 h-2.5 bg-green-500 border-2 border-[#0d0e14] rounded-full"></span>
-          </div>
-          <div className="flex-1 min-w-0">
-            <div className="text-sm font-semibold truncate text-white">{userProfile?.username || 'AnonUser'}</div>
-            <div className="text-xs text-slate-500 truncate">Online</div>
-          </div>
+          ) : (
+            <button
+              onClick={handleConnectWallet}
+              className="w-full px-4 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg font-medium transition-colors flex items-center justify-center gap-2"
+            >
+              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+              </svg>
+              Connect Wallet
+            </button>
+          )}
         </div>
       </aside>
 
@@ -188,10 +237,26 @@ export default function HomePage() {
             </div>
           </div>
 
-          <button className="bg-[#5865F2] hover:bg-[#4752c4] px-4 py-2 rounded-lg text-sm font-medium transition-colors shadow-lg shadow-indigo-500/20 flex items-center gap-2 text-white">
-            <span>🔗</span>
-            <span className="hidden sm:inline">Connect</span>
-          </button>
+          <div className="flex items-center gap-2">
+            {!walletAddress && (
+              <button 
+                onClick={handleConnectWallet}
+                className="bg-[#5865F2] hover:bg-[#4752c4] px-4 py-2 rounded-lg text-sm font-medium transition-colors shadow-lg shadow-indigo-500/20 flex items-center gap-2 text-white"
+              >
+                <span>🔗</span>
+                <span className="hidden sm:inline">Connect</span>
+              </button>
+            )}
+            {/* Mobile sidebar toggle */}
+            <button
+              onClick={() => setIsMobileSidebarOpen(true)}
+              className="lg:hidden p-2 hover:bg-white/5 rounded-lg text-slate-400 hover:text-white transition-colors"
+            >
+              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" />
+              </svg>
+            </button>
+          </div>
         </header>
 
         {/* Content Area */}
@@ -906,13 +971,13 @@ export default function HomePage() {
         </div>
       </main>
 
-      {/* RIGHT SIDEBAR - Mods */}
+      {/* RIGHT SIDEBAR - Mods & Members (Desktop) */}
       <aside className="w-64 bg-[#11121c] border-l border-white/5 hidden lg:flex flex-col p-4 overflow-y-auto">
         <h3 className="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-4 px-2">
           Mods Online — {mods.filter(m => m.status === 'online').length}
         </h3>
 
-        <div className="flex flex-col gap-1">
+        <div className="flex flex-col gap-1 mb-6">
           {mods.map((mod) => (
             <div
               key={mod.name}
@@ -934,7 +999,95 @@ export default function HomePage() {
             </div>
           ))}
         </div>
+
+        {/* Members List */}
+        <MembersList />
       </aside>
+
+      {/* MOBILE SIDEBAR - Swipeable from right */}
+      <AnimatePresence>
+        {isMobileSidebarOpen && (
+          <>
+            {/* Backdrop */}
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              onClick={() => setIsMobileSidebarOpen(false)}
+              className="fixed inset-0 bg-black/60 backdrop-blur-sm z-40 lg:hidden"
+            />
+
+            {/* Sidebar Panel */}
+            <motion.aside
+              initial={{ x: '100%' }}
+              animate={{ x: 0 }}
+              exit={{ x: '100%' }}
+              transition={{ type: 'spring', damping: 30, stiffness: 300 }}
+              drag="x"
+              dragConstraints={{ left: 0, right: 0 }}
+              dragElastic={0.2}
+              onDragEnd={(e, info: PanInfo) => {
+                if (info.offset.x > 100 || info.velocity.x > 500) {
+                  setIsMobileSidebarOpen(false);
+                }
+              }}
+              className="fixed right-0 top-0 bottom-0 w-80 max-w-[85vw] bg-[#11121c] border-l border-white/5 z-50 lg:hidden overflow-y-auto"
+            >
+              {/* Header */}
+              <div className="flex items-center justify-between p-4 border-b border-white/5 sticky top-0 bg-[#11121c] z-10">
+                <h3 className="text-lg font-bold text-white">Mods & Members</h3>
+                <button
+                  onClick={() => setIsMobileSidebarOpen(false)}
+                  className="p-2 hover:bg-white/5 rounded-lg text-slate-400 hover:text-white transition-colors"
+                >
+                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                  </svg>
+                </button>
+              </div>
+
+              <div className="p-4">
+                {/* Mods */}
+                <h4 className="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-3 px-2">
+                  Mods Online — {mods.filter(m => m.status === 'online').length}
+                </h4>
+
+                <div className="flex flex-col gap-1 mb-6">
+                  {mods.map((mod) => (
+                    <div
+                      key={mod.name}
+                      onClick={() => {
+                        handleModClick(mod.persona);
+                        setIsMobileSidebarOpen(false);
+                      }}
+                      className="flex items-center gap-3 p-2 rounded cursor-pointer group transition-colors hover:bg-white/5"
+                    >
+                      <div className="relative">
+                        <div className="w-8 h-8 rounded-full bg-slate-800 flex items-center justify-center text-xl">
+                          {mod.emoji}
+                        </div>
+                        <span className="absolute -bottom-0.5 -right-0.5 w-3 h-3 bg-[#11121c] flex items-center justify-center rounded-full">
+                          <span className={`w-2 h-2 ${getStatusColor(mod.status)} rounded-full`}></span>
+                        </span>
+                      </div>
+                      <div className="flex-1 min-w-0">
+                        <div className={`text-sm font-semibold truncate ${mod.color}`}>{mod.name}</div>
+                        <div className="text-[10px] text-slate-500">{mod.role}</div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+
+                {/* Members List */}
+                <MembersList />
+              </div>
+
+              {/* Swipe indicator */}
+              <div className="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-1 w-1 h-16 bg-white/20 rounded-l-full" />
+            </motion.aside>
+          </>
+        )}
+      </AnimatePresence>
 
       {/* Modals */}
       {selectedMod && (
@@ -949,6 +1102,24 @@ export default function HomePage() {
       {activeCall && <VoiceCallAgent persona={activeCall} onClose={() => setActiveCall(null)} />}
 
       <SocialMediaPopup isOpen={showSocialPopup} onClose={() => setShowSocialPopup(false)} />
+
+      {/* Profile Settings Modal */}
+      {walletAddress && userProfile && (
+        <ProfileSettingsModal
+          isOpen={showProfileSettings}
+          onClose={() => setShowProfileSettings(false)}
+          currentUsername={userProfile.username}
+          currentAvatar={userProfile.avatar}
+          walletAddress={walletAddress}
+          onSave={handleProfileSave}
+        />
+      )}
+
+      {/* Wallet Connect Modal */}
+      <WalletConnectModal
+        isOpen={showWalletConnect}
+        onClose={() => setShowWalletConnect(false)}
+      />
     </div>
   );
 }

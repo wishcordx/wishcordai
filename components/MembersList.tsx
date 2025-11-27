@@ -78,61 +78,100 @@ export default function MembersList() {
   };
 
   // Sort members: online first, then by last active
-  const sortedMembers = [...members].sort((a, b) => {
-    if (a.is_online && !b.is_online) return -1;
-    if (!a.is_online && b.is_online) return 1;
-    return new Date(b.last_active).getTime() - new Date(a.last_active).getTime();
-  });
+  const onlineMembers = members.filter(m => m.is_online).sort((a, b) => 
+    new Date(b.last_active).getTime() - new Date(a.last_active).getTime()
+  );
+  const offlineMembers = members.filter(m => !m.is_online).sort((a, b) => 
+    new Date(b.last_active).getTime() - new Date(a.last_active).getTime()
+  );
 
   return (
-    <div className="mt-6 pt-4 border-t border-[#0f1011]">
-      <h3 className="text-white font-semibold mb-3 flex items-center gap-2">
-        <span className="w-2 h-2 bg-gray-500 rounded-full"></span>
+    <div className="border-t border-white/5 pt-4">
+      <h3 className="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-3 px-2">
         Members — {members.length}
       </h3>
       
-      <div className="text-xs text-gray-400 mb-3">
+      <div className="text-xs text-slate-400 mb-3 px-2">
         {onlineCount} online
       </div>
 
-      <div className="space-y-2 max-h-[400px] overflow-y-auto custom-scrollbar">
-        {sortedMembers.map((member) => (
-          <div
-            key={member.wallet_address}
-            className="flex items-center gap-3 p-2 rounded hover:bg-[#2b2d31] transition-colors"
-          >
-            <div className="relative">
-              <div className="w-8 h-8 rounded-full flex items-center justify-center overflow-hidden bg-gradient-to-br from-indigo-500 to-purple-500">
-                {member.avatar.startsWith('data:') ? (
-                  <img src={member.avatar} alt={member.username} className="w-full h-full object-cover" />
-                ) : (
-                  <span className="text-lg">{member.avatar}</span>
+      <div className="space-y-1 max-h-[400px] overflow-y-auto custom-scrollbar">
+        {/* Online Members */}
+        {onlineMembers.length > 0 && (
+          <div className="mb-3">
+            <p className="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-2 px-2">Online</p>
+            {onlineMembers.map((member) => (
+              <div
+                key={member.wallet_address}
+                className="flex items-center gap-3 p-2 rounded hover:bg-white/5 transition-colors"
+              >
+                <div className="relative">
+                  <div className="w-8 h-8 rounded-full flex items-center justify-center overflow-hidden bg-gradient-to-br from-indigo-500 to-purple-500">
+                    {member.avatar.startsWith('data:') ? (
+                      <img src={member.avatar} alt={member.username} className="w-full h-full object-cover" />
+                    ) : (
+                      <span className="text-lg">{member.avatar}</span>
+                    )}
+                  </div>
+                  <span className="absolute -bottom-0.5 -right-0.5 w-3 h-3 rounded-full border-2 border-[#11121c] bg-green-500"></span>
+                </div>
+                <div className="flex-1 min-w-0">
+                  <p className="text-sm font-medium text-slate-300 truncate">
+                    {member.username}
+                  </p>
+                  <p className="text-xs text-slate-500 truncate">
+                    {truncateAddress(member.wallet_address)}
+                  </p>
+                </div>
+                {walletAddress === member.wallet_address && (
+                  <span className="text-xs bg-indigo-600/30 text-indigo-400 px-2 py-0.5 rounded">
+                    You
+                  </span>
                 )}
               </div>
-              <span
-                className={`absolute -bottom-0.5 -right-0.5 w-3 h-3 rounded-full border-2 border-[#1e1f22] ${
-                  member.is_online ? 'bg-green-500' : 'bg-gray-500'
-                }`}
-              ></span>
-            </div>
-            <div className="flex-1 min-w-0">
-              <p className="text-sm font-medium text-gray-300 truncate">
-                {member.username}
-              </p>
-              <p className="text-xs text-gray-500 truncate">
-                {truncateAddress(member.wallet_address)}
-              </p>
-            </div>
-            {walletAddress === member.wallet_address && (
-              <span className="text-xs bg-indigo-600/30 text-indigo-400 px-2 py-0.5 rounded">
-                You
-              </span>
-            )}
+            ))}
           </div>
-        ))}
+        )}
+
+        {/* Offline Members */}
+        {offlineMembers.length > 0 && (
+          <div>
+            <p className="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-2 px-2">Offline</p>
+            {offlineMembers.map((member) => (
+              <div
+                key={member.wallet_address}
+                className="flex items-center gap-3 p-2 rounded hover:bg-white/5 transition-colors opacity-60"
+              >
+                <div className="relative">
+                  <div className="w-8 h-8 rounded-full flex items-center justify-center overflow-hidden bg-gradient-to-br from-slate-500 to-slate-600">
+                    {member.avatar.startsWith('data:') ? (
+                      <img src={member.avatar} alt={member.username} className="w-full h-full object-cover" />
+                    ) : (
+                      <span className="text-lg">{member.avatar}</span>
+                    )}
+                  </div>
+                  <span className="absolute -bottom-0.5 -right-0.5 w-3 h-3 rounded-full border-2 border-[#11121c] bg-slate-600"></span>
+                </div>
+                <div className="flex-1 min-w-0">
+                  <p className="text-sm font-medium text-slate-400 truncate">
+                    {member.username}
+                  </p>
+                  <p className="text-xs text-slate-600 truncate">
+                    {truncateAddress(member.wallet_address)}
+                  </p>
+                </div>
+                {walletAddress === member.wallet_address && (
+                  <span className="text-xs bg-indigo-600/30 text-indigo-400 px-2 py-0.5 rounded">
+                    You
+                  </span>
+                )}
+              </div>
+            ))}
+          </div>
+        )}
         
         {members.length === 0 && (
-          <div className="text-center py-6 text-gray-500 text-sm">
+          <div className="text-center py-6 text-slate-500 text-sm">
             No members yet
           </div>
         )}
