@@ -113,15 +113,48 @@ export default function HomePage() {
 
   return (
     <div className="flex h-screen w-full bg-[#0b0c15] text-slate-300 overflow-hidden">
-      {/* Mobile Menu Button */}
-      <button
+      {/* Mobile Menu Button - Animated */}
+      <motion.button
         onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-        className="fixed top-5 left-4 z-50 md:hidden p-2 bg-[#1e1f2e] rounded-md border border-white/5 text-white hover:bg-[#2b2d3d] transition-colors"
+        animate={{
+          x: isMobileMenuOpen ? 240 : 0, // 240px = sidebar width (256px) - button width
+          left: isMobileMenuOpen ? 0 : 16,
+        }}
+        transition={{ type: "spring", damping: 25, stiffness: 200 }}
+        className="fixed top-5 z-50 md:hidden p-2 bg-[#1e1f2e] rounded-md border border-white/5 text-white hover:bg-[#2b2d3d] transition-colors"
       >
-        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
-        </svg>
-      </button>
+        <AnimatePresence mode="wait">
+          {isMobileMenuOpen ? (
+            <motion.svg
+              key="arrow"
+              initial={{ rotate: -90, opacity: 0 }}
+              animate={{ rotate: 0, opacity: 1 }}
+              exit={{ rotate: 90, opacity: 0 }}
+              transition={{ duration: 0.2 }}
+              className="w-5 h-5"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+            </motion.svg>
+          ) : (
+            <motion.svg
+              key="hamburger"
+              initial={{ rotate: -90, opacity: 0 }}
+              animate={{ rotate: 0, opacity: 1 }}
+              exit={{ rotate: 90, opacity: 0 }}
+              transition={{ duration: 0.2 }}
+              className="w-5 h-5"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+            </motion.svg>
+          )}
+        </AnimatePresence>
+      </motion.button>
 
       {/* Mobile Overlay */}
       <AnimatePresence>
