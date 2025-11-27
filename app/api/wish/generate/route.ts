@@ -31,7 +31,13 @@ export async function POST(request: NextRequest) {
   const startTime = Date.now();
   
   try {
-    const { wishId, wishText, persona, imageUrl, audioUrl } = await request.json();
+    const { wishId, wishText, persona, imageUrl, audioUrl }: {
+      wishId: string;
+      wishText: string;
+      persona: Persona;
+      imageUrl?: string;
+      audioUrl?: string;
+    } = await request.json();
     
     console.log(`⏱️ [${wishId}] Starting AI generation at ${new Date().toISOString()}`);
     
