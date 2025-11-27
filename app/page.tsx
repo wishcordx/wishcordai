@@ -296,8 +296,10 @@ export default function HomePage() {
             <div className="w-full max-w-3xl mx-auto flex flex-col gap-6 fade-in">
               {/* Hero */}
               <div className="bg-gradient-to-br from-indigo-900/50 to-purple-900/50 border border-indigo-500/20 rounded-xl p-8 text-center">
-                <div className="text-6xl mb-4">❄️</div>
-                <h2 className="text-3xl font-bold tracking-tight mb-3 text-white">About WishCord</h2>
+                <div className="flex justify-center mb-4">
+                  <img src="/assets/logo.webp" alt="WishCord" className="w-20 h-20 rounded-xl" />
+                </div>
+                <h2 className="text-3xl font-bold tracking-tight mb-3 text-white">About Wishcord</h2>
                 <p className="text-lg text-slate-400">
                   Where AI meets the holiday spirit 🎄✨
                 </p>
