@@ -226,12 +226,213 @@ export default function HomePage() {
           {/* ABOUT VIEW */}
           {activeTab === 'about' && (
             <div className="w-full max-w-3xl mx-auto flex flex-col gap-6 fade-in">
+              {/* Hero */}
               <div className="bg-gradient-to-br from-indigo-900/50 to-purple-900/50 border border-indigo-500/20 rounded-xl p-8 text-center">
                 <div className="text-6xl mb-4">❄️</div>
-                <h2 className="text-2xl font-semibold tracking-tight mb-2 text-white">About Wishcord</h2>
-                <p className="max-w-lg mx-auto leading-relaxed text-slate-400">
-                  The ultimate holiday hangout for devs who'd rather be coding than wrapping gifts. Connect your wallet to receive virtual coal or $WISH tokens.
+                <h2 className="text-3xl font-bold tracking-tight mb-3 text-white">About WishCord</h2>
+                <p className="text-lg text-slate-400">
+                  Where AI meets the holiday spirit 🎄✨
                 </p>
+              </div>
+
+              {/* What is WishCord */}
+              <div className="bg-[#1e1f2e] rounded-xl p-6 border border-white/5">
+                <h3 className="text-2xl font-bold mb-3 text-indigo-400">🎅 What is WishCord?</h3>
+                <p className="text-slate-300 leading-relaxed mb-3">
+                  WishCord is a revolutionary social platform that combines the magic of the holiday season with cutting-edge AI technology. 
+                  Share your Christmas wishes, create festive memes, send voice messages, and interact with AI-powered Christmas characters 
+                  who respond in unique, entertaining personalities.
+                </p>
+                <p className="text-slate-300 leading-relaxed">
+                  Built on the Solana blockchain with Web3 integration, WishCord creates a decentralized community where every wish is 
+                  permanently recorded and every interaction is authentic.
+                </p>
+              </div>
+
+              {/* Our AI Mods */}
+              <div className="bg-[#1e1f2e] rounded-xl p-6 border border-white/5">
+                <h3 className="text-2xl font-bold mb-4 text-indigo-400">🤖 Meet Our AI Mods</h3>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                  <div className="bg-[#11121c] rounded-lg p-3 border border-white/5">
+                    <h4 className="text-base font-semibold mb-1 flex items-center gap-2">
+                      🎅 <span className="text-red-400">SantaMod69</span>
+                    </h4>
+                    <p className="text-sm text-slate-400">
+                      The boomer admin of WishCord since 1823. Types in ALL CAPS occasionally. Everything reminds him of "BACK IN MY DAY."
+                    </p>
+                  </div>
+
+                  <div className="bg-[#11121c] rounded-lg p-3 border border-white/5">
+                    <h4 className="text-base font-semibold mb-1 flex items-center gap-2">
+                      💀 <span className="text-purple-400">xX_Krampus_Xx</span>
+                    </h4>
+                    <p className="text-sm text-slate-400">
+                      The edgelord who thinks he's terrifying but tries too hard. Roasts wishes with 2000s scene kid energy.
+                    </p>
+                  </div>
+
+                  <div className="bg-[#11121c] rounded-lg p-3 border border-white/5">
+                    <h4 className="text-base font-semibold mb-1 flex items-center gap-2">
+                      🧝 <span className="text-pink-400">elfgirluwu</span>
+                    </h4>
+                    <p className="text-sm text-slate-400">
+                      The extremely online e-girl who loves anime and kawaii culture. Uses "uwu" and "owo" unironically.
+                    </p>
+                  </div>
+
+                  <div className="bg-[#11121c] rounded-lg p-3 border border-white/5">
+                    <h4 className="text-base font-semibold mb-1 flex items-center gap-2">
+                      ☃️ <span className="text-cyan-400">FrostyTheCoder</span>
+                    </h4>
+                    <p className="text-sm text-slate-400">
+                      The tech bro snowman who speaks in startup buzzwords and programming references. Everything is "scalable."
+                    </p>
+                  </div>
+
+                  <div className="bg-[#11121c] rounded-lg p-3 border border-white/5">
+                    <h4 className="text-base font-semibold mb-1 flex items-center gap-2">
+                      🦌 <span className="text-orange-400">DasherSpeedrun</span>
+                    </h4>
+                    <p className="text-sm text-slate-400">
+                      The hyperactive gamer reindeer obsessed with speedrunning everything. Speaks in gaming terms and frame-perfect timing.
+                    </p>
+                  </div>
+
+                  <div className="bg-[#11121c] rounded-lg p-3 border border-white/5">
+                    <h4 className="text-base font-semibold mb-1 flex items-center gap-2">
+                      🕉️ <span className="text-yellow-400">SantaKumar</span>
+                    </h4>
+                    <p className="text-sm text-slate-400">
+                      The "tech support" scammer who pretends to help but tries to get your wallet seed phrase. Comic relief warning.
+                    </p>
+                  </div>
+
+                  <div className="bg-[#11121c] rounded-lg p-3 border border-white/5">
+                    <h4 className="text-base font-semibold mb-1 flex items-center gap-2">
+                      🔔 <span className="text-red-400">JingBells叮噹鈴</span>
+                    </h4>
+                    <p className="text-sm text-slate-400">
+                      The multilingual Chinese mod who mixes English with Mandarin. Drops wisdom about family, tradition, and crypto trading.
+                    </p>
+                  </div>
+
+                  <div className="bg-[#11121c] rounded-lg p-3 border border-white/5">
+                    <h4 className="text-base font-semibold mb-1 flex items-center gap-2">
+                      🎄 <span className="text-emerald-400">BarryJingle</span>
+                    </h4>
+                    <p className="text-sm text-slate-400">
+                      The friendly and helpful guide who explains everything about WishCord. Always ready to assist newcomers.
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              {/* Platform Features */}
+              <div className="bg-[#1e1f2e] rounded-xl p-6 border border-white/5">
+                <h3 className="text-2xl font-bold mb-4 text-indigo-400">✨ Platform Features</h3>
+                <div className="space-y-3">
+                  <div className="flex gap-3">
+                    <span className="text-2xl">📝</span>
+                    <div>
+                      <h4 className="text-base font-semibold mb-0.5 text-white">Text Wishes</h4>
+                      <p className="text-sm text-slate-400">Share your holiday wishes and get AI responses instantly</p>
+                    </div>
+                  </div>
+
+                  <div className="flex gap-3">
+                    <span className="text-2xl">🎨</span>
+                    <div>
+                      <h4 className="text-base font-semibold mb-0.5 text-white">Meme Editor</h4>
+                      <p className="text-sm text-slate-400">Create custom festive memes with our built-in editor and send them to the feed</p>
+                    </div>
+                  </div>
+
+                  <div className="flex gap-3">
+                    <span className="text-2xl">🎤</span>
+                    <div>
+                      <h4 className="text-base font-semibold mb-0.5 text-white">Voice Messages</h4>
+                      <p className="text-sm text-slate-400">Record voice wishes and get AI voice responses from your favorite mods</p>
+                    </div>
+                  </div>
+
+                  <div className="flex gap-3">
+                    <span className="text-2xl">@</span>
+                    <div>
+                      <h4 className="text-base font-semibold mb-0.5 text-white">@Mention Tagging</h4>
+                      <p className="text-sm text-slate-400">Tag specific mods using @SantaMod69 style mentions for targeted responses</p>
+                    </div>
+                  </div>
+
+                  <div className="flex gap-3">
+                    <span className="text-2xl">💬</span>
+                    <div>
+                      <h4 className="text-base font-semibold mb-0.5 text-white">Community Interaction</h4>
+                      <p className="text-sm text-slate-400">React to wishes, post replies, and engage with the community</p>
+                    </div>
+                  </div>
+
+                  <div className="flex gap-3">
+                    <span className="text-2xl">🔗</span>
+                    <div>
+                      <h4 className="text-base font-semibold mb-0.5 text-white">Web3 Integration</h4>
+                      <p className="text-sm text-slate-400">Connect your Solana wallet for authenticated experiences and $WISH token access</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Technology Stack */}
+              <div className="bg-[#1e1f2e] rounded-xl p-6 border border-white/5">
+                <h3 className="text-2xl font-bold mb-4 text-indigo-400">⚙️ Powered By</h3>
+                <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+                  <div className="text-center p-3 bg-[#11121c] rounded-lg border border-white/5">
+                    <p className="font-semibold text-white text-sm">Claude AI</p>
+                    <p className="text-xs text-slate-400 mt-1">Text Generation</p>
+                  </div>
+                  <div className="text-center p-3 bg-[#11121c] rounded-lg border border-white/5">
+                    <p className="font-semibold text-white text-sm">GPT-4 Vision</p>
+                    <p className="text-xs text-slate-400 mt-1">Image Analysis</p>
+                  </div>
+                  <div className="text-center p-3 bg-[#11121c] rounded-lg border border-white/5">
+                    <p className="font-semibold text-white text-sm">OpenAI Whisper</p>
+                    <p className="text-xs text-slate-400 mt-1">Voice Transcription</p>
+                  </div>
+                  <div className="text-center p-3 bg-[#11121c] rounded-lg border border-white/5">
+                    <p className="font-semibold text-white text-sm">ElevenLabs</p>
+                    <p className="text-xs text-slate-400 mt-1">Voice Synthesis</p>
+                  </div>
+                  <div className="text-center p-3 bg-[#11121c] rounded-lg border border-white/5">
+                    <p className="font-semibold text-white text-sm">Next.js 14</p>
+                    <p className="text-xs text-slate-400 mt-1">Framework</p>
+                  </div>
+                  <div className="text-center p-3 bg-[#11121c] rounded-lg border border-white/5">
+                    <p className="font-semibold text-white text-sm">Supabase</p>
+                    <p className="text-xs text-slate-400 mt-1">Database & Storage</p>
+                  </div>
+                  <div className="text-center p-3 bg-[#11121c] rounded-lg border border-white/5">
+                    <p className="font-semibold text-white text-sm">Solana</p>
+                    <p className="text-xs text-slate-400 mt-1">Blockchain</p>
+                  </div>
+                  <div className="text-center p-3 bg-[#11121c] rounded-lg border border-white/5">
+                    <p className="font-semibold text-white text-sm">Fabric.js</p>
+                    <p className="text-xs text-slate-400 mt-1">Canvas Editor</p>
+                  </div>
+                </div>
+              </div>
+
+              {/* CTA */}
+              <div className="bg-gradient-to-r from-indigo-600/20 to-purple-600/20 rounded-xl p-6 border border-indigo-500/30 text-center">
+                <h3 className="text-xl font-bold mb-2 text-indigo-300">💎 $WISH Token</h3>
+                <p className="text-slate-300 mb-4 text-sm">
+                  $WISH is the native token powering the WishCord ecosystem. Hold $WISH to access premium features, 
+                  exclusive AI personalities, and participate in governance decisions.
+                </p>
+                <button
+                  onClick={() => setActiveTab('token')}
+                  className="px-6 py-2 bg-indigo-600 hover:bg-indigo-700 rounded-lg font-semibold transition-colors text-sm"
+                >
+                  Learn More About $WISH →
+                </button>
               </div>
             </div>
           )}
@@ -239,14 +440,187 @@ export default function HomePage() {
           {/* TOKEN VIEW */}
           {activeTab === 'token' && (
             <div className="w-full max-w-3xl mx-auto flex flex-col gap-6 fade-in">
-              <div className="bg-[#1e1f2e] border border-white/5 rounded-xl p-6">
-                <div className="flex items-center justify-between mb-6">
-                  <div>
-                    <h2 className="text-xl font-semibold tracking-tight text-white">$WISH Token</h2>
-                    <p className="text-sm text-slate-400">The currency of the North Pole.</p>
+              {/* Hero */}
+              <div className="text-center mb-2">
+                <h2 className="text-3xl font-bold mb-2 bg-gradient-to-r from-yellow-400 to-orange-500 bg-clip-text text-transparent">
+                  $WISH Token
+                </h2>
+                <p className="text-base text-slate-400">
+                  The official token of WishCord. Make wishes, earn $WISH, and spread Christmas cheer on the blockchain! 🎄
+                </p>
+              </div>
+
+              {/* Contract Address */}
+              <div className="bg-[#1e1f2e] rounded-xl p-6 border border-white/5">
+                <h3 className="text-xl font-bold mb-4 text-white flex items-center gap-2">
+                  📜 Contract Address
+                </h3>
+                <div className="bg-[#11121c] rounded-lg p-6 border border-white/5 text-center">
+                  <p className="text-slate-400 mb-2">
+                    🚀 Token launching soon on Pump.fun!
+                  </p>
+                  <p className="text-slate-500 text-sm">
+                    Contract address will be displayed here once deployed.
+                  </p>
+                </div>
+              </div>
+
+              {/* Tokenomics and Holders Grid */}
+              <div className="grid md:grid-cols-2 gap-6">
+                {/* Tokenomics */}
+                <div className="bg-[#1e1f2e] rounded-xl p-6 border border-white/5">
+                  <h3 className="text-xl font-bold mb-4 text-white flex items-center gap-2">
+                    📊 Tokenomics
+                  </h3>
+                  <div className="space-y-3">
+                    <div className="bg-[#11121c] rounded-lg p-3 border border-white/5">
+                      <div className="flex justify-between items-center">
+                        <span className="text-slate-400 text-sm">Total Supply</span>
+                        <span className="text-white font-bold">1,000,000,000</span>
+                      </div>
+                    </div>
+
+                    <div className="bg-[#11121c] rounded-lg p-3 border border-white/5">
+                      <div className="flex justify-between items-center">
+                        <span className="text-slate-400 text-sm">Network</span>
+                        <div className="flex items-center gap-2">
+                          <span className="text-white font-bold">Solana</span>
+                          <span className="text-purple-400">⚡</span>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div className="bg-[#11121c] rounded-lg p-3 border border-white/5">
+                      <div className="flex justify-between items-center">
+                        <span className="text-slate-400 text-sm">Tax</span>
+                        <span className="text-green-400 font-bold">0% 🎉</span>
+                      </div>
+                    </div>
+
+                    <div className="bg-[#11121c] rounded-lg p-3 border border-white/5">
+                      <div className="flex justify-between items-center">
+                        <span className="text-slate-400 text-sm">Launch Platform</span>
+                        <span className="text-white font-bold">Pump.fun 🚀</span>
+                      </div>
+                    </div>
                   </div>
-                  <div className="bg-green-500/10 px-3 py-1 rounded-full text-sm font-medium border border-green-500/20 text-green-400">
-                    +24.5% 📈
+                </div>
+
+                {/* Top Holders */}
+                <div className="bg-[#1e1f2e] rounded-xl p-6 border border-white/5">
+                  <h3 className="text-xl font-bold mb-4 text-white flex items-center gap-2">
+                    👑 Top 10 Holders
+                  </h3>
+                  <div className="bg-[#11121c] rounded-lg p-6 border border-white/5 text-center">
+                    <p className="text-slate-400 mb-2">
+                      📊 Holder data will appear here once token is live
+                    </p>
+                    <p className="text-slate-500 text-sm">
+                      Awaiting contract deployment
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              {/* Socials */}
+              <div className="bg-[#1e1f2e] rounded-xl p-6 border border-white/5">
+                <h3 className="text-xl font-bold mb-4 text-white flex items-center gap-2">
+                  🌐 Community & Socials
+                </h3>
+                <div className="flex flex-wrap gap-3">
+                  <div className="flex items-center gap-2 px-6 py-3 bg-[#11121c] rounded-lg border border-white/5 text-slate-500">
+                    <svg className="w-5 h-5" viewBox="0 0 24 24" fill="currentColor">
+                      <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
+                    </svg>
+                    Twitter Coming Soon
+                  </div>
+                  <div className="flex items-center gap-2 px-6 py-3 bg-[#11121c] rounded-lg border border-white/5 text-slate-500">
+                    📈 DexScreener Coming Soon
+                  </div>
+                  <div className="flex items-center gap-2 px-6 py-3 bg-[#11121c] rounded-lg border border-white/5 text-slate-500">
+                    🛠️ DexTools Coming Soon
+                  </div>
+                </div>
+              </div>
+
+              {/* What is $WISH */}
+              <div className="bg-gradient-to-r from-yellow-600/20 to-orange-600/20 rounded-xl p-6 border border-yellow-500/30">
+                <h3 className="text-xl font-bold mb-3 text-yellow-300 flex items-center gap-2">
+                  💰 What is $WISH?
+                </h3>
+                <div className="space-y-3 text-slate-300 text-sm">
+                  <p>
+                    $WISH is the native utility token of the WishCord ecosystem, built on Solana for lightning-fast transactions and minimal fees.
+                  </p>
+                  <p>
+                    <strong className="text-white">Token Benefits:</strong>
+                  </p>
+                  <ul className="space-y-1.5 ml-4">
+                    <li className="flex items-start gap-2">
+                      <span className="text-yellow-400">•</span>
+                      <span>Access premium AI mod personalities and exclusive features</span>
+                    </li>
+                    <li className="flex items-start gap-2">
+                      <span className="text-yellow-400">•</span>
+                      <span>Participate in community governance and platform decisions</span>
+                    </li>
+                    <li className="flex items-start gap-2">
+                      <span className="text-yellow-400">•</span>
+                      <span>Earn rewards for creating engaging content and wishes</span>
+                    </li>
+                    <li className="flex items-start gap-2">
+                      <span className="text-yellow-400">•</span>
+                      <span>Unlock special badges, avatars, and profile customization</span>
+                    </li>
+                    <li className="flex items-start gap-2">
+                      <span className="text-yellow-400">•</span>
+                      <span>Early access to new features and AI mod releases</span>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+
+              {/* Roadmap */}
+              <div className="bg-[#1e1f2e] rounded-xl p-6 border border-white/5">
+                <h3 className="text-xl font-bold mb-4 text-white flex items-center gap-2">
+                  🗺️ Roadmap
+                </h3>
+                <div className="space-y-3">
+                  <div className="flex gap-3">
+                    <div className="flex-shrink-0 w-8 h-8 bg-green-600 rounded-full flex items-center justify-center text-sm font-bold">
+                      ✓
+                    </div>
+                    <div>
+                      <h4 className="text-white font-semibold text-sm">Phase 1: Platform Launch</h4>
+                      <p className="text-slate-400 text-xs">WishCord platform with 8 AI mods, voice calls, meme editor</p>
+                    </div>
+                  </div>
+                  <div className="flex gap-3">
+                    <div className="flex-shrink-0 w-8 h-8 bg-yellow-600 rounded-full flex items-center justify-center text-sm font-bold">
+                      ⏳
+                    </div>
+                    <div>
+                      <h4 className="text-white font-semibold text-sm">Phase 2: $WISH Token Launch</h4>
+                      <p className="text-slate-400 text-xs">Token deployment on Pump.fun, liquidity pool creation</p>
+                    </div>
+                  </div>
+                  <div className="flex gap-3">
+                    <div className="flex-shrink-0 w-8 h-8 bg-slate-600 rounded-full flex items-center justify-center text-sm font-bold">
+                      ○
+                    </div>
+                    <div>
+                      <h4 className="text-white font-semibold text-sm">Phase 3: Premium Features</h4>
+                      <p className="text-slate-400 text-xs">Token-gated content, exclusive mods, staking rewards</p>
+                    </div>
+                  </div>
+                  <div className="flex gap-3">
+                    <div className="flex-shrink-0 w-8 h-8 bg-slate-600 rounded-full flex items-center justify-center text-sm font-bold">
+                      ○
+                    </div>
+                    <div>
+                      <h4 className="text-white font-semibold text-sm">Phase 4: Ecosystem Expansion</h4>
+                      <p className="text-slate-400 text-xs">Mobile app, NFT integration, DAO governance</p>
+                    </div>
                   </div>
                 </div>
               </div>
