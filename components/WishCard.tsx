@@ -56,9 +56,6 @@ export default function WishCard({ wish }: WishCardProps) {
 
   const personaConfig = PERSONAS[wish.persona as keyof typeof PERSONAS];
   // Use wish props directly - Realtime updates the parent which re-renders this component
-  const aiStatus = wish.ai_status;
-  const aiReply = wish.ai_reply;
-  const aiAudioUrl = wish.ai_audio_url;
   const [lastReplyCount, setLastReplyCount] = useState(0);
   const [shouldPollReplies, setShouldPollReplies] = useState(false);
   const [expectedModUsername, setExpectedModUsername] = useState<string | null>(null);
@@ -527,7 +524,7 @@ export default function WishCard({ wish }: WishCardProps) {
       )}
 
       {/* Mod Response */}
-      {(aiReply || aiStatus === 'pending') && (
+      {(wish.ai_reply || wish.ai_status === 'pending') && (
         <div className="flex gap-2 sm:gap-3 pl-4 sm:pl-6 border-l-2 border-indigo-600/30 ml-4 sm:ml-6 mb-2 sm:mb-3">
           <span className="text-xl sm:text-2xl flex-shrink-0">{personaConfig?.emoji || '🤖'}</span>
           <div className="flex-1 min-w-0">
@@ -536,7 +533,7 @@ export default function WishCard({ wish }: WishCardProps) {
               <span className="px-1.5 sm:px-2 py-0.5 rounded text-xs font-semibold bg-indigo-600/20 text-indigo-400 border border-indigo-600/30">
                 MOD
               </span>
-              {aiReply && (
+              {wish.ai_reply && (
                 <span className={`px-1.5 sm:px-2 py-0.5 rounded text-xs font-bold border ${verdictColors[verdict as keyof typeof verdictColors]}`}>
                   {verdict}
                 </span>
@@ -544,7 +541,7 @@ export default function WishCard({ wish }: WishCardProps) {
             </div>
             
             {/* Show typing indicator when AI is generating response */}
-            {aiStatus === 'pending' && (
+            {wish.ai_status === 'pending' && (
               <div className="flex items-center gap-2 text-gray-400 text-xs sm:text-sm italic">
                 <span>{personaConfig?.emoji || '🤖'} {personaConfig?.name || 'Mod'} is typing</span>
                 <div className="flex gap-1">
@@ -556,22 +553,22 @@ export default function WishCard({ wish }: WishCardProps) {
             )}
 
             {/* Show error message if AI generation failed */}
-            {aiStatus === 'failed' && (
+            {wish.ai_status === 'failed' && (
               <p className="text-red-400 text-xs sm:text-sm italic">Failed to generate response. Please try again.</p>
             )}
             
             {/* Only show text if there's no AI audio, otherwise hide transcription */}
-            {aiReply && !aiAudioUrl && aiStatus === 'completed' && (
-              <p className="text-gray-300 text-xs sm:text-sm leading-relaxed whitespace-pre-wrap">{aiReply}</p>
+            {wish.ai_reply && !wish.ai_audio_url && wish.ai_status === 'completed' && (
+              <p className="text-gray-300 text-xs sm:text-sm leading-relaxed whitespace-pre-wrap">{wish.ai_reply}</p>
             )}
             
             {/* AI Voice Response - Show audio player only */}
-            {aiAudioUrl && aiStatus === 'completed' && (
+            {wish.ai_audio_url && wish.ai_status === 'completed' && (
               <div className="mt-2 bg-[#202225] rounded-lg p-2 border border-indigo-600/20 flex items-center gap-2">
                 <span className="text-xl">{personaConfig?.emoji || '🤖'}</span>
                 <audio
                   controls
-                  src={aiAudioUrl}
+                  src={wish.ai_audio_url}
                   className="flex-1 h-8"
                   preload="metadata"
                 >
