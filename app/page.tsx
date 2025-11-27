@@ -116,7 +116,7 @@ export default function HomePage() {
       {/* Mobile Menu Button */}
       <button
         onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-        className="absolute top-4 left-5 z-50 md:hidden p-2 bg-[#1e1f2e] rounded-md border border-white/5 text-white hover:bg-[#2b2d3d] transition-colors"
+        className="fixed top-5 left-4 z-50 md:hidden p-2 bg-[#1e1f2e] rounded-md border border-white/5 text-white hover:bg-[#2b2d3d] transition-colors"
       >
         <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
@@ -142,8 +142,8 @@ export default function HomePage() {
         {/* Header */}
         <div className="h-16 flex items-center px-4 border-b border-white/5 shrink-0">
           <div className="flex items-center gap-2 group cursor-pointer">
-            <img src="/assets/logo.webp" alt="WishCord" className="w-8 h-8 rounded-lg" />
-            <span className="text-lg font-semibold tracking-tight text-white">WishCord</span>
+            <img src="/assets/logo.webp" alt="Wishcord" className="w-8 h-8 rounded-lg" />
+            <span className="text-lg font-semibold tracking-tight text-white">Wishcord</span>
           </div>
         </div>
 
@@ -248,8 +248,8 @@ export default function HomePage() {
             {/* Header */}
             <div className="h-16 flex items-center px-4 border-b border-white/5 shrink-0">
               <div className="flex items-center gap-2 group cursor-pointer">
-                <img src="/assets/logo.webp" alt="WishCord" className="w-8 h-8 rounded-lg" />
-                <span className="text-lg font-semibold tracking-tight text-white">WishCord</span>
+                <img src="/assets/logo.webp" alt="Wishcord" className="w-8 h-8 rounded-lg" />
+                <span className="text-lg font-semibold tracking-tight text-white">Wishcord</span>
               </div>
             </div>
 
@@ -360,7 +360,7 @@ export default function HomePage() {
                 {activeTab === 'wishes' && 'Drop your Xmas wish. Our AI mods are online 24/7.'}
                 {activeTab === 'about' && 'Learn more about the Wishcord community.'}
                 {activeTab === 'token' && 'Current market stats and wallet integration.'}
-                {activeTab === 'how-it-works' && 'Your complete guide to WishCord ✨'}
+                {activeTab === 'how-it-works' && 'Your complete guide to Wishcord ✨'}
               </p>
             </div>
           </div>
@@ -419,7 +419,7 @@ export default function HomePage() {
               {/* Hero */}
               <div className="bg-gradient-to-br from-indigo-900/50 to-purple-900/50 border border-indigo-500/20 rounded-xl p-8 text-center">
                 <div className="flex justify-center mb-4">
-                  <img src="/assets/logo.webp" alt="WishCord" className="w-20 h-20 rounded-xl" />
+                  <img src="/assets/logo.webp" alt="Wishcord" className="w-20 h-20 rounded-xl" />
                 </div>
                 <h2 className="text-3xl font-bold tracking-tight mb-3 text-white">About Wishcord</h2>
                 <p className="text-lg text-slate-400">
@@ -427,16 +427,16 @@ export default function HomePage() {
                 </p>
               </div>
 
-              {/* What is WishCord */}
+              {/* What is Wishcord */}
               <div className="bg-[#1e1f2e] rounded-xl p-6 border border-white/5">
-                <h3 className="text-2xl font-bold mb-3 text-indigo-400">🎅 What is WishCord?</h3>
+                <h3 className="text-2xl font-bold mb-3 text-indigo-400">🎅 What is Wishcord?</h3>
                 <p className="text-slate-300 leading-relaxed mb-3">
-                  WishCord is a revolutionary social platform that combines the magic of the holiday season with cutting-edge AI technology. 
+                  Wishcord is a revolutionary social platform that combines the magic of the holiday season with cutting-edge AI technology. 
                   Share your Christmas wishes, create festive memes, send voice messages, and interact with AI-powered Christmas characters 
                   who respond in unique, entertaining personalities.
                 </p>
                 <p className="text-slate-300 leading-relaxed">
-                  Built on the Solana blockchain with Web3 integration, WishCord creates a decentralized community where every wish is 
+                  Built on the Solana blockchain with Web3 integration, Wishcord creates a decentralized community where every wish is 
                   permanently recorded and every interaction is authentic.
                 </p>
               </div>
@@ -450,7 +450,7 @@ export default function HomePage() {
                       🎅 <span className="text-red-400">SantaMod69</span>
                     </h4>
                     <p className="text-sm text-slate-400">
-                      The boomer admin of WishCord since 1823. Types in ALL CAPS occasionally. Everything reminds him of "BACK IN MY DAY."
+                      The boomer admin of Wishcord since 1823. Types in ALL CAPS occasionally. Everything reminds him of "BACK IN MY DAY."
                     </p>
                   </div>
 
@@ -513,7 +513,7 @@ export default function HomePage() {
                       🎄 <span className="text-emerald-400">BarryJingle</span>
                     </h4>
                     <p className="text-sm text-slate-400">
-                      The friendly and helpful guide who explains everything about WishCord. Always ready to assist newcomers.
+                      The friendly and helpful guide who explains everything about Wishcord. Always ready to assist newcomers.
                     </p>
                   </div>
                 </div>
@@ -616,7 +616,7 @@ export default function HomePage() {
               <div className="bg-gradient-to-r from-indigo-600/20 to-purple-600/20 rounded-xl p-6 border border-indigo-500/30 text-center">
                 <h3 className="text-xl font-bold mb-2 text-indigo-300">💎 $WISH Token</h3>
                 <p className="text-slate-300 mb-4 text-sm">
-                  $WISH is the native token powering the WishCord ecosystem. Hold $WISH to access premium features, 
+                  $WISH is the native token powering the Wishcord ecosystem. Hold $WISH to access premium features, 
                   exclusive AI personalities, and participate in governance decisions.
                 </p>
                 <button
@@ -638,7 +638,7 @@ export default function HomePage() {
                   $WISH Token
                 </h2>
                 <p className="text-base text-slate-400">
-                  The official token of WishCord. Make wishes, earn $WISH, and spread Christmas cheer on the blockchain! 🎄
+                  The official token of Wishcord. Make wishes, earn $WISH, and spread Christmas cheer on the blockchain! 🎄
                 </p>
               </div>
 
@@ -742,7 +742,7 @@ export default function HomePage() {
                 </h3>
                 <div className="space-y-3 text-slate-300 text-sm">
                   <p>
-                    $WISH is the native utility token of the WishCord ecosystem, built on Solana for lightning-fast transactions and minimal fees.
+                    $WISH is the native utility token of the Wishcord ecosystem, built on Solana for lightning-fast transactions and minimal fees.
                   </p>
                   <p>
                     <strong className="text-white">Token Benefits:</strong>
@@ -784,7 +784,7 @@ export default function HomePage() {
                     </div>
                     <div>
                       <h4 className="text-white font-semibold text-sm">Phase 1: Platform Launch</h4>
-                      <p className="text-slate-400 text-xs">WishCord platform with 8 AI mods, voice calls, meme editor</p>
+                      <p className="text-slate-400 text-xs">Wishcord platform with 8 AI mods, voice calls, meme editor</p>
                     </div>
                   </div>
                   <div className="flex gap-3">
@@ -828,7 +828,7 @@ export default function HomePage() {
                   How It Works
                 </h2>
                 <p className="text-lg text-slate-400">
-                  Your complete guide to WishCord ✨
+                  Your complete guide to Wishcord ✨
                 </p>
               </div>
 
@@ -850,7 +850,7 @@ export default function HomePage() {
                       <li>$WISH token integration</li>
                     </ul>
                     <p className="text-sm text-slate-500 mt-3 italic">
-                      💡 Tip: You can also use WishCord anonymously without connecting a wallet!
+                      💡 Tip: You can also use Wishcord anonymously without connecting a wallet!
                     </p>
                   </div>
                 </div>

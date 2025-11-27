@@ -68,7 +68,7 @@ export default function WishTokenPage() {
             $WISH Token
           </h1>
           <p className="text-base sm:text-xl text-gray-400 max-w-2xl mx-auto">
-            The official token of WishCord. Make wishes, earn $WISH, and spread Christmas cheer on the blockchain! 🎄
+            The official token of Wishcord. Make wishes, earn $WISH, and spread Christmas cheer on the blockchain! 🎄
           </p>
         </div>
 
@@ -272,7 +272,7 @@ export default function WishTokenPage() {
             href="/"
             className="inline-flex items-center gap-2 text-indigo-400 hover:text-indigo-300 text-sm sm:text-base transition-colors"
           >
-            ← Back to WishCord
+            ← Back to Wishcord
           </Link>
         </div>
       </div>

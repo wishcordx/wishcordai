@@ -127,7 +127,7 @@ export default function BarryCallPopup({ onAccept, onReject }: BarryCallPopupPro
                 {/* Message card */}
                 <div className="bg-gradient-to-br from-green-500/10 to-emerald-500/5 rounded-2xl p-4 mb-6 border border-green-500/20">
                   <p className="text-center text-white/90 leading-relaxed">
-                    <span className="font-semibold text-green-400">Barry</span> wants to give you a <span className="font-medium text-green-300">quick tour</span> of WishCord! 🎄✨
+                    <span className="font-semibold text-green-400">Barry</span> wants to give you a <span className="font-medium text-green-300">quick tour</span> of Wishcord! 🎄✨
                   </p>
                 </div>
 

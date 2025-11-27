@@ -10,7 +10,7 @@ export default function AboutPage() {
         {/* Hero Section */}
         <div className="text-center mb-16">
           <h1 className="text-4xl sm:text-5xl font-bold mb-4 bg-gradient-to-r from-indigo-400 to-purple-400 bg-clip-text text-transparent">
-            About WishCord
+            About Wishcord
           </h1>
           <p className="text-xl text-gray-300">
             Where AI meets the holiday spirit 🎄✨
@@ -21,14 +21,14 @@ export default function AboutPage() {
         <div className="space-y-12">
           {/* What is WishAI */}
           <section className="bg-[#1e1f22] rounded-lg p-8 border border-[#0f1011]">
-            <h2 className="text-3xl font-bold mb-4 text-indigo-400">🎅 What is WishCord?</h2>
-            <p className="text-gray-300 leading-relaxed mb-4">
-              WishCord is a revolutionary social platform that combines the magic of the holiday season with cutting-edge AI technology. 
+            <h2 className="text-3xl font-bold mb-4 text-indigo-400">🎅 What is Wishcord?</h2>
+            <p className="text-slate-300 leading-relaxed mb-4">
+              Wishcord is a revolutionary social platform that combines the magic of the holiday season with cutting-edge AI technology.
               Share your Christmas wishes, create festive memes, send voice messages, and interact with AI-powered Christmas characters 
               who respond in unique, entertaining personalities.
             </p>
             <p className="text-gray-300 leading-relaxed">
-              Built on the Solana blockchain with Web3 integration, WishCord creates a decentralized community where every wish is 
+              Built on the Solana blockchain with Web3 integration, Wishcord creates a decentralized community where every wish is 
               permanently recorded and every interaction is authentic.
             </p>
           </section>
@@ -42,7 +42,7 @@ export default function AboutPage() {
                   🎅 <span className="text-red-400">SantaMod69</span>
                 </h3>
                 <p className="text-sm text-gray-400">
-                  The boomer admin of WishCord since 1823. Types in ALL CAPS occasionally. Everything reminds him of "BACK IN MY DAY." Supportive but completely out of touch with modern life.
+                  The boomer admin of Wishcord since 1823. Types in ALL CAPS occasionally. Everything reminds him of "BACK IN MY DAY." Supportive but completely out of touch with modern life.
                 </p>
               </div>
 
@@ -207,7 +207,7 @@ export default function AboutPage() {
           <section className="bg-gradient-to-r from-indigo-600/20 to-purple-600/20 rounded-lg p-8 border border-indigo-500/30">
             <h2 className="text-3xl font-bold mb-4 text-indigo-300">💎 $WISH Token</h2>
             <p className="text-gray-300 leading-relaxed mb-4">
-              $WISH is the native token powering the WishCord ecosystem. Hold $WISH to access premium features, 
+              $WISH is the native token powering the Wishcord ecosystem. Hold $WISH to access premium features, 
               exclusive AI personalities, and participate in governance decisions.
             </p>
             <Link 

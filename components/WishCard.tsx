@@ -470,7 +470,7 @@ export default function WishCard({ wish }: WishCardProps) {
 
   const shareToTwitter = () => {
     setShareCount(prev => prev + 1);
-    const tweetText = `Just made a wish on WishCord! 🎅✨\n\n"${wish.wish_text.slice(0, 100)}${wish.wish_text.length > 100 ? '...' : ''}"\n\n${personaConfig?.name} responded with: "${wish.ai_reply?.slice(0, 80)}..."\n\n#WishCord #XmasAI #Web3Christmas`;
+    const tweetText = `Just made a wish on Wishcord! 🎅✨\n\n"${wish.wish_text.slice(0, 100)}${wish.wish_text.length > 100 ? '...' : ''}"\n\n${personaConfig?.name} responded with: "${wish.ai_reply?.slice(0, 80)}..."\n\n#Wishcord #XmasAI #Web3Christmas`;
     const tweetUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(tweetText)}`;
     window.open(tweetUrl, '_blank');
   };
