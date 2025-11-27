@@ -16,7 +16,7 @@ export default function HomePage() {
   const [selectedMod, setSelectedMod] = useState<Persona | null>(null);
   const [showSocialPopup, setShowSocialPopup] = useState(false);
   const [newWish, setNewWish] = useState<any>(null);
-  const [activeTab, setActiveTab] = useState<'wishes' | 'about' | 'token'>('wishes');
+  const [activeTab, setActiveTab] = useState<'wishes' | 'about' | 'token' | 'how-it-works'>('wishes');
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   const mods = [
@@ -138,10 +138,13 @@ export default function HomePage() {
             <span className="font-medium">WISH Token</span>
           </button>
 
-          <a href="/how-it-works" className="w-full flex items-center gap-2 px-2 py-1.5 rounded-md text-slate-400 hover:bg-[#2b2d3d]/30 hover:text-slate-200 transition-all duration-200">
+          <button
+            onClick={() => setActiveTab('how-it-works')}
+            className={`w-full flex items-center gap-2 px-2 py-1.5 rounded-md group transition-all duration-200 ${activeTab === 'how-it-works' ? 'bg-[#2b2d3d]/50 text-white' : 'text-slate-400 hover:bg-[#2b2d3d]/30 hover:text-slate-200'}`}
+          >
             <span className="text-slate-400">❓</span>
             <span className="font-medium">How It Works</span>
-          </a>
+          </button>
         </nav>
 
         {/* User Status */}
@@ -174,11 +177,13 @@ export default function HomePage() {
                 {activeTab === 'wishes' && 'xmas-wishes'}
                 {activeTab === 'about' && 'About'}
                 {activeTab === 'token' && 'WISH Token'}
+                {activeTab === 'how-it-works' && 'How It Works'}
               </h1>
               <p className="text-xs hidden sm:block text-slate-400">
                 {activeTab === 'wishes' && 'Drop your Xmas wish. Our AI mods are online 24/7.'}
                 {activeTab === 'about' && 'Learn more about the Wishcord community.'}
                 {activeTab === 'token' && 'Current market stats and wallet integration.'}
+                {activeTab === 'how-it-works' && 'Your complete guide to WishCord ✨'}
               </p>
             </div>
           </div>
@@ -244,6 +249,283 @@ export default function HomePage() {
                     +24.5% 📈
                   </div>
                 </div>
+              </div>
+            </div>
+          )}
+
+          {/* HOW IT WORKS VIEW */}
+          {activeTab === 'how-it-works' && (
+            <div className="w-full max-w-3xl mx-auto flex flex-col gap-6 fade-in">
+              {/* Hero */}
+              <div className="text-center mb-4">
+                <h2 className="text-3xl font-bold mb-2 bg-gradient-to-r from-green-400 to-blue-400 bg-clip-text text-transparent">
+                  How It Works
+                </h2>
+                <p className="text-lg text-slate-400">
+                  Your complete guide to WishCord ✨
+                </p>
+              </div>
+
+              {/* Step 1 */}
+              <div className="bg-[#1e1f2e] rounded-xl p-6 border-l-4 border-indigo-500">
+                <div className="flex items-start gap-4">
+                  <div className="flex-shrink-0 w-10 h-10 bg-indigo-600 rounded-full flex items-center justify-center text-lg font-bold">
+                    1
+                  </div>
+                  <div className="flex-1">
+                    <h3 className="text-xl font-bold mb-2 text-indigo-400">Connect Your Wallet (Optional)</h3>
+                    <p className="text-slate-300 mb-3">
+                      Click "Connect Wallet" in the top-right corner to link your Solana wallet. This gives you:
+                    </p>
+                    <ul className="list-disc list-inside space-y-1 text-slate-400 ml-4">
+                      <li>Verified identity with your wallet address</li>
+                      <li>Custom username and avatar</li>
+                      <li>Access to your wish history</li>
+                      <li>$WISH token integration</li>
+                    </ul>
+                    <p className="text-sm text-slate-500 mt-3 italic">
+                      💡 Tip: You can also use WishCord anonymously without connecting a wallet!
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              {/* Step 2 */}
+              <div className="bg-[#1e1f2e] rounded-xl p-6 border-l-4 border-green-500">
+                <div className="flex items-start gap-4">
+                  <div className="flex-shrink-0 w-10 h-10 bg-green-600 rounded-full flex items-center justify-center text-lg font-bold">
+                    2
+                  </div>
+                  <div className="flex-1">
+                    <h3 className="text-xl font-bold mb-2 text-green-400">Set Up Your Profile</h3>
+                    <p className="text-slate-300 mb-3">
+                      Create your unique identity:
+                    </p>
+                    <div className="space-y-2">
+                      <div className="bg-[#11121c] rounded-lg p-3 border border-white/5">
+                        <p className="text-white font-semibold mb-1">1. Choose a Username</p>
+                        <p className="text-sm text-slate-400">Pick a name that represents you (max 20 characters)</p>
+                      </div>
+                      <div className="bg-[#11121c] rounded-lg p-3 border border-white/5">
+                        <p className="text-white font-semibold mb-1">2. Select an Avatar</p>
+                        <p className="text-sm text-slate-400">Pick from emojis or upload a custom avatar</p>
+                      </div>
+                      <div className="bg-[#11121c] rounded-lg p-3 border border-white/5">
+                        <p className="text-white font-semibold mb-1">3. Save Your Profile</p>
+                        <p className="text-sm text-slate-400">Your profile is stored and synced across devices</p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Step 3 */}
+              <div className="bg-[#1e1f2e] rounded-xl p-6 border-l-4 border-purple-500">
+                <div className="flex items-start gap-4">
+                  <div className="flex-shrink-0 w-10 h-10 bg-purple-600 rounded-full flex items-center justify-center text-lg font-bold">
+                    3
+                  </div>
+                  <div className="flex-1">
+                    <h3 className="text-xl font-bold mb-2 text-purple-400">Create Your Wish</h3>
+                    <p className="text-slate-300 mb-3">
+                      Express yourself in multiple ways:
+                    </p>
+                    <div className="space-y-3">
+                      <div>
+                        <h4 className="text-base font-semibold text-white mb-1 flex items-center gap-2">
+                          📝 Text Wishes
+                        </h4>
+                        <p className="text-slate-400 text-sm mb-1">
+                          Type your wish (up to 500 characters). You can:
+                        </p>
+                        <ul className="list-disc list-inside space-y-1 text-slate-400 text-sm ml-4">
+                          <li>Share holiday wishes and dreams</li>
+                          <li>Ask for advice or guidance</li>
+                          <li>Tell jokes or share stories</li>
+                          <li>Use <code className="bg-[#11121c] px-1 rounded">@SantaMod69</code> to tag specific mods</li>
+                        </ul>
+                      </div>
+                      <div>
+                        <h4 className="text-base font-semibold text-white mb-1 flex items-center gap-2">
+                          🎨 Meme Creator
+                        </h4>
+                        <p className="text-slate-400 text-sm mb-1">
+                          Click the "📷 Add Image" button to create festive memes
+                        </p>
+                        <p className="text-sm text-yellow-500 mt-1">
+                          ✨ AI mods can analyze your meme and respond to its content!
+                        </p>
+                      </div>
+                      <div>
+                        <h4 className="text-base font-semibold text-white mb-1 flex items-center gap-2">
+                          🎤 Voice Messages
+                        </h4>
+                        <p className="text-slate-400 text-sm mb-1">
+                          Click the "🎤 Voice" button to record audio (max 60 seconds)
+                        </p>
+                        <p className="text-sm text-yellow-500 mt-1">
+                          ✨ AI will transcribe your voice and respond with synthesized speech!
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Step 4 */}
+              <div className="bg-[#1e1f2e] rounded-xl p-6 border-l-4 border-yellow-500">
+                <div className="flex items-start gap-4">
+                  <div className="flex-shrink-0 w-10 h-10 bg-yellow-600 rounded-full flex items-center justify-center text-lg font-bold">
+                    4
+                  </div>
+                  <div className="flex-1">
+                    <h3 className="text-xl font-bold mb-2 text-yellow-400">Select an AI Mod</h3>
+                    <p className="text-slate-300 mb-3">
+                      Choose which AI personality responds to your wish:
+                    </p>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                      <div className="bg-[#11121c] rounded-lg p-2 border border-white/5">
+                        <p className="font-semibold text-red-400 text-sm">🎅 SantaMod69</p>
+                        <p className="text-xs text-slate-400">Boomer admin - ALL CAPS energy</p>
+                      </div>
+                      <div className="bg-[#11121c] rounded-lg p-2 border border-white/5">
+                        <p className="font-semibold text-purple-400 text-sm">💀 xX_Krampus_Xx</p>
+                        <p className="text-xs text-slate-400">Edgelord with 2000s vibes</p>
+                      </div>
+                      <div className="bg-[#11121c] rounded-lg p-2 border border-white/5">
+                        <p className="font-semibold text-pink-400 text-sm">🧝 elfgirluwu</p>
+                        <p className="text-xs text-slate-400">Anime e-girl - uwu master</p>
+                      </div>
+                      <div className="bg-[#11121c] rounded-lg p-2 border border-white/5">
+                        <p className="font-semibold text-cyan-400 text-sm">☃️ FrostyTheCoder</p>
+                        <p className="text-xs text-slate-400">Tech bro - startup buzzwords</p>
+                      </div>
+                      <div className="bg-[#11121c] rounded-lg p-2 border border-white/5">
+                        <p className="font-semibold text-orange-400 text-sm">🦌 DasherSpeedrun</p>
+                        <p className="text-xs text-slate-400">Gamer - speedrun everything</p>
+                      </div>
+                      <div className="bg-[#11121c] rounded-lg p-2 border border-white/5">
+                        <p className="font-semibold text-yellow-400 text-sm">🕉️ SantaKumar</p>
+                        <p className="text-xs text-slate-400">Scammer - wants your seed phrase</p>
+                      </div>
+                      <div className="bg-[#11121c] rounded-lg p-2 border border-white/5">
+                        <p className="font-semibold text-red-400 text-sm">🔔 JingBells叮噹鈴</p>
+                        <p className="text-xs text-slate-400">Multilingual - wisdom & crypto</p>
+                      </div>
+                      <div className="bg-[#11121c] rounded-lg p-2 border border-white/5">
+                        <p className="font-semibold text-emerald-400 text-sm">🎄 BarryJingle</p>
+                        <p className="text-xs text-slate-400">Helper - explains everything</p>
+                      </div>
+                    </div>
+                    <p className="text-sm text-slate-500 mt-3 italic">
+                      💡 Tip: Use @mentions in your text to tag multiple mods at once!
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              {/* Step 5 */}
+              <div className="bg-[#1e1f2e] rounded-xl p-6 border-l-4 border-pink-500">
+                <div className="flex items-start gap-4">
+                  <div className="flex-shrink-0 w-10 h-10 bg-pink-600 rounded-full flex items-center justify-center text-lg font-bold">
+                    5
+                  </div>
+                  <div className="flex-1">
+                    <h3 className="text-xl font-bold mb-2 text-pink-400">Get AI Response</h3>
+                    <p className="text-slate-300 mb-3">
+                      Watch as your chosen mod crafts a personalized response:
+                    </p>
+                    <div className="space-y-2">
+                      <div className="flex items-center gap-3 bg-[#11121c] rounded-lg p-3 border border-white/5">
+                        <span className="text-xl">⚡</span>
+                        <div>
+                          <p className="text-white font-semibold text-sm">Instant Response</p>
+                          <p className="text-xs text-slate-400">AI generates reply in 2-5 seconds</p>
+                        </div>
+                      </div>
+                      <div className="flex items-center gap-3 bg-[#11121c] rounded-lg p-3 border border-white/5">
+                        <span className="text-xl">🎭</span>
+                        <div>
+                          <p className="text-white font-semibold text-sm">Unique Personality</p>
+                          <p className="text-xs text-slate-400">Each mod has distinct voice & style</p>
+                        </div>
+                      </div>
+                      <div className="flex items-center gap-3 bg-[#11121c] rounded-lg p-3 border border-white/5">
+                        <span className="text-xl">🖼️</span>
+                        <div>
+                          <p className="text-white font-semibold text-sm">Context-Aware</p>
+                          <p className="text-xs text-slate-400">Mods "see" images and "hear" voice messages</p>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Step 6 */}
+              <div className="bg-[#1e1f2e] rounded-xl p-6 border-l-4 border-blue-500">
+                <div className="flex items-start gap-4">
+                  <div className="flex-shrink-0 w-10 h-10 bg-blue-600 rounded-full flex items-center justify-center text-lg font-bold">
+                    6
+                  </div>
+                  <div className="flex-1">
+                    <h3 className="text-xl font-bold mb-2 text-blue-400">Engage with Community</h3>
+                    <p className="text-slate-300 mb-3">
+                      Interact with other wishes:
+                    </p>
+                    <div className="grid grid-cols-2 gap-3">
+                      <div className="bg-[#11121c] rounded-lg p-3 border border-white/5">
+                        <p className="text-xl mb-1">👍</p>
+                        <p className="font-semibold text-white text-sm mb-0.5">React</p>
+                        <p className="text-xs text-slate-400">Add emoji reactions to any wish</p>
+                      </div>
+                      <div className="bg-[#11121c] rounded-lg p-3 border border-white/5">
+                        <p className="text-xl mb-1">💬</p>
+                        <p className="font-semibold text-white text-sm mb-0.5">Reply</p>
+                        <p className="text-xs text-slate-400">Post comments and join discussions</p>
+                      </div>
+                      <div className="bg-[#11121c] rounded-lg p-3 border border-white/5">
+                        <p className="text-xl mb-1">📤</p>
+                        <p className="font-semibold text-white text-sm mb-0.5">Share</p>
+                        <p className="text-xs text-slate-400">Copy link or share on social media</p>
+                      </div>
+                      <div className="bg-[#11121c] rounded-lg p-3 border border-white/5">
+                        <p className="text-xl mb-1">🔊</p>
+                        <p className="font-semibold text-white text-sm mb-0.5">Voice Call</p>
+                        <p className="text-xs text-slate-400">Have live AI voice conversations</p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Pro Tips */}
+              <div className="bg-gradient-to-r from-yellow-600/20 to-orange-600/20 rounded-xl p-6 border border-yellow-500/30">
+                <h3 className="text-xl font-bold mb-3 text-yellow-300 flex items-center gap-2">
+                  💡 Pro Tips
+                </h3>
+                <ul className="space-y-2 text-slate-300 text-sm">
+                  <li className="flex items-start gap-2">
+                    <span className="text-yellow-400 font-bold">•</span>
+                    <span>Use <code className="bg-[#1a1b1e] px-2 py-0.5 rounded text-xs">@ModName</code> tags to get responses from multiple mods</span>
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <span className="text-yellow-400 font-bold">•</span>
+                    <span>Combine text, images, and voice in one wish for engaging responses</span>
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <span className="text-yellow-400 font-bold">•</span>
+                    <span>Check the Members list to see who's active and their wish counts</span>
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <span className="text-yellow-400 font-bold">•</span>
+                    <span>Visit user profiles to see their wish history and stats</span>
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <span className="text-yellow-400 font-bold">•</span>
+                    <span>Hold $WISH tokens to unlock premium features and exclusive mods</span>
+                  </li>
+                </ul>
               </div>
             </div>
           )}
