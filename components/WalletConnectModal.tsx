@@ -82,41 +82,13 @@ export default function WalletConnectModal({ isOpen, onClose }: WalletConnectMod
                     disabled={isConnecting}
                     className="w-full flex items-center gap-4 p-4 bg-[#11121c] hover:bg-white/5 border border-white/10 rounded-lg transition-colors group disabled:opacity-50 disabled:cursor-not-allowed"
                   >
-                    <div className="w-12 h-12 bg-gradient-to-br from-purple-500 to-indigo-600 rounded-lg flex items-center justify-center flex-shrink-0">
-                      <svg className="w-7 h-7 text-white" viewBox="0 0 128 128" fill="none">
-                        <path d="M107.6 19.8C99.8 11.7 89.2 7 77.9 7H28.9C27.3 7 26 8.3 26 9.9V118.1C26 119.7 27.3 121 28.9 121H99.1C100.7 121 102 119.7 102 118.1V49.4C102 38.1 111.4 28.7 107.6 19.8ZM77.9 15C85.9 15 93.2 18.3 98.6 24.1L64.5 59.5H40V15H77.9ZM94 113H34V67.5H66.9L94 95.3V113Z" fill="currentColor"/>
-                      </svg>
+                    <div className="w-12 h-12 rounded-lg flex items-center justify-center flex-shrink-0 overflow-hidden">
+                      <img src="/assets/phantom.webp" alt="Phantom" className="w-full h-full object-cover" />
                     </div>
                     <div className="flex-1 text-left">
                       <p className="text-white font-semibold">Phantom</p>
                       <p className="text-xs text-slate-400">
                         {isMobile ? 'Open in Phantom app' : 'Browser extension'}
-                      </p>
-                    </div>
-                    {isConnecting ? (
-                      <div className="w-5 h-5 border-2 border-indigo-600 border-t-transparent rounded-full animate-spin" />
-                    ) : (
-                      <svg className="w-5 h-5 text-slate-400 group-hover:text-white transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                      </svg>
-                    )}
-                  </button>
-
-                  {/* Solflare */}
-                  <button
-                    onClick={handleConnect}
-                    disabled={isConnecting}
-                    className="w-full flex items-center gap-4 p-4 bg-[#11121c] hover:bg-white/5 border border-white/10 rounded-lg transition-colors group disabled:opacity-50 disabled:cursor-not-allowed"
-                  >
-                    <div className="w-12 h-12 bg-gradient-to-br from-orange-500 to-red-600 rounded-lg flex items-center justify-center flex-shrink-0">
-                      <svg className="w-7 h-7 text-white" viewBox="0 0 24 24" fill="currentColor">
-                        <path d="M12 2L2 12L12 22L22 12L12 2ZM12 5.84L18.16 12L12 18.16L5.84 12L12 5.84Z"/>
-                      </svg>
-                    </div>
-                    <div className="flex-1 text-left">
-                      <p className="text-white font-semibold">Solflare</p>
-                      <p className="text-xs text-slate-400">
-                        {isMobile ? 'Mobile wallet' : 'Browser extension'}
                       </p>
                     </div>
                     {isConnecting ? (
@@ -134,17 +106,13 @@ export default function WalletConnectModal({ isOpen, onClose }: WalletConnectMod
                   <p className="text-xs text-slate-400 text-center">
                     {isMobile ? (
                       <>
-                        <span className="text-indigo-400 font-semibold">Mobile users:</span> You'll be redirected to your wallet app. Make sure you have Phantom or Solflare installed.
+                        <span className="text-indigo-400 font-semibold">Mobile users:</span> You'll be redirected to your Phantom wallet app. Make sure you have it installed.
                       </>
                     ) : (
                       <>
-                        <span className="text-indigo-400 font-semibold">New to Solana?</span> Install a wallet extension from{' '}
+                        <span className="text-indigo-400 font-semibold">New to Solana?</span> Install Phantom wallet extension from{' '}
                         <a href="https://phantom.app" target="_blank" rel="noopener noreferrer" className="text-indigo-400 hover:underline">
                           phantom.app
-                        </a>{' '}
-                        or{' '}
-                        <a href="https://solflare.com" target="_blank" rel="noopener noreferrer" className="text-indigo-400 hover:underline">
-                          solflare.com
                         </a>
                       </>
                     )}
