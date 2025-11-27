@@ -1,16 +1,23 @@
 'use client';
 
-import { useState, useRef } from 'react';
-import MemeEditor from './MemeEditor';
+import { useState, useRef, useEffect } from 'react';
+import { useRouter } from 'next/navigation';
+import { createClient } from '@supabase/supabase-js';
 import MentionAutocomplete, { MODS, type Mention } from './MentionAutocomplete';
 import { useWallet } from '@/lib/wallet-context';
 import type { Persona } from '@/typings/types';
+
+const supabase = createClient(
+  process.env.NEXT_PUBLIC_SUPABASE_URL!,
+  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+);
 
 interface WishFormProps {
   onWishSubmitted?: (wish: any) => void;
 }
 
 export default function WishForm({ onWishSubmitted }: WishFormProps) {
+  const router = useRouter();
   const { walletAddress } = useWallet();
   const [wishText, setWishText] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -26,10 +33,8 @@ export default function WishForm({ onWishSubmitted }: WishFormProps) {
   const [cursorPosition, setCursorPosition] = useState(0);
   
   // Media features
-  const [uploadedImage, setUploadedImage] = useState<string | null>(null);
   const [imageUrl, setImageUrl] = useState<string | null>(null);
   const [imagePath, setImagePath] = useState<string | null>(null);
-  const [showMemeEditor, setShowMemeEditor] = useState(false);
   const [isRecording, setIsRecording] = useState(false);
   const [audioBlob, setAudioBlob] = useState<Blob | null>(null);
   const [recordingTime, setRecordingTime] = useState(0);
@@ -38,6 +43,50 @@ export default function WishForm({ onWishSubmitted }: WishFormProps) {
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const mediaRecorderRef = useRef<MediaRecorder | null>(null);
   const recordingIntervalRef = useRef<NodeJS.Timeout | null>(null);
+
+  // Check for edited image on mount
+  useEffect(() => {
+    const editedImage = sessionStorage.getItem('editedImage');
+    if (editedImage) {
+      // Upload to Supabase immediately
+      uploadEditedImageToSupabase(editedImage);
+      sessionStorage.removeItem('editedImage');
+    }
+  }, []);
+
+  // Upload edited image to Supabase
+  const uploadEditedImageToSupabase = async (dataURL: string) => {
+    try {
+      // Convert base64 to blob
+      const response = await fetch(dataURL);
+      const blob = await response.blob();
+      
+      // Generate unique filename
+      const timestamp = Date.now();
+      const filename = `meme-${timestamp}.png`;
+      
+      // Upload directly to Supabase Storage
+      const { data, error } = await supabase.storage
+        .from('wish-images')
+        .upload(filename, blob, {
+          contentType: 'image/png',
+          cacheControl: '3600',
+        });
+      
+      if (error) throw error;
+      
+      // Get public URL
+      const { data: { publicUrl } } = supabase.storage
+        .from('wish-images')
+        .getPublicUrl(filename);
+      
+      setImageUrl(publicUrl);
+      setImagePath(filename);
+    } catch (err) {
+      console.error('Failed to upload edited image:', err);
+      setError('Failed to upload edited image');
+    }
+  };
 
   const handleTextChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     const newText = e.target.value;
@@ -130,7 +179,7 @@ export default function WishForm({ onWishSubmitted }: WishFormProps) {
     }, 0);
   };
 
-  // Handle image upload
+  // Handle image upload - redirect to editor page
   const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
@@ -149,24 +198,17 @@ export default function WishForm({ onWishSubmitted }: WishFormProps) {
 
     const reader = new FileReader();
     reader.onload = () => {
-      setUploadedImage(reader.result as string);
-      setShowMemeEditor(true);
+      // Store image in sessionStorage and redirect to editor
+      sessionStorage.setItem('editorImage', reader.result as string);
+      router.push('/editor');
     };
     reader.readAsDataURL(file);
-  };
-
-  // Handle meme editor save
-  const handleMemeEditorSave = (url: string, path: string) => {
-    setImageUrl(url);
-    setImagePath(path);
-    setShowMemeEditor(false);
   };
 
   // Remove image
   const removeImage = () => {
     setImageUrl(null);
     setImagePath(null);
-    setUploadedImage(null);
     if (fileInputRef.current) fileInputRef.current.value = '';
   };
 
@@ -311,7 +353,6 @@ export default function WishForm({ onWishSubmitted }: WishFormProps) {
         setWishText('');
         setImageUrl(null);
         setImagePath(null);
-        setUploadedImage(null);
         setAudioBlob(null);
         setRecordingTime(0);
         if (fileInputRef.current) fileInputRef.current.value = '';
@@ -330,16 +371,7 @@ export default function WishForm({ onWishSubmitted }: WishFormProps) {
   };
 
   return (
-    <>
-      {/* Meme Editor Modal */}
-      <MemeEditor
-        isOpen={showMemeEditor}
-        onClose={() => setShowMemeEditor(false)}
-        initialImage={uploadedImage}
-        onSaveToFeed={handleMemeEditorSave}
-      />
-
-      <form onSubmit={handleSubmit} className="space-y-3 sm:space-y-4">
+    <form onSubmit={handleSubmit} className="space-y-3 sm:space-y-4">
         {/* Professional Message Input Container */}
         <div className="relative bg-[#313338] rounded-lg border border-[#1e1f22] focus-within:border-[#3e4047] transition-colors">
           {/* Main input area with action buttons */}
@@ -515,6 +547,5 @@ export default function WishForm({ onWishSubmitted }: WishFormProps) {
         </div>
       )}
     </form>
-    </>
   );
 }
