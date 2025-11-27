@@ -120,133 +120,29 @@ export async function POST(request: NextRequest) {
 
     console.log('📝 Wish saved instantly:', wish.id, 'AI status:', aiStatus);
 
-    // STEP 2: Return immediately so user sees their message
-    const response = NextResponse.json<WishResponse>(
-      { success: true, wish },
-      { status: 201 }
-    );
-
-    // STEP 3: Generate AI response asynchronously (don't await)
+    // STEP 2: Trigger AI generation in background without blocking response
     if (shouldRespond) {
       console.log(`💬 ${personaConfig.name} is typing...`);
       
-      // Fire and forget - generate AI response in background
-      (async () => {
-        const startTime = Date.now();
-        try {
-          console.log(`⏱️ [${wish.id}] Starting AI generation at ${new Date().toISOString()}`);
-          let aiReply: string | null = null;
-          let aiAudioUrl: string | undefined;
-          let aiAudioPath: string | undefined;
-          let imageDescription: string | undefined;
-
-          // Analyze image if present
-          if (imageUrl) {
-            console.log('🖼️ Analyzing image with Claude Vision...');
-            imageDescription = await aiRouter.analyzeMeme(imageUrl, 'claude');
-          }
-
-          console.log(`📝 Message content: "${wishText}"`);
-          console.log(`🎤 Has audio: ${!!audioUrl}`);
-          console.log(`🖼️ Has image: ${!!imageUrl}`);
-
-          // Generate AI response with full context
-          console.log(`⏱️ [${wish.id}] Calling aiRouter.generateModResponse...`);
-          aiReply = await aiRouter.generateModResponse(
-            personaConfig.systemPrompt,
-            wishText || '[No text, see attached media]',
-            imageDescription,
-            undefined
-          );
-
-          const elapsed = ((Date.now() - startTime) / 1000).toFixed(2);
-          console.log(`✅ [${wish.id}] ${personaConfig.name} responded in ${elapsed}s!`);
-
-          // Generate voice response if user sent voice message
-          if (audioUrl && aiReply) {
-            try {
-              console.log(`🎙️ Generating voice response for ${personaConfig.name}...`);
-              
-              if (!process.env.ELEVENLABS_API_KEY) {
-                throw new Error('ElevenLabs API key not configured');
-              }
-              
-              const voiceId = VOICE_MAP[persona];
-              const audio = await elevenlabs.textToSpeech.convert(voiceId, {
-                text: aiReply,
-                modelId: 'eleven_turbo_v2_5',
-                outputFormat: 'mp3_22050_32',
-              });
-
-              const chunks: Uint8Array[] = [];
-              const reader = audio.getReader();
-              while (true) {
-                const { done, value } = await reader.read();
-                if (done) break;
-                chunks.push(value);
-              }
-              const audioBuffer = Buffer.concat(chunks);
-
-              const fileName = `ai-voice-${Date.now()}.mp3`;
-              const { data: uploadData, error: uploadError } = await supabase.storage
-                .from('wish-audio')
-                .upload(fileName, audioBuffer, {
-                  contentType: 'audio/mpeg',
-                  cacheControl: '3600',
-                });
-
-              if (!uploadError) {
-                const { data: { publicUrl } } = supabase.storage
-                  .from('wish-audio')
-                  .getPublicUrl(fileName);
-                
-                aiAudioUrl = publicUrl;
-                aiAudioPath = fileName;
-                console.log(`✅ Voice response uploaded: ${publicUrl}`);
-              }
-            } catch (voiceError) {
-              console.error('❌ Voice generation failed:', voiceError);
-            }
-          }
-
-          // Update wish with AI response
-          console.log(`⏱️ [${wish.id}] Updating database with AI response...`);
-          const { error: updateError } = await supabase
-            .from('wishes')
-            .update({
-              ai_reply: aiReply,
-              ai_status: 'completed',
-              ai_audio_url: aiAudioUrl,
-              ai_audio_path: aiAudioPath,
-            })
-            .eq('id', wish.id);
-
-          if (updateError) {
-            console.error(`❌ [${wish.id}] Failed to update wish with AI response:`, updateError);
-            // Mark as failed
-            await supabase
-              .from('wishes')
-              .update({ ai_status: 'failed' })
-              .eq('id', wish.id);
-          } else {
-            const totalElapsed = ((Date.now() - startTime) / 1000).toFixed(2);
-            console.log(`✅✅✅ [${wish.id}] COMPLETE! Database updated in ${totalElapsed}s total`);
-          }
-        } catch (error) {
-          console.error(`❌ [${wish.id}] AI generation error:`, error);
-          // Mark as failed
-          await supabase
-            .from('wishes')
-            .update({ ai_status: 'failed' })
-            .eq('id', wish.id);
-          console.log(`⚠️ [${wish.id}] Marked as failed in database`);
-        }
-      })();
-    } else {
-      console.log(`⏭️ ${personaConfig.name} not mentioned, no AI response needed`);
+      // Call separate endpoint to generate AI response (non-blocking)
+      fetch(`${process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000'}/api/wish/generate`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          wishId: wish.id,
+          wishText: wishText || '[Media message]',
+          persona,
+          imageUrl,
+          audioUrl,
+        }),
+      }).catch(err => console.error('Failed to trigger AI generation:', err));
     }
 
-    return response;
+    // STEP 3: Return immediately so user sees their message
+    return NextResponse.json<WishResponse>(
+      { success: true, wish },
+      { status: 201 }
+    );
   } catch (error) {
     console.error('❌ Error:', error);
     return NextResponse.json<WishResponse>(
