@@ -3,6 +3,7 @@
 import { useState, useRef, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { createClient } from '@supabase/supabase-js';
+import { motion, AnimatePresence } from 'framer-motion';
 import MentionAutocomplete, { MODS, type Mention } from './MentionAutocomplete';
 import { useWallet } from '@/lib/wallet-context';
 import type { Persona } from '@/typings/types';
@@ -551,24 +552,52 @@ export default function WishForm({ onWishSubmitted }: WishFormProps) {
           </div>
         )}
 
-      {success && (
-        <div className="bg-green-600/20 border border-green-600/30 px-3 py-2 sm:px-4 rounded-lg flex items-center gap-2">
-          <svg className="w-4 h-4 text-green-400 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-          </svg>
-          <p className="text-xs sm:text-sm text-green-400">
-            Message sent! Mod is typing...
-          </p>
-        </div>
-      )}
+      <AnimatePresence mode="wait">
+        {success && (
+          <motion.div
+            key="success"
+            initial={{ scale: 0.8, opacity: 0 }}
+            animate={{ scale: 1, opacity: 1 }}
+            exit={{ scale: 0.8, opacity: 0 }}
+            transition={{ type: "spring", damping: 20, stiffness: 300 }}
+            className="flex items-center justify-center py-2"
+          >
+            <motion.div
+              initial={{ scale: 0 }}
+              animate={{ scale: [0, 1.2, 1] }}
+              transition={{ duration: 0.5, times: [0, 0.6, 1] }}
+              className="w-10 h-10 bg-gradient-to-br from-green-500 to-emerald-500 rounded-full flex items-center justify-center shadow-lg shadow-green-500/50"
+            >
+              <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <motion.path
+                  initial={{ pathLength: 0 }}
+                  animate={{ pathLength: 1 }}
+                  transition={{ duration: 0.4, delay: 0.2 }}
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={3}
+                  d="M5 13l4 4L19 7"
+                />
+              </svg>
+            </motion.div>
+          </motion.div>
+        )}
 
-      {error && (
-        <div className="bg-red-600/20 border border-red-600/30 px-3 py-2 sm:px-4 rounded-lg">
-          <p className="text-xs sm:text-sm text-red-400">
-            {error}
-          </p>
-        </div>
-      )}
+        {error && (
+          <motion.div
+            key="error"
+            initial={{ opacity: 0, y: -10 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -10 }}
+            transition={{ duration: 0.2 }}
+            className="bg-red-600/20 border border-red-600/30 px-3 py-2 sm:px-4 rounded-lg"
+          >
+            <p className="text-xs sm:text-sm text-red-400">
+              {error}
+            </p>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </form>
   );
 }
