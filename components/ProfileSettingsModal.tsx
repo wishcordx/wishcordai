@@ -2,7 +2,13 @@
 
 import { useState, useRef, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { createClient } from '@supabase/supabase-js';
 import { useWallet } from '@/lib/wallet-context';
+
+const supabase = createClient(
+  process.env.NEXT_PUBLIC_SUPABASE_URL!,
+  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+);
 
 interface ProfileSettingsModalProps {
   isOpen: boolean;
@@ -98,7 +104,7 @@ export default function ProfileSettingsModal({
     setAvatar(newUrl);
   };
 
-  const handleSave = () => {
+  const handleSave = async () => {
     if (username.trim().length === 0) {
       alert('Username cannot be empty');
       return;
@@ -107,8 +113,37 @@ export default function ProfileSettingsModal({
       alert('Username must be 20 characters or less');
       return;
     }
-    onSave(username.trim(), avatar);
-    onClose();
+
+    try {
+      // Update database
+      const { error } = await supabase
+        .from('members')
+        .upsert({
+          wallet_address: walletAddress,
+          username: username.trim(),
+          avatar: avatar,
+          last_active: new Date().toISOString(),
+        }, {
+          onConflict: 'wallet_address'
+        });
+
+      if (error) {
+        console.error('Error updating profile:', error);
+        alert('Failed to save profile. Please try again.');
+        return;
+      }
+
+      // Update localStorage
+      onSave(username.trim(), avatar);
+      
+      // Trigger UI update
+      window.dispatchEvent(new Event('profileUpdated'));
+      
+      onClose();
+    } catch (err) {
+      console.error('Failed to save profile:', err);
+      alert('An error occurred. Please try again.');
+    }
   };
 
   const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {

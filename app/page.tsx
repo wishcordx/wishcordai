@@ -9,12 +9,13 @@ import ModProfileModal from '@/components/ModProfileModal';
 import SocialMediaPopup from '@/components/SocialMediaPopup';
 import MembersList from '@/components/MembersList';
 import ProfileSettingsModal from '@/components/ProfileSettingsModal';
+import ProfileSetupModal from '@/components/ProfileSetupModal';
 import WalletConnectModal from '@/components/WalletConnectModal';
 import { useWallet } from '@/lib/wallet-context';
 import type { Persona } from '@/typings/types';
 
 export default function HomePage() {
-  const { walletAddress, disconnectWallet } = useWallet();
+  const { walletAddress, disconnectWallet, profileExists } = useWallet();
   const [refreshTrigger, setRefreshTrigger] = useState(0);
   const [totalMessages, setTotalMessages] = useState(0);
   const [activeCall, setActiveCall] = useState<Persona | null>(null);
@@ -27,6 +28,7 @@ export default function HomePage() {
   const [isMobileSidebarOpen, setIsMobileSidebarOpen] = useState(false);
   const [showProfileSettings, setShowProfileSettings] = useState(false);
   const [showWalletConnect, setShowWalletConnect] = useState(false);
+  const [showProfileSetup, setShowProfileSetup] = useState(false);
 
   const mods = [
     { name: 'BarryJingle', emoji: '🎄', role: 'Helper', color: 'text-emerald-400', persona: 'barry' as Persona, status: 'online' },
@@ -53,16 +55,34 @@ export default function HomePage() {
     setActiveCall(persona);
   };
 
+  // Load profile from localStorage
   useEffect(() => {
-    const profileData = localStorage.getItem('userProfile');
-    if (profileData) {
-      const profile = JSON.parse(profileData);
-      setUserProfile({
-        username: profile.username || 'AnonUser',
-        avatar: profile.avatar || '👤',
-      });
-    }
+    const loadProfile = () => {
+      const profileData = localStorage.getItem('userProfile');
+      if (profileData) {
+        const profile = JSON.parse(profileData);
+        setUserProfile({
+          username: profile.username || 'AnonUser',
+          avatar: profile.avatar || '👤',
+        });
+      } else {
+        setUserProfile(null);
+      }
+    };
+
+    loadProfile();
+
+    // Listen for profile updates
+    window.addEventListener('profileUpdated', loadProfile);
+    return () => window.removeEventListener('profileUpdated', loadProfile);
   }, []);
+
+  // Show profile setup modal if wallet connected but no profile
+  useEffect(() => {
+    if (walletAddress && profileExists === false) {
+      setShowProfileSetup(true);
+    }
+  }, [walletAddress, profileExists]);
 
   const handleProfileSave = (username: string, avatar: string) => {
     const profile = { username, avatar };
@@ -1279,6 +1299,12 @@ export default function HomePage() {
       <WalletConnectModal
         isOpen={showWalletConnect}
         onClose={() => setShowWalletConnect(false)}
+      />
+
+      {/* Profile Setup Modal - Auto-show for new wallets */}
+      <ProfileSetupModal
+        isOpen={showProfileSetup}
+        onClose={() => setShowProfileSetup(false)}
       />
     </div>
   );

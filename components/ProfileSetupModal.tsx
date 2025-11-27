@@ -1,7 +1,13 @@
 'use client';
 
 import { useState } from 'react';
+import { createClient } from '@supabase/supabase-js';
 import { useWallet } from '@/lib/wallet-context';
+
+const supabase = createClient(
+  process.env.NEXT_PUBLIC_SUPABASE_URL!,
+  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+);
 
 interface ProfileSetupModalProps {
   isOpen: boolean;
@@ -30,15 +36,48 @@ export default function ProfileSetupModal({ isOpen, onClose }: ProfileSetupModal
     }
   };
 
-  const handleComplete = () => {
-    // TODO: Save profile to database
-    localStorage.setItem('userProfile', JSON.stringify({
-      walletAddress,
+  const handleComplete = async () => {
+    if (!walletAddress) return;
+
+    const profile = {
+      wallet_address: walletAddress,
       username: username || 'Anonymous',
       avatar: customImage || selectedEmoji,
-      setupCompleted: true,
-    }));
-    onClose();
+      last_active: new Date().toISOString(),
+    };
+
+    try {
+      // Save to database using upsert (insert or update if exists)
+      const { error } = await supabase
+        .from('members')
+        .upsert(profile, { 
+          onConflict: 'wallet_address',
+          ignoreDuplicates: false 
+        });
+
+      if (error) {
+        console.error('Error saving profile to database:', error);
+        alert('Failed to save profile. Please try again.');
+        return;
+      }
+
+      // Save to localStorage for quick access
+      localStorage.setItem('userProfile', JSON.stringify({
+        walletAddress,
+        username: profile.username,
+        avatar: profile.avatar,
+        setupCompleted: true,
+      }));
+
+      console.log('Profile saved successfully:', profile.username);
+      onClose();
+      
+      // Trigger a page refresh or custom event to update UI
+      window.dispatchEvent(new Event('profileUpdated'));
+    } catch (err) {
+      console.error('Failed to save profile:', err);
+      alert('An error occurred. Please try again.');
+    }
   };
 
   return (
