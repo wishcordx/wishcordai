@@ -32,6 +32,23 @@ interface Reply {
 
 const REACTION_EMOJIS = ['👍', '❤️', '😂', '💀', '🎄', '🎅'];
 
+// Official mod usernames - verified mods only
+const OFFICIAL_MODS = [
+  'SantaMod69',
+  'xX_Krampus_Xx',
+  'elfgirluwu',
+  'FrostyTheCoder',
+  'DasherSpeedrun',
+  'SantaKumar',
+  'JingBells叮噹鈴',
+  'BarryJingle'
+];
+
+// Helper function to check if username is an official mod
+const isOfficialMod = (username: string): boolean => {
+  return OFFICIAL_MODS.includes(username);
+};
+
 export default function WishCard({ wish }: WishCardProps) {
   const { walletAddress } = useWallet();
   const [reactions, setReactions] = useState<Reaction[]>([]);
@@ -514,10 +531,18 @@ export default function WishCard({ wish }: WishCardProps) {
           )}
         </div>
         <div className="flex-1 min-w-0">
-          <div className="flex items-baseline gap-1 sm:gap-2 mb-1 flex-wrap">
+          <div className="flex items-center gap-1 sm:gap-2 mb-1 flex-wrap">
             <span className="text-white font-medium text-xs sm:text-sm">
               {wish.username || (wish.wallet_address ? truncateAddress(wish.wallet_address) : 'Anonymous')}
             </span>
+            {isOfficialMod(wish.username || '') && (
+              <span className="inline-flex items-center gap-0.5 px-1.5 py-0.5 rounded text-[10px] font-bold bg-gradient-to-r from-indigo-600 to-purple-600 text-white border border-indigo-400/30 shadow-sm">
+                <svg className="w-2.5 h-2.5" fill="currentColor" viewBox="0 0 24 24">
+                  <path d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+                </svg>
+                MOD
+              </span>
+            )}
             <span className="text-gray-500 text-xs" title={formatRelativeTime(wish.created_at)}>
               {formatDiscordTimestamp(wish.created_at)}
             </span>
@@ -582,7 +607,10 @@ export default function WishCard({ wish }: WishCardProps) {
           <div className="flex-1 min-w-0">
             <div className="flex items-center gap-1 sm:gap-2 mb-1 flex-wrap">
               <span className="text-indigo-400 font-medium text-xs sm:text-sm">{personaConfig?.name || 'Mod'}</span>
-              <span className="px-1.5 sm:px-2 py-0.5 rounded text-xs font-semibold bg-indigo-600/20 text-indigo-400 border border-indigo-600/30">
+              <span className="inline-flex items-center gap-0.5 px-1.5 sm:px-2 py-0.5 rounded text-[10px] sm:text-xs font-bold bg-gradient-to-r from-indigo-600 to-purple-600 text-white border border-indigo-400/30 shadow-sm">
+                <svg className="w-2.5 h-2.5" fill="currentColor" viewBox="0 0 24 24">
+                  <path d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+                </svg>
                 MOD
               </span>
               {wish.ai_reply && (
@@ -729,8 +757,16 @@ export default function WishCard({ wish }: WishCardProps) {
                 )}
               </div>
               <div className="flex-1 min-w-0">
-                <div className="flex items-baseline gap-1 sm:gap-2 mb-1">
+                <div className="flex items-center gap-1 sm:gap-2 mb-1 flex-wrap">
                   <span className="text-white font-medium text-xs">{reply.username}</span>
+                  {isOfficialMod(reply.username) && (
+                    <span className="inline-flex items-center gap-0.5 px-1.5 py-0.5 rounded text-[10px] font-bold bg-gradient-to-r from-indigo-600 to-purple-600 text-white border border-indigo-400/30 shadow-sm">
+                      <svg className="w-2.5 h-2.5" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+                      </svg>
+                      MOD
+                    </span>
+                  )}
                   <span className="text-gray-500 text-xs" title={formatRelativeTime(reply.created_at)}>
                     {formatDiscordTimestamp(reply.created_at)}
                   </span>
