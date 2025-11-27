@@ -238,198 +238,178 @@ export default function VoiceCallAgent({ persona, onClose }: VoiceCallAgentProps
 
   // Connected - Real-time conversation
   return (
-    <div className="fixed inset-0 bg-[#0f1011] z-50 flex flex-col select-none" style={{ userSelect: 'none', WebkitUserSelect: 'none' }}>
-      {/* Top Bar */}
-      <div className="bg-[#1e1f22] px-4 py-3 flex items-center justify-between border-b border-[#0f1011]">
+    <div className="fixed inset-0 bg-gradient-to-br from-[#0a0b10] via-[#111318] to-[#1a1b24] z-50 flex flex-col select-none" style={{ userSelect: 'none', WebkitUserSelect: 'none' }}>
+      {/* Top Bar - Clean and minimal */}
+      <div className="px-6 py-4 flex items-center justify-between">
         <div className="flex items-center gap-3">
-          <div className="text-gray-400 text-xl">🎙️</div>
-          <div>
-            <h2 className="text-white font-semibold">Voice Call</h2>
-            <p className="text-xs text-gray-400">{modPersona.name}</p>
-          </div>
+          <div className="w-2 h-2 rounded-full bg-green-500 animate-pulse"></div>
+          <span className="text-white/80 text-sm font-medium">Voice Call</span>
         </div>
-        <div className="flex items-center gap-4">
-          <span className="text-gray-400 text-sm">{formatDuration(callDuration)}</span>
-          <button
-            onClick={endCall}
-            className="text-gray-400 hover:text-white transition p-2"
-          >
-            ✕
-          </button>
-        </div>
+        <button
+          onClick={endCall}
+          className="w-8 h-8 rounded-full bg-white/5 hover:bg-white/10 text-white/60 hover:text-white transition flex items-center justify-center"
+        >
+          <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+          </svg>
+        </button>
       </div>
 
-      {/* Center - Avatars */}
-      <div className="flex-1 flex flex-col items-center justify-center px-4 gap-8">
-        {/* Mod Avatar */}
-        <div className="flex flex-col items-center">
-          <div className="relative flex items-center justify-center">
-            {/* Animated ripple rings when speaking */}
+      {/* Main Content - Centered Avatars */}
+      <div className="flex-1 flex flex-col items-center justify-center px-6 py-8">
+        {/* Mod Avatar - Main Focus */}
+        <div className="flex flex-col items-center mb-16">
+          <div className="relative mb-6">
+            {/* Subtle glow effect when speaking */}
             {isAgentSpeaking && (
-              <>
-                <motion.div
-                  animate={{ 
-                    scale: [1, 1.8],
-                    opacity: [0.6, 0]
-                  }}
-                  transition={{ 
-                    duration: 1.5,
-                    repeat: Infinity,
-                    ease: "easeOut"
-                  }}
-                  className="absolute w-32 h-32 sm:w-40 sm:h-40 rounded-full border-4 border-green-500"
-                />
-                <motion.div
-                  animate={{ 
-                    scale: [1, 1.6],
-                    opacity: [0.4, 0]
-                  }}
-                  transition={{ 
-                    duration: 1.5,
-                    repeat: Infinity,
-                    ease: "easeOut",
-                    delay: 0.3
-                  }}
-                  className="absolute w-32 h-32 sm:w-40 sm:h-40 rounded-full border-4 border-green-500"
-                />
-                <motion.div
-                  animate={{ 
-                    scale: [1, 1.4],
-                    opacity: [0.3, 0]
-                  }}
-                  transition={{ 
-                    duration: 1.5,
-                    repeat: Infinity,
-                    ease: "easeOut",
-                    delay: 0.6
-                  }}
-                  className="absolute w-32 h-32 sm:w-40 sm:h-40 rounded-full border-4 border-green-500"
-                />
-              </>
+              <motion.div
+                animate={{ 
+                  scale: [1, 1.15],
+                  opacity: [0.4, 0]
+                }}
+                transition={{ 
+                  duration: 1.5,
+                  repeat: Infinity,
+                  ease: "easeOut"
+                }}
+                className="absolute inset-0 rounded-full bg-green-400 blur-2xl"
+              />
             )}
             
             <motion.div
               animate={{
-                scale: isAgentSpeaking ? [1, 1.05, 1] : 1
+                scale: isAgentSpeaking ? [1, 1.02, 1] : 1
               }}
-              transition={{ duration: 1, repeat: isAgentSpeaking ? Infinity : 0 }}
+              transition={{ duration: 2, repeat: isAgentSpeaking ? Infinity : 0 }}
               className="relative"
             >
-              <div className="w-32 h-32 sm:w-40 sm:h-40 rounded-full bg-gradient-to-br from-indigo-500 via-purple-500 to-pink-500 flex items-center justify-center text-6xl sm:text-7xl shadow-2xl">
+              {/* Main avatar circle */}
+              <div className="w-48 h-48 rounded-full bg-gradient-to-br from-indigo-500 via-purple-500 to-pink-500 flex items-center justify-center text-8xl shadow-2xl ring-4 ring-white/5">
                 {modPersona.emoji}
               </div>
               
-              <div className={`absolute bottom-2 right-2 w-6 h-6 rounded-full border-4 border-[#1e1f22] ${
-                isAgentSpeaking ? 'bg-green-500 animate-pulse' : 'bg-gray-500'
-              }`} />
+              {/* Status indicator */}
+              <motion.div 
+                animate={{ scale: isAgentSpeaking ? [1, 1.2, 1] : 1 }}
+                transition={{ duration: 1, repeat: isAgentSpeaking ? Infinity : 0 }}
+                className={`absolute -bottom-1 -right-1 w-8 h-8 rounded-full border-4 border-[#0a0b10] flex items-center justify-center ${
+                  isAgentSpeaking ? 'bg-green-500' : 'bg-gray-600'
+                }`}
+              >
+                {isAgentSpeaking && (
+                  <motion.div
+                    animate={{ scale: [0.8, 1, 0.8] }}
+                    transition={{ duration: 0.8, repeat: Infinity }}
+                  >
+                    <svg className="w-4 h-4 text-white" fill="currentColor" viewBox="0 0 24 24">
+                      <path d="M12 14c1.66 0 3-1.34 3-3V5c0-1.66-1.34-3-3-3S9 3.34 9 5v6c0 1.66 1.34 3 3 3z"/>
+                      <path d="M17 11c0 2.76-2.24 5-5 5s-5-2.24-5-5H5c0 3.53 2.61 6.43 6 6.92V21h2v-3.08c3.39-.49 6-3.39 6-6.92h-2z"/>
+                    </svg>
+                  </motion.div>
+                )}
+              </motion.div>
             </motion.div>
           </div>
 
-          <h1 className="text-white text-2xl sm:text-3xl font-bold mt-4 mb-1">{modPersona.name}</h1>
-          <p className="text-gray-400 text-sm sm:text-base">
-            {isAgentSpeaking ? '🗣️ Speaking...' : '👂 Listening...'}
-          </p>
+          {/* Name and status */}
+          <h1 className="text-white text-3xl font-bold mb-2">{modPersona.name}</h1>
+          <div className="flex items-center gap-2">
+            <div className={`w-2 h-2 rounded-full ${isAgentSpeaking ? 'bg-green-500 animate-pulse' : 'bg-gray-500'}`}></div>
+            <p className="text-white/60 text-base">
+              {isAgentSpeaking ? 'Speaking...' : 'Listening'}
+            </p>
+          </div>
         </div>
 
-        {/* User Avatar */}
+        {/* User Avatar - Smaller, bottom */}
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="flex flex-col items-center"
+          initial={{ opacity: 0, scale: 0.9 }}
+          animate={{ opacity: 1, scale: 1 }}
+          className="flex items-center gap-4 bg-white/5 backdrop-blur-sm rounded-2xl px-6 py-4 border border-white/10"
         >
-          <div className="relative flex items-center justify-center">
-            {/* Animated ripple rings when speaking */}
+          <div className="relative">
+            {/* Subtle glow when speaking */}
             {isSpeaking && (
-              <>
-                <motion.div
-                  animate={{ 
-                    scale: [1, 1.8],
-                    opacity: [0.6, 0]
-                  }}
-                  transition={{ 
-                    duration: 1.2,
-                    repeat: Infinity,
-                    ease: "easeOut"
-                  }}
-                  className="absolute w-20 h-20 sm:w-24 sm:h-24 rounded-full border-4 border-blue-500"
-                />
-                <motion.div
-                  animate={{ 
-                    scale: [1, 1.6],
-                    opacity: [0.4, 0]
-                  }}
-                  transition={{ 
-                    duration: 1.2,
-                    repeat: Infinity,
-                    ease: "easeOut",
-                    delay: 0.25
-                  }}
-                  className="absolute w-20 h-20 sm:w-24 sm:h-24 rounded-full border-4 border-blue-500"
-                />
-                <motion.div
-                  animate={{ 
-                    scale: [1, 1.4],
-                    opacity: [0.3, 0]
-                  }}
-                  transition={{ 
-                    duration: 1.2,
-                    repeat: Infinity,
-                    ease: "easeOut",
-                    delay: 0.5
-                  }}
-                  className="absolute w-20 h-20 sm:w-24 sm:h-24 rounded-full border-4 border-blue-500"
-                />
-              </>
+              <motion.div
+                animate={{ 
+                  scale: [1, 1.2],
+                  opacity: [0.5, 0]
+                }}
+                transition={{ 
+                  duration: 1,
+                  repeat: Infinity,
+                  ease: "easeOut"
+                }}
+                className="absolute inset-0 rounded-full bg-blue-400 blur-xl"
+              />
             )}
             
-            <motion.div
-              animate={{
-                scale: isSpeaking ? [1, 1.08, 1] : 1
-              }}
-              transition={{ duration: 0.8, repeat: isSpeaking ? Infinity : 0 }}
-              className="relative"
-            >
-              <div className="w-20 h-20 sm:w-24 sm:h-24 rounded-full bg-gradient-to-br from-blue-500 to-cyan-500 flex items-center justify-center text-3xl sm:text-4xl shadow-xl">
-                👤
-              </div>
-              
-              <div className={`absolute bottom-1 right-1 w-4 h-4 rounded-full border-2 border-[#1e1f22] ${
-                isSpeaking ? 'bg-blue-500 animate-pulse' : 'bg-gray-500'
-              }`} />
-            </motion.div>
+            <div className="relative w-12 h-12 rounded-full bg-gradient-to-br from-blue-500 to-cyan-500 flex items-center justify-center text-2xl shadow-lg ring-2 ring-white/10">
+              👤
+            </div>
+            
+            {/* Mic indicator */}
+            {isSpeaking && (
+              <motion.div 
+                animate={{ scale: [1, 1.1, 1] }}
+                transition={{ duration: 0.5, repeat: Infinity }}
+                className="absolute -bottom-1 -right-1 w-5 h-5 rounded-full bg-blue-500 border-2 border-[#0a0b10] flex items-center justify-center"
+              >
+                <svg className="w-2.5 h-2.5 text-white" fill="currentColor" viewBox="0 0 24 24">
+                  <path d="M12 14c1.66 0 3-1.34 3-3V5c0-1.66-1.34-3-3-3S9 3.34 9 5v6c0 1.66 1.34 3 3 3z"/>
+                </svg>
+              </motion.div>
+            )}
           </div>
-
-          <p className="text-white text-lg font-semibold mt-2">You</p>
-          <p className="text-sm text-gray-400">
-            {isSpeaking ? '🎤 Speaking...' : '🤫 Listening'}
-          </p>
+          
+          <div>
+            <p className="text-white font-semibold text-sm">You</p>
+            <p className="text-white/50 text-xs">
+              {isSpeaking ? 'Speaking' : 'Listening'}
+            </p>
+          </div>
         </motion.div>
 
         {/* Error Message */}
         {error && (
-          <div className="bg-red-500/20 text-red-400 rounded-lg p-3 text-sm max-w-md">
+          <motion.div
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="mt-6 bg-red-500/10 border border-red-500/20 text-red-400 rounded-xl px-4 py-3 text-sm max-w-md text-center"
+          >
             {error}
-          </div>
+          </motion.div>
         )}
       </div>
 
-      {/* Bottom Bar */}
-      <div className="bg-[#1e1f22] px-4 py-6 border-t border-[#0f1011]">
-        <div className="flex items-center justify-center">
-          <motion.button
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-            onClick={endCall}
-            className="w-14 h-14 rounded-full bg-red-600 hover:bg-red-700 text-white flex items-center justify-center shadow-lg transition"
-          >
-            <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
-              <path d="M12 9c-1.6 0-3.15.25-4.6.72v3.1c0 .39-.23.74-.56.9-.98.49-1.87 1.12-2.66 1.85-.18.18-.43.28-.7.28-.28 0-.53-.11-.71-.29L.29 13.08c-.18-.17-.29-.42-.29-.7 0-.28.11-.53.29-.71C3.34 8.78 7.46 7 12 7s8.66 1.78 11.71 4.67c.18.18.29.43.29.71 0 .28-.11.53-.29.71l-2.48 2.48c-.18.18-.43.29-.71.29-.27 0-.52-.11-.7-.28-.79-.74-1.68-1.36-2.66-1.85-.33-.16-.56-.5-.56-.9v-3.1C15.15 9.25 13.6 9 12 9z"/>
-            </svg>
-          </motion.button>
+      {/* Bottom Control Bar - Clean and centered */}
+      <div className="px-6 py-6 flex flex-col items-center gap-4">
+        {/* Call duration */}
+        <div className="text-white/40 text-sm font-mono">
+          {formatDuration(callDuration)}
         </div>
         
-        <p className="text-center text-gray-400 text-sm mt-4 font-medium">
-          Real-time conversation - just speak naturally!
+        {/* End call button */}
+        <motion.button
+          whileHover={{ scale: 1.05 }}
+          whileTap={{ scale: 0.95 }}
+          onClick={endCall}
+          className="group relative"
+        >
+          {/* Glow effect */}
+          <div className="absolute inset-0 rounded-full bg-red-500 blur-xl opacity-30 group-hover:opacity-50 transition"></div>
+          
+          {/* Button */}
+          <div className="relative w-16 h-16 rounded-full bg-gradient-to-br from-red-500 to-red-600 hover:from-red-600 hover:to-red-700 flex items-center justify-center shadow-2xl transition-all">
+            <svg className="w-7 h-7 text-white" fill="currentColor" viewBox="0 0 24 24">
+              <path d="M12 9c-1.6 0-3.15.25-4.6.72v3.1c0 .39-.23.74-.56.9-.98.49-1.87 1.12-2.66 1.85-.18.18-.43.28-.7.28-.28 0-.53-.11-.71-.29L.29 13.08c-.18-.17-.29-.42-.29-.7 0-.28.11-.53.29-.71C3.34 8.78 7.46 7 12 7s8.66 1.78 11.71 4.67c.18.18.29.43.29.71 0 .28-.11.53-.29.71l-2.48 2.48c-.18.18-.43.29-.71.29-.27 0-.52-.11-.7-.28-.79-.74-1.68-1.36-2.66-1.85-.33-.16-.56-.5-.56-.9v-3.1C15.15 9.25 13.6 9 12 9z"/>
+            </svg>
+          </div>
+        </motion.button>
+        
+        {/* Hint text */}
+        <p className="text-white/40 text-xs text-center max-w-xs">
+          Speak naturally when you see the microphone icon
         </p>
       </div>
     </div>
