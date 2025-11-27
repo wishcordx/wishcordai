@@ -80,18 +80,18 @@ export default function HomePage() {
     { name: 'elfgirluwu', emoji: '🧝', role: 'Mod', color: 'text-pink-400', persona: 'elf' as Persona },
     { name: 'FrostyTheCoder', emoji: '☃️', role: 'Mod', color: 'text-cyan-400', persona: 'snowman' as Persona },
     { name: 'DasherSpeedrun', emoji: '🦌', role: 'Mod', color: 'text-orange-400', persona: 'reindeer' as Persona },
+    { name: 'SantaKumar', emoji: '🕉️', role: 'Scammer', color: 'text-yellow-400', persona: 'scammer' as Persona },
+    { name: 'JingBells叮噹鈴', emoji: '🔔', role: 'Mod', color: 'text-red-400', persona: 'jingbells' as Persona },
   ];
 
   return (
-    <main className="min-h-screen flex bg-[#202225]">
+    <main className="min-h-screen flex bg-[#313338]">
       {/* Left Sidebar - Navigation (Desktop Only) */}
-      <div className="hidden lg:flex flex-col w-60 bg-[#1e1f22] border-r border-[#0f1011]">
-        {/* Server Icon & Name */}
-        <div className="p-4 border-b border-[#0f1011]">
+      <div className="hidden lg:flex flex-col w-60 bg-[#2b2d31]">
+        {/* Logo & Name */}
+        <div className="p-4">
           <div className="flex items-center gap-3">
-            <div className="w-12 h-12 bg-gradient-to-br from-indigo-500 to-purple-500 rounded-2xl flex items-center justify-center text-2xl">
-              🎅
-            </div>
+            <img src="/assets/logo.webp" alt="WishCord" className="w-12 h-12 rounded-lg" />
             <div>
               <h1 className="text-white font-bold text-lg">WishCord</h1>
             </div>
@@ -99,27 +99,34 @@ export default function HomePage() {
         </div>
 
         {/* Navigation Links */}
-        <div className="flex-1 overflow-y-auto p-3">
+        <div className="flex-1 overflow-y-auto px-2 py-3">
           <div className="space-y-0.5">
             <a
               href="/"
-              className="flex items-center gap-3 px-2 py-1.5 rounded text-gray-400 hover:bg-[#35373c] hover:text-white transition-colors"
+              className="flex items-center gap-3 px-2 py-2 rounded text-white bg-[#404249] font-medium"
             >
-              <span className="text-lg">#</span>
-              <span className="text-sm font-medium">xmas-wishes</span>
+              <span className="text-gray-400 text-xl">#</span>
+              <span className="text-sm">xmas-wishes</span>
             </a>
             <a
               href="/about"
-              className="flex items-center gap-3 px-2 py-1.5 rounded text-gray-400 hover:bg-[#35373c] hover:text-white transition-colors"
+              className="flex items-center gap-3 px-2 py-2 rounded text-[#949ba4] hover:bg-[#35383e] hover:text-[#dbdee1] transition-colors"
             >
-              <span className="text-lg">👤</span>
+              <span className="text-xl">👤</span>
               <span className="text-sm">About</span>
             </a>
             <a
-              href="/wishtoken"
-              className="flex items-center gap-3 px-2 py-1.5 rounded text-gray-400 hover:bg-[#35373c] hover:text-white transition-colors"
+              href="/how-it-works"
+              className="flex items-center gap-3 px-2 py-2 rounded text-[#949ba4] hover:bg-[#35383e] hover:text-[#dbdee1] transition-colors"
             >
-              <span className="text-lg">$</span>
+              <span className="text-xl">❓</span>
+              <span className="text-sm">How It Works</span>
+            </a>
+            <a
+              href="/wishtoken"
+              className="flex items-center gap-3 px-2 py-2 rounded text-[#949ba4] hover:bg-[#35383e] hover:text-[#dbdee1] transition-colors"
+            >
+              <span className="text-xl">💰</span>
               <span className="text-sm">WISH Token</span>
             </a>
           </div>
@@ -134,9 +141,9 @@ export default function HomePage() {
       {/* Main Content Area */}
       <div className="flex-1 flex flex-col lg:flex-row">
         {/* Chat Area - Center */}
-        <div className="flex-1 flex flex-col pt-16 lg:pt-0 bg-[#202225]">
+        <div className="flex-1 flex flex-col pt-16 lg:pt-0 bg-[#313338]">
           {/* Channel Header */}
-          <div className="px-4 py-3 border-b border-[#0f1011] bg-[#202225] shadow-sm">
+          <div className="px-4 py-3 border-b border-[#1e1f22] bg-[#313338] shadow-sm">
             <div className="flex items-center gap-2">
               <span className="text-2xl text-gray-400">#</span>
               <h2 className="text-xl font-bold text-white">xmas-wishes</h2>
@@ -150,7 +157,7 @@ export default function HomePage() {
           <div className="flex-1 overflow-y-auto">
             <div className="max-w-full px-4 py-4 space-y-4">
               {/* Post Message Box */}
-              <div className="bg-[#2b2d31] rounded-lg p-4 border border-[#1e1f22]">
+              <div className="bg-[#383a40] rounded-lg p-4">
                 <div className="flex items-center gap-3 mb-3">
                   <div className="w-10 h-10 bg-gradient-to-br from-indigo-500 to-purple-500 rounded-full flex items-center justify-center overflow-hidden">
                     {userProfile?.avatar ? (
@@ -178,33 +185,46 @@ export default function HomePage() {
         </div>
 
         {/* Right Sidebar - Mods List (Desktop Only) */}
-        <div className="hidden lg:flex flex-col w-64 bg-[#1e1f22] border-l border-[#0f1011]">
-          <div className="p-4 border-b border-[#0f1011]">
-            <h3 className="text-white font-semibold text-sm">Mods Online</h3>
+        <div className="hidden lg:flex flex-col w-64 bg-[#2b2d31]">
+          {/* Connect Button */}
+          <div className="p-3">
+            <button className="w-full bg-[#5865f2] hover:bg-[#4752c4] text-white font-semibold py-2.5 px-4 rounded-lg transition-colors flex items-center justify-center gap-2">
+              <span>🔗</span>
+              <span>Connect</span>
+            </button>
+          </div>
+          
+          <div className="px-3 py-2">
+            <h3 className="text-white font-semibold text-xs uppercase tracking-wide">Mods Online</h3>
           </div>
 
           {/* Mods List */}
-          <div className="flex-1 overflow-y-auto p-3">
-            <div className="space-y-1">
+          <div className="overflow-y-auto px-2 pb-2">
+            <div className="space-y-0.5">
               {mods.map((mod) => (
                 <div
                   key={mod.name}
                   onClick={() => handleModClick(mod.persona)}
-                  className="flex items-center gap-3 p-2 rounded hover:bg-[#35373c] transition-colors cursor-pointer group"
+                  className="flex items-center gap-3 px-2 py-2 rounded hover:bg-[#35383e] transition-colors cursor-pointer group"
                 >
                   <div className="relative">
                     <span className="text-2xl">{mod.emoji}</span>
-                    <span className="absolute -bottom-0.5 -right-0.5 w-3 h-3 bg-green-500 rounded-full border-2 border-[#1e1f22]"></span>
+                    <span className="absolute -bottom-0.5 -right-0.5 w-3 h-3 bg-[#23a55a] rounded-full border-2 border-[#2b2d31]"></span>
                   </div>
                   <div className="flex-1 min-w-0">
-                    <p className={`text-sm font-medium truncate ${mod.color} group-hover:text-white transition-colors`}>
+                    <p className={`text-sm font-medium truncate ${mod.color}`}>
                       {mod.name}
                     </p>
-                    <p className="text-xs text-gray-500">{mod.role}</p>
+                    <p className="text-xs text-[#949ba4]">{mod.role}</p>
                   </div>
                 </div>
               ))}
             </div>
+          </div>
+
+          {/* Members List */}
+          <div className="border-t border-[#1e1f22] px-2 py-2">
+            <MembersList />
           </div>
         </div>
       </div>
