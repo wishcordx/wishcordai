@@ -14,7 +14,7 @@ export async function GET(
 
     const { data: wish, error } = await supabase
       .from('wishes')
-      .select('id, ai_reply, ai_status, ai_audio_url, ai_audio_path')
+      .select('*')
       .eq('id', id)
       .single();
 
@@ -28,10 +28,7 @@ export async function GET(
     return NextResponse.json(
       {
         success: true,
-        ai_reply: wish.ai_reply,
-        ai_status: wish.ai_status,
-        ai_audio_url: wish.ai_audio_url,
-        ai_audio_path: wish.ai_audio_path,
+        wish,
       },
       {
         headers: {

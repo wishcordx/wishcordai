@@ -65,6 +65,53 @@ export default function WishCard({ wish }: WishCardProps) {
     console.log(`🔄 [WishCard ${wish.id}] Rendered with ai_status:`, wish.ai_status, 'ai_reply:', wish.ai_reply?.substring(0, 30));
   }, [wish.ai_status, wish.ai_reply, wish.id]);
   
+  // Poll for AI response completion if status is pending (fallback in case Realtime fails)
+  useEffect(() => {
+    if (wish.ai_status !== 'pending') return;
+    
+    console.log(`⏱️ [WishCard ${wish.id}] AI is pending, starting polling fallback...`);
+    let pollCount = 0;
+    const maxPolls = 30; // Poll for up to 60 seconds
+    
+    const pollInterval = setInterval(async () => {
+      pollCount++;
+      console.log(`🔄 [Poll ${pollCount}/${maxPolls}] Checking wish ${wish.id} status...`);
+      
+      try {
+        const response = await fetch(`/api/wishes/${wish.id}`, {
+          cache: 'no-store'
+        });
+        const data = await response.json();
+        
+        if (data.success && data.wish) {
+          console.log(`📝 [Poll] Wish ${wish.id} status:`, data.wish.ai_status);
+          
+          // If status changed from pending, trigger a feed refresh
+          if (data.wish.ai_status !== 'pending') {
+            console.log(`✅ [Poll] AI response completed! Triggering manual update...`);
+            // Dispatch custom event to trigger Feed refresh
+            window.dispatchEvent(new CustomEvent('wish-updated', { 
+              detail: { wishId: wish.id, wish: data.wish } 
+            }));
+            clearInterval(pollInterval);
+          }
+        }
+      } catch (error) {
+        console.error(`❌ [Poll] Error checking wish ${wish.id}:`, error);
+      }
+      
+      if (pollCount >= maxPolls) {
+        console.log(`⏹️ [Poll] Max polls reached for wish ${wish.id}`);
+        clearInterval(pollInterval);
+      }
+    }, 2000);
+    
+    return () => {
+      console.log(`🛑 [Poll] Cleanup for wish ${wish.id}`);
+      clearInterval(pollInterval);
+    };
+  }, [wish.id, wish.ai_status]);
+  
   useEffect(() => {
     // Fetch reactions and reply count in parallel for faster loading
     fetchInitialData();

@@ -19,6 +19,33 @@ export default function Feed({ refreshTrigger, newWish }: FeedProps) {
     fetchWishes();
   }, [refreshTrigger]);
 
+  // Listen for manual wish updates from polling fallback
+  useEffect(() => {
+    const handleWishUpdated = (event: CustomEvent) => {
+      const { wishId, wish: updatedWish } = event.detail;
+      console.log('📢 [Feed] Received wish-updated event for:', wishId);
+      
+      setWishes(prev => {
+        const index = prev.findIndex(w => w.id === wishId);
+        if (index === -1) {
+          console.warn('⚠️ [Feed] Wish not found:', wishId);
+          return prev;
+        }
+        
+        const updated = [...prev];
+        updated[index] = updatedWish;
+        console.log('✅ [Feed] Updated wish via polling fallback');
+        return updated;
+      });
+    };
+
+    window.addEventListener('wish-updated', handleWishUpdated as EventListener);
+    
+    return () => {
+      window.removeEventListener('wish-updated', handleWishUpdated as EventListener);
+    };
+  }, []);
+
   // Supabase Realtime - Listen for new wishes and updates
   useEffect(() => {
     console.log('🔌 Connecting to Supabase Realtime...');
