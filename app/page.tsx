@@ -258,7 +258,13 @@ export default function HomePage() {
               {/* Input Area */}
               <div className="bg-[#1e1f2e] rounded-xl p-4 border border-white/5 shadow-lg">
                 <div className="flex gap-4 mb-3">
-                  <div className="w-10 h-10 rounded-full bg-gradient-to-r from-indigo-500 to-purple-600 flex-shrink-0"></div>
+                  <div className="w-10 h-10 rounded-full bg-gradient-to-r from-indigo-500 to-purple-600 flex-shrink-0 overflow-hidden flex items-center justify-center">
+                    {userProfile?.avatar && (userProfile.avatar.startsWith('data:') || userProfile.avatar.startsWith('https://')) ? (
+                      <img src={userProfile.avatar} alt={userProfile.username} className="w-full h-full object-cover" />
+                    ) : (
+                      <span className="text-2xl">{userProfile?.avatar || '👤'}</span>
+                    )}
+                  </div>
                   <div className="flex-1">
                     <h3 className="font-semibold text-sm mb-1 text-white">Post your wish</h3>
                     <p className="text-xs text-slate-500">The mods will respond...</p>
