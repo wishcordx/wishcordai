@@ -242,6 +242,25 @@ export default function HomePage() {
             </svg>
             <span className="font-medium">How It Works</span>
           </button>
+
+          {/* Voice Channels Section */}
+          <div className="mt-4 pt-4 border-t border-white/5">
+            <div className="px-2 mb-2 flex items-center justify-between group">
+              <span className="text-xs font-semibold text-slate-500 uppercase tracking-wider">Voice Channels</span>
+            </div>
+
+            <button
+              className="w-full flex items-center gap-2 px-2 py-1.5 rounded-md group transition-all duration-200 text-slate-400 hover:bg-[#2b2d3d]/30 hover:text-slate-200"
+            >
+              <svg className="w-5 h-5 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15.536 8.464a5 5 0 010 7.072m2.828-9.9a9 9 0 010 12.728M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z" />
+              </svg>
+              <div className="flex-1 flex items-center justify-between">
+                <span className="font-medium">General</span>
+                <span className="text-xs text-slate-500">0</span>
+              </div>
+            </button>
+          </div>
         </nav>
 
         {/* User Status / Wallet Connect */}
@@ -348,6 +367,26 @@ export default function HomePage() {
                 </svg>
                 <span className="font-medium">How It Works</span>
               </button>
+
+              {/* Voice Channels Section */}
+              <div className="mt-4 pt-4 border-t border-white/5">
+                <div className="px-2 mb-2 flex items-center justify-between group">
+                  <span className="text-xs font-semibold text-slate-500 uppercase tracking-wider">Voice Channels</span>
+                </div>
+
+                <button
+                  onClick={() => setIsMobileMenuOpen(false)}
+                  className="w-full flex items-center gap-2 px-2 py-1.5 rounded-md group transition-all duration-200 text-slate-400 hover:bg-[#2b2d3d]/30 hover:text-slate-200"
+                >
+                  <svg className="w-5 h-5 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15.536 8.464a5 5 0 010 7.072m2.828-9.9a9 9 0 010 12.728M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z" />
+                  </svg>
+                  <div className="flex-1 flex items-center justify-between">
+                    <span className="font-medium">General</span>
+                    <span className="text-xs text-slate-500">0</span>
+                  </div>
+                </button>
+              </div>
             </nav>
 
             {/* User Status / Wallet Connect */}
