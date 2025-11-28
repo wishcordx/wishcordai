@@ -26,7 +26,7 @@ export default function HomePage() {
   const [selectedMod, setSelectedMod] = useState<Persona | null>(null);
   const [showSocialPopup, setShowSocialPopup] = useState(false);
   const [newWish, setNewWish] = useState<any>(null);
-  const [activeTab, setActiveTab] = useState<'wishes' | 'about' | 'token' | 'how-it-works'>('wishes');
+  const [activeTab, setActiveTab] = useState<'wishes' | 'about' | 'token' | 'how-it-works' | 'faq' | 'community-rules' | 'support'>('wishes');
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isMobileSidebarOpen, setIsMobileSidebarOpen] = useState(false);
   const [showProfileSettings, setShowProfileSettings] = useState(false);
@@ -248,6 +248,36 @@ export default function HomePage() {
             <span className="font-medium">How It Works</span>
           </button>
 
+          <button
+            onClick={() => { setActiveTab('faq'); setShowVoiceUI(false); }}
+            className={`w-full flex items-center gap-2 px-2 py-1.5 rounded-md group transition-all duration-200 ${activeTab === 'faq' ? 'bg-[#2b2d3d]/50 text-white' : 'text-slate-400 hover:bg-[#2b2d3d]/30 hover:text-slate-200'}`}
+          >
+            <svg className="w-4 h-4 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+            <span className="font-medium">FAQ</span>
+          </button>
+
+          <button
+            onClick={() => { setActiveTab('community-rules'); setShowVoiceUI(false); }}
+            className={`w-full flex items-center gap-2 px-2 py-1.5 rounded-md group transition-all duration-200 ${activeTab === 'community-rules' ? 'bg-[#2b2d3d]/50 text-white' : 'text-slate-400 hover:bg-[#2b2d3d]/30 hover:text-slate-200'}`}
+          >
+            <svg className="w-4 h-4 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+            </svg>
+            <span className="font-medium">Community Rules</span>
+          </button>
+
+          <button
+            onClick={() => { setActiveTab('support'); setShowVoiceUI(false); }}
+            className={`w-full flex items-center gap-2 px-2 py-1.5 rounded-md group transition-all duration-200 ${activeTab === 'support' ? 'bg-[#2b2d3d]/50 text-white' : 'text-slate-400 hover:bg-[#2b2d3d]/30 hover:text-slate-200'}`}
+          >
+            <svg className="w-4 h-4 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M18.364 5.636l-3.536 3.536m0 5.656l3.536 3.536M9.172 9.172L5.636 5.636m3.536 9.192l-3.536 3.536M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-5 0a4 4 0 11-8 0 4 4 0 018 0z" />
+            </svg>
+            <span className="font-medium">Support & Feedback</span>
+          </button>
+
           {/* Voice Channels Section */}
           <div className="mt-4 pt-4 border-t border-white/5">
             <div className="px-2 mb-2 flex items-center justify-between group">
@@ -448,6 +478,36 @@ export default function HomePage() {
                 <span className="font-medium">How It Works</span>
               </button>
 
+              <button
+                onClick={() => { setActiveTab('faq'); setShowVoiceUI(false); setIsMobileMenuOpen(false); }}
+                className={`w-full flex items-center gap-2 px-2 py-1.5 rounded-md group transition-all duration-200 ${activeTab === 'faq' ? 'bg-[#2b2d3d]/50 text-white' : 'text-slate-400 hover:bg-[#2b2d3d]/30 hover:text-slate-200'}`}
+              >
+                <svg className="w-4 h-4 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+                <span className="font-medium">FAQ</span>
+              </button>
+
+              <button
+                onClick={() => { setActiveTab('community-rules'); setShowVoiceUI(false); setIsMobileMenuOpen(false); }}
+                className={`w-full flex items-center gap-2 px-2 py-1.5 rounded-md group transition-all duration-200 ${activeTab === 'community-rules' ? 'bg-[#2b2d3d]/50 text-white' : 'text-slate-400 hover:bg-[#2b2d3d]/30 hover:text-slate-200'}`}
+              >
+                <svg className="w-4 h-4 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+                </svg>
+                <span className="font-medium">Community Rules</span>
+              </button>
+
+              <button
+                onClick={() => { setActiveTab('support'); setShowVoiceUI(false); setIsMobileMenuOpen(false); }}
+                className={`w-full flex items-center gap-2 px-2 py-1.5 rounded-md group transition-all duration-200 ${activeTab === 'support' ? 'bg-[#2b2d3d]/50 text-white' : 'text-slate-400 hover:bg-[#2b2d3d]/30 hover:text-slate-200'}`}
+              >
+                <svg className="w-4 h-4 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M18.364 5.636l-3.536 3.536m0 5.656l3.536 3.536M9.172 9.172L5.636 5.636m3.536 9.192l-3.536 3.536M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-5 0a4 4 0 11-8 0 4 4 0 018 0z" />
+                </svg>
+                <span className="font-medium">Support & Feedback</span>
+              </button>
+
               {/* Voice Channels Section */}
               <div className="mt-4 pt-4 border-t border-white/5">
                 <div className="px-2 mb-2 flex items-center justify-between group">
@@ -601,12 +661,18 @@ export default function HomePage() {
                 {activeTab === 'about' && 'About'}
                 {activeTab === 'token' && 'WISH Token'}
                 {activeTab === 'how-it-works' && 'How It Works'}
+                {activeTab === 'faq' && 'FAQ'}
+                {activeTab === 'community-rules' && 'Community Rules'}
+                {activeTab === 'support' && 'Support & Feedback'}
               </h1>
               <p className="text-xs hidden sm:block text-slate-400">
                 {activeTab === 'wishes' && 'Drop your Xmas wish. Our AI mods are online 24/7.'}
                 {activeTab === 'about' && 'Learn more about the Wishcord community.'}
                 {activeTab === 'token' && 'Current market stats and wallet integration.'}
-                {activeTab === 'how-it-works' && 'Your complete guide to Wishcord ✨'}
+                {activeTab === 'how-it-works' && 'Your complete guide to Wishcord'}
+                {activeTab === 'faq' && 'Frequently asked questions about Wishcord'}
+                {activeTab === 'community-rules' && 'Guidelines for our community'}
+                {activeTab === 'support' && 'Get help or share your feedback with us'}
               </p>
             </div>
           </div>
@@ -937,6 +1003,49 @@ export default function HomePage() {
                       <p className="text-sm text-slate-400">Connect your Solana wallet for authenticated experiences and $WISH token access</p>
                     </div>
                   </div>
+
+                  <div className="flex gap-3">
+                    <span className="text-2xl">🔊</span>
+                    <div>
+                      <h4 className="text-base font-semibold mb-0.5 text-white">Voice Channels</h4>
+                      <p className="text-sm text-slate-400">Join real-time voice chat rooms and talk with community members directly</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Voice Chat Features */}
+              <div className="bg-[#1e1f2e] rounded-xl p-6 border border-white/5">
+                <h3 className="text-2xl font-bold mb-4 text-cyan-400">🎙️ Real-Time Voice Chat</h3>
+                <p className="text-slate-300 leading-relaxed mb-4">
+                  Wishcord now features Discord-style voice channels powered by LiveKit. Connect with the community in real-time, 
+                  share holiday stories, or just hang out in voice while browsing wishes.
+                </p>
+                <div className="space-y-3">
+                  <div className="bg-[#11121c] rounded-lg p-3 border border-white/5">
+                    <h4 className="text-base font-semibold mb-1 text-cyan-300">🌐 Crystal Clear Audio</h4>
+                    <p className="text-sm text-slate-400">
+                      High-quality WebRTC voice chat with automatic echo cancellation and noise suppression
+                    </p>
+                  </div>
+                  <div className="bg-[#11121c] rounded-lg p-3 border border-white/5">
+                    <h4 className="text-base font-semibold mb-1 text-cyan-300">👥 Live Participants</h4>
+                    <p className="text-sm text-slate-400">
+                      See who's in the channel with real-time participant display and speaking indicators
+                    </p>
+                  </div>
+                  <div className="bg-[#11121c] rounded-lg p-3 border border-white/5">
+                    <h4 className="text-base font-semibold mb-1 text-cyan-300">🎚️ Full Control</h4>
+                    <p className="text-sm text-slate-400">
+                      Mute/unmute, deafen audio, and disconnect - all from your profile controls
+                    </p>
+                  </div>
+                  <div className="bg-[#11121c] rounded-lg p-3 border border-white/5">
+                    <h4 className="text-base font-semibold mb-1 text-cyan-300">📱 Mobile Ready</h4>
+                    <p className="text-sm text-slate-400">
+                      Voice chat works seamlessly on desktop and mobile browsers with touch controls
+                    </p>
+                  </div>
                 </div>
               </div>
 
@@ -959,6 +1068,10 @@ export default function HomePage() {
                   <div className="text-center p-3 bg-[#11121c] rounded-lg border border-white/5">
                     <p className="font-semibold text-white text-sm">ElevenLabs</p>
                     <p className="text-xs text-slate-400 mt-1">Voice Synthesis</p>
+                  </div>
+                  <div className="text-center p-3 bg-[#11121c] rounded-lg border border-white/5">
+                    <p className="font-semibold text-white text-sm">LiveKit</p>
+                    <p className="text-xs text-slate-400 mt-1">Real-Time Voice</p>
                   </div>
                   <div className="text-center p-3 bg-[#11121c] rounded-lg border border-white/5">
                     <p className="font-semibold text-white text-sm">Next.js 14</p>
@@ -1432,6 +1545,56 @@ export default function HomePage() {
                 </div>
               </div>
 
+              {/* Step 7 */}
+              <div className="bg-[#1e1f2e] rounded-xl p-6 border-l-4 border-cyan-500">
+                <div className="flex items-start gap-4">
+                  <div className="flex-shrink-0 w-10 h-10 bg-cyan-600 rounded-full flex items-center justify-center text-lg font-bold">
+                    7
+                  </div>
+                  <div className="flex-1">
+                    <h3 className="text-xl font-bold mb-2 text-cyan-400">Join Voice Channels</h3>
+                    <p className="text-slate-300 mb-3">
+                      Connect with the community in real-time voice chat:
+                    </p>
+                    <div className="space-y-3">
+                      <div className="bg-[#11121c] rounded-lg p-3 border border-white/5">
+                        <p className="text-white font-semibold mb-1 text-sm">📍 Find Voice Channels</p>
+                        <p className="text-slate-400 text-xs">
+                          Look for "Voice Channels" section in the left sidebar. Click "General" to join.
+                        </p>
+                      </div>
+                      <div className="bg-[#11121c] rounded-lg p-3 border border-white/5">
+                        <p className="text-white font-semibold mb-1 text-sm">🎙️ Audio Controls</p>
+                        <p className="text-slate-400 text-xs">
+                          Use mic icon to mute/unmute. Use headphone icon to deafen (mute incoming audio). 
+                          Controls appear in your profile at bottom-left.
+                        </p>
+                      </div>
+                      <div className="bg-[#11121c] rounded-lg p-3 border border-white/5">
+                        <p className="text-white font-semibold mb-1 text-sm">👥 See Participants</p>
+                        <p className="text-slate-400 text-xs">
+                          When connected, you'll see all participants with live speaking indicators. 
+                          Your voice indicator glows when you speak.
+                        </p>
+                      </div>
+                      <div className="bg-[#11121c] rounded-lg p-3 border border-white/5">
+                        <p className="text-white font-semibold mb-1 text-sm">📱 Works Everywhere</p>
+                        <p className="text-slate-400 text-xs">
+                          Voice chat stays connected while you browse other tabs. Works on desktop and mobile.
+                        </p>
+                      </div>
+                    </div>
+                    <div className="mt-3 bg-cyan-900/30 border border-cyan-500/30 rounded-lg p-3">
+                      <p className="text-cyan-300 text-sm font-semibold mb-1">🎉 New Feature!</p>
+                      <p className="text-slate-300 text-xs">
+                        Voice channels are powered by LiveKit for crystal-clear audio quality. Join conversations, 
+                        share stories, or just hang out while browsing wishes!
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
               {/* Pro Tips */}
               <div className="bg-gradient-to-r from-yellow-600/20 to-orange-600/20 rounded-xl p-6 border border-yellow-500/30">
                 <h3 className="text-xl font-bold mb-3 text-yellow-300 flex items-center gap-2">
@@ -1448,6 +1611,10 @@ export default function HomePage() {
                   </li>
                   <li className="flex items-start gap-2">
                     <span className="text-yellow-400 font-bold">•</span>
+                    <span>Join voice channels to connect with community members in real-time</span>
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <span className="text-yellow-400 font-bold">•</span>
                     <span>Check the Members list to see who's active and their wish counts</span>
                   </li>
                   <li className="flex items-start gap-2">
@@ -1459,6 +1626,387 @@ export default function HomePage() {
                     <span>Hold $WISH tokens to unlock premium features and exclusive mods</span>
                   </li>
                 </ul>
+              </div>
+            </div>
+          )}
+
+          {/* FAQ VIEW */}
+          {!showVoiceUI && activeTab === 'faq' && (
+            <div className="w-full max-w-3xl mx-auto flex flex-col gap-6 fade-in">
+              {/* Hero */}
+              <div className="bg-gradient-to-br from-blue-900/50 to-cyan-900/50 border border-blue-500/20 rounded-xl p-8 text-center">
+                <h2 className="text-3xl font-bold tracking-tight mb-3 text-white">Frequently Asked Questions</h2>
+                <p className="text-lg text-slate-400">
+                  Everything you need to know about Wishcord
+                </p>
+              </div>
+
+              {/* Voice Chat Questions */}
+              <div className="bg-[#1e1f2e] rounded-xl p-6 border border-white/5">
+                <h3 className="text-2xl font-bold mb-4 text-cyan-400">Voice Chat</h3>
+                <div className="space-y-4">
+                  <div>
+                    <h4 className="text-lg font-semibold text-white mb-2">How do I join a voice channel?</h4>
+                    <p className="text-slate-300 leading-relaxed">
+                      Click on "General" under the Voice Channels section in the left sidebar. Your microphone will be automatically enabled. 
+                      You can mute/unmute or disconnect using the controls in the bottom-left profile area.
+                    </p>
+                  </div>
+                  <div>
+                    <h4 className="text-lg font-semibold text-white mb-2">Can I use voice chat on mobile?</h4>
+                    <p className="text-slate-300 leading-relaxed">
+                      Yes! Voice chat works seamlessly on mobile devices. Simply tap the voice channel from the mobile menu to join.
+                    </p>
+                  </div>
+                  <div>
+                    <h4 className="text-lg font-semibold text-white mb-2">How do I control my audio?</h4>
+                    <p className="text-slate-300 leading-relaxed">
+                      When connected, you'll see microphone and audio icons in your profile (bottom-left). Click the mic icon to mute/unmute yourself, 
+                      and the audio icon to deafen (mute all incoming audio).
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              {/* General Questions */}
+              <div className="bg-[#1e1f2e] rounded-xl p-6 border border-white/5">
+                <h3 className="text-2xl font-bold mb-4 text-indigo-400">General</h3>
+                <div className="space-y-4">
+                  <div>
+                    <h4 className="text-lg font-semibold text-white mb-2">Do I need to connect a wallet?</h4>
+                    <p className="text-slate-300 leading-relaxed">
+                      No! You can use Wishcord anonymously. Connecting a wallet gives you benefits like custom profiles, wish history, 
+                      and WISH token integration, but it's entirely optional.
+                    </p>
+                  </div>
+                  <div>
+                    <h4 className="text-lg font-semibold text-white mb-2">How do AI mods work?</h4>
+                    <p className="text-slate-300 leading-relaxed">
+                      Our AI mods are powered by advanced language models with unique personalities. They analyze your wishes in real-time 
+                      and respond with character-specific voices. Each mod has different traits - from SantaMod69's boomer energy to elfgirluwu's uwu style.
+                    </p>
+                  </div>
+                  <div>
+                    <h4 className="text-lg font-semibold text-white mb-2">What is the WISH token?</h4>
+                    <p className="text-slate-300 leading-relaxed">
+                      $WISH is the community token on Solana blockchain. Token holders get exclusive features, VIP voice access, 
+                      special badges, and governance rights. Check the WISH Token page for current stats and wallet integration.
+                    </p>
+                  </div>
+                  <div>
+                    <h4 className="text-lg font-semibold text-white mb-2">Can I send voice messages?</h4>
+                    <p className="text-slate-300 leading-relaxed">
+                      Yes! Click the microphone button when creating a wish to record up to 60 seconds of audio. 
+                      AI mods will transcribe your message and respond with synthesized speech in their unique voices.
+                    </p>
+                  </div>
+                  <div>
+                    <h4 className="text-lg font-semibold text-white mb-2">How do reactions work?</h4>
+                    <p className="text-slate-300 leading-relaxed">
+                      Click the heart icon on any wish to react. You can see who reacted by hovering over the reaction count. 
+                      Reactions help highlight the best wishes in the community.
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              {/* Technical Questions */}
+              <div className="bg-[#1e1f2e] rounded-xl p-6 border border-white/5">
+                <h3 className="text-2xl font-bold mb-4 text-green-400">Technical</h3>
+                <div className="space-y-4">
+                  <div>
+                    <h4 className="text-lg font-semibold text-white mb-2">Is my data stored on blockchain?</h4>
+                    <p className="text-slate-300 leading-relaxed">
+                      Your wishes are stored in a decentralized database. Wallet-connected users have their activity linked to their 
+                      Solana address, ensuring transparency and permanent record keeping.
+                    </p>
+                  </div>
+                  <div>
+                    <h4 className="text-lg font-semibold text-white mb-2">What browsers are supported?</h4>
+                    <p className="text-slate-300 leading-relaxed">
+                      Wishcord works best on Chrome, Firefox, Safari, and Edge. Voice chat requires microphone permissions. 
+                      Mobile browsers (iOS Safari, Chrome) are fully supported.
+                    </p>
+                  </div>
+                  <div>
+                    <h4 className="text-lg font-semibold text-white mb-2">How do I report a bug or issue?</h4>
+                    <p className="text-slate-300 leading-relaxed">
+                      Join our community channels and mention <code className="bg-[#11121c] px-1 rounded">@BarryJingle</code> with your issue. 
+                      You can also check our social media links for support channels.
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* COMMUNITY RULES VIEW */}
+          {!showVoiceUI && activeTab === 'community-rules' && (
+            <div className="w-full max-w-3xl mx-auto flex flex-col gap-6 fade-in">
+              {/* Hero */}
+              <div className="bg-gradient-to-br from-red-900/50 to-orange-900/50 border border-red-500/20 rounded-xl p-8 text-center">
+                <h2 className="text-3xl font-bold tracking-tight mb-3 text-white">Community Rules</h2>
+                <p className="text-lg text-slate-400">
+                  Guidelines to keep Wishcord fun and festive for everyone
+                </p>
+              </div>
+
+              {/* Core Rules */}
+              <div className="bg-[#1e1f2e] rounded-xl p-6 border border-white/5">
+                <h3 className="text-2xl font-bold mb-4 text-red-400">Core Rules</h3>
+                <div className="space-y-4">
+                  <div className="bg-[#11121c] rounded-lg p-4 border-l-4 border-red-500">
+                    <h4 className="text-lg font-semibold text-white mb-2">1. Respect Everyone</h4>
+                    <p className="text-slate-300 leading-relaxed">
+                      Treat all community members with kindness and respect. No harassment, hate speech, discrimination, 
+                      or personal attacks. We're here to spread holiday cheer, not negativity.
+                    </p>
+                  </div>
+                  <div className="bg-[#11121c] rounded-lg p-4 border-l-4 border-orange-500">
+                    <h4 className="text-lg font-semibold text-white mb-2">2. Keep It Family-Friendly</h4>
+                    <p className="text-slate-300 leading-relaxed">
+                      Wishcord is for all ages. No NSFW content, explicit language, or inappropriate material. 
+                      Keep your wishes, memes, and voice messages appropriate for a holiday celebration.
+                    </p>
+                  </div>
+                  <div className="bg-[#11121c] rounded-lg p-4 border-l-4 border-yellow-500">
+                    <h4 className="text-lg font-semibold text-white mb-2">3. No Spam or Self-Promotion</h4>
+                    <p className="text-slate-300 leading-relaxed">
+                      Don't flood the feed with repetitive messages, promotional links, or advertisements. 
+                      Share genuine wishes and engage authentically with the community.
+                    </p>
+                  </div>
+                  <div className="bg-[#11121c] rounded-lg p-4 border-l-4 border-green-500">
+                    <h4 className="text-lg font-semibold text-white mb-2">4. Protect Privacy</h4>
+                    <p className="text-slate-300 leading-relaxed">
+                      Never share personal information (real names, addresses, phone numbers, private keys) in public channels. 
+                      Be cautious of scams - moderators will NEVER ask for your wallet seed phrase.
+                    </p>
+                  </div>
+                  <div className="bg-[#11121c] rounded-lg p-4 border-l-4 border-blue-500">
+                    <h4 className="text-lg font-semibold text-white mb-2">5. Use AI Responsibly</h4>
+                    <p className="text-slate-300 leading-relaxed">
+                      Don't try to manipulate, trick, or abuse the AI mods. They're here to entertain and help. 
+                      Engaging in harmful or malicious prompting may result in temporary restrictions.
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              {/* Voice Chat Rules */}
+              <div className="bg-[#1e1f2e] rounded-xl p-6 border border-white/5">
+                <h3 className="text-2xl font-bold mb-4 text-purple-400">Voice Chat Etiquette</h3>
+                <div className="space-y-3">
+                  <div className="flex items-start gap-3">
+                    <div className="flex-shrink-0 w-8 h-8 bg-purple-600 rounded-full flex items-center justify-center text-sm font-bold">
+                      ✓
+                    </div>
+                    <div>
+                      <p className="text-white font-semibold">Use push-to-talk or mute when not speaking</p>
+                      <p className="text-slate-400 text-sm">Reduce background noise for better audio quality</p>
+                    </div>
+                  </div>
+                  <div className="flex items-start gap-3">
+                    <div className="flex-shrink-0 w-8 h-8 bg-purple-600 rounded-full flex items-center justify-center text-sm font-bold">
+                      ✓
+                    </div>
+                    <div>
+                      <p className="text-white font-semibold">Let others speak and don't interrupt</p>
+                      <p className="text-slate-400 text-sm">Practice good conversation flow and turn-taking</p>
+                    </div>
+                  </div>
+                  <div className="flex items-start gap-3">
+                    <div className="flex-shrink-0 w-8 h-8 bg-purple-600 rounded-full flex items-center justify-center text-sm font-bold">
+                      ✓
+                    </div>
+                    <div>
+                      <p className="text-white font-semibold">No ear-rape, screaming, or loud noises</p>
+                      <p className="text-slate-400 text-sm">Keep volume levels comfortable for all participants</p>
+                    </div>
+                  </div>
+                  <div className="flex items-start gap-3">
+                    <div className="flex-shrink-0 w-8 h-8 bg-purple-600 rounded-full flex items-center justify-center text-sm font-bold">
+                      ✓
+                    </div>
+                    <div>
+                      <p className="text-white font-semibold">No soundboards or excessive voice effects</p>
+                      <p className="text-slate-400 text-sm">Use voice modifiers sparingly and appropriately</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Consequences */}
+              <div className="bg-[#1e1f2e] rounded-xl p-6 border border-white/5">
+                <h3 className="text-2xl font-bold mb-4 text-orange-400">Enforcement</h3>
+                <p className="text-slate-300 leading-relaxed mb-4">
+                  Violations of community rules may result in:
+                </p>
+                <div className="space-y-2">
+                  <div className="bg-[#11121c] rounded-lg p-3 border border-yellow-500/30">
+                    <p className="text-yellow-400 font-semibold">⚠️ Warning</p>
+                    <p className="text-slate-400 text-sm">First offense - friendly reminder of the rules</p>
+                  </div>
+                  <div className="bg-[#11121c] rounded-lg p-3 border border-orange-500/30">
+                    <p className="text-orange-400 font-semibold">⏸️ Temporary Mute</p>
+                    <p className="text-slate-400 text-sm">24-hour restriction from posting or voice chat</p>
+                  </div>
+                  <div className="bg-[#11121c] rounded-lg p-3 border border-red-500/30">
+                    <p className="text-red-400 font-semibold">🚫 Permanent Ban</p>
+                    <p className="text-slate-400 text-sm">Severe or repeated violations - account blocked</p>
+                  </div>
+                </div>
+                <p className="text-slate-400 text-sm mt-4 italic">
+                  Our AI mods and human moderators work together to maintain a positive environment. 
+                  If you see rule-breaking behavior, mention @BarryJingle or contact support.
+                </p>
+              </div>
+
+              {/* Positive Community */}
+              <div className="bg-gradient-to-br from-green-900/30 to-emerald-900/30 border border-green-500/20 rounded-xl p-6">
+                <h3 className="text-xl font-bold mb-3 text-green-400">Building a Positive Community</h3>
+                <p className="text-slate-300 leading-relaxed mb-3">
+                  Wishcord thrives when everyone contributes positively. Share creative wishes, support fellow community members, 
+                  engage with AI mods respectfully, and help newcomers feel welcome.
+                </p>
+                <p className="text-slate-300 leading-relaxed">
+                  Remember: Behind every wish is a real person (or AI mod) trying to spread holiday joy. 
+                  Let's make this the most magical community on Web3! 
+                </p>
+              </div>
+            </div>
+          )}
+
+          {/* SUPPORT & FEEDBACK VIEW */}
+          {!showVoiceUI && activeTab === 'support' && (
+            <div className="w-full max-w-3xl mx-auto flex flex-col h-full fade-in">
+              {/* Hero Info Section */}
+              <div className="bg-gradient-to-br from-teal-900/50 to-blue-900/50 border border-teal-500/20 rounded-xl p-6 mb-4">
+                <div className="flex items-start gap-4">
+                  <div className="flex-shrink-0">
+                    <div className="w-12 h-12 bg-teal-600/30 rounded-full flex items-center justify-center border border-teal-500/30">
+                      <svg className="w-6 h-6 text-teal-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M18.364 5.636l-3.536 3.536m0 5.656l3.536 3.536M9.172 9.172L5.636 5.636m3.536 9.192l-3.536 3.536M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-5 0a4 4 0 11-8 0 4 4 0 018 0z" />
+                      </svg>
+                    </div>
+                  </div>
+                  <div className="flex-1">
+                    <h2 className="text-2xl font-bold tracking-tight mb-2 text-white">Support & Feedback Board</h2>
+                    <p className="text-slate-300 leading-relaxed text-sm mb-3">
+                      Welcome to our community support channel! This is your space to:
+                    </p>
+                    <ul className="space-y-1 text-sm text-slate-400">
+                      <li className="flex items-center gap-2">
+                        <svg className="w-4 h-4 text-teal-400 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                        </svg>
+                        <span>Get help with technical issues or questions</span>
+                      </li>
+                      <li className="flex items-center gap-2">
+                        <svg className="w-4 h-4 text-teal-400 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                        </svg>
+                        <span>Share feedback about your Wishcord experience</span>
+                      </li>
+                      <li className="flex items-center gap-2">
+                        <svg className="w-4 h-4 text-teal-400 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                        </svg>
+                        <span>Suggest new features or improvements</span>
+                      </li>
+                      <li className="flex items-center gap-2">
+                        <svg className="w-4 h-4 text-teal-400 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                        </svg>
+                        <span>Connect with community members and help each other</span>
+                      </li>
+                    </ul>
+                    <div className="mt-3 flex items-center gap-2 text-xs text-teal-300 bg-teal-900/30 rounded-lg px-3 py-2 border border-teal-500/20">
+                      <svg className="w-4 h-4 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                      </svg>
+                      <span>Note: This is a community discussion board. Messages are not AI-moderated.</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Messages Feed */}
+              <div className="flex-1 overflow-y-auto space-y-3 mb-4 pr-2" style={{ maxHeight: 'calc(100vh - 400px)' }}>
+                {/* Example messages - you'll replace this with real data */}
+                <div className="bg-[#1e1f2e] rounded-lg p-4 border border-white/5">
+                  <div className="flex items-start gap-3">
+                    <div className="w-10 h-10 bg-gradient-to-br from-purple-600 to-pink-600 rounded-full flex items-center justify-center text-lg font-bold text-white flex-shrink-0">
+                      A
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <div className="flex items-center gap-2 mb-1">
+                        <span className="font-semibold text-white">Anonymous</span>
+                        <span className="text-xs text-slate-500">2 hours ago</span>
+                      </div>
+                      <p className="text-slate-300 text-sm leading-relaxed">
+                        Welcome to the Support & Feedback board! Feel free to share your thoughts, ask questions, or help fellow community members.
+                      </p>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="bg-[#1e1f2e] rounded-lg p-4 border border-white/5">
+                  <div className="flex items-start gap-3">
+                    <div className="w-10 h-10 bg-gradient-to-br from-blue-600 to-cyan-600 rounded-full flex items-center justify-center text-lg font-bold text-white flex-shrink-0">
+                      W
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <div className="flex items-center gap-2 mb-1">
+                        <span className="font-semibold text-white">Wishcord Team</span>
+                        <span className="inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-bold bg-gradient-to-r from-indigo-600 to-purple-600 text-white border border-indigo-400/30">
+                          STAFF
+                        </span>
+                        <span className="text-xs text-slate-500">1 hour ago</span>
+                      </div>
+                      <p className="text-slate-300 text-sm leading-relaxed">
+                        We're always listening! Your feedback helps us build a better platform. Whether it's a bug report, feature request, or just a general comment - we appreciate you taking the time to share. 🎄✨
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Input Bar - Fixed at Bottom */}
+              <div className="sticky bottom-0 bg-[#0b0c15] pt-3 pb-4 border-t border-white/5">
+                <form className="relative" onSubmit={(e) => {
+                  e.preventDefault();
+                  // Handle message submission here
+                  const input = e.currentTarget.querySelector('textarea') as HTMLTextAreaElement;
+                  if (input && input.value.trim()) {
+                    console.log('Support message:', input.value);
+                    // TODO: Send to API or state management
+                    input.value = '';
+                  }
+                }}>
+                  <div className="bg-[#1e1f2e] rounded-xl border border-white/10 focus-within:border-teal-500/50 transition-colors">
+                    <textarea
+                      placeholder="Share your feedback, ask for help, or suggest improvements..."
+                      className="w-full bg-transparent text-white placeholder-slate-500 px-4 py-3 focus:outline-none resize-none text-sm"
+                      rows={3}
+                      maxLength={1000}
+                    />
+                    <div className="flex items-center justify-between px-4 pb-3">
+                      <span className="text-xs text-slate-500">
+                        Max 1000 characters • No AI mod tagging
+                      </span>
+                      <button
+                        type="submit"
+                        className="px-4 py-2 bg-gradient-to-r from-teal-600 to-blue-600 hover:from-teal-500 hover:to-blue-500 text-white rounded-lg font-medium text-sm transition-all duration-200 flex items-center gap-2 shadow-lg"
+                      >
+                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" />
+                        </svg>
+                        Send Message
+                      </button>
+                    </div>
+                  </div>
+                </form>
               </div>
             </div>
           )}
