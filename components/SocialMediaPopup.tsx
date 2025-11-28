@@ -198,9 +198,9 @@ export default function SocialMediaPopup({ isOpen, onClose }: SocialMediaPopupPr
                 alt="Astronaut"
                 src="https://uiverse.io/astronaut.png"
               />
-              <div className="heading">We're on Social Media</div>
+              <div className="heading">Follow us on X!</div>
               <div className="icons">
-                <a className="x" onClick={(e) => e.preventDefault()}>
+                <a className="x" href="https://x.com/wishcord" target="_blank" rel="noopener noreferrer">
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
                     fill="none"
