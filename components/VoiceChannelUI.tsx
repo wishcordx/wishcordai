@@ -6,11 +6,10 @@ import { useState, useEffect } from 'react';
 import { AudioVisualizer } from '@livekit/components-react';
 
 interface VoiceChannelUIProps {
-  isOpen: boolean;
   onClose: () => void;
 }
 
-export default function VoiceChannelUI({ isOpen, onClose }: VoiceChannelUIProps) {
+export default function VoiceChannelUI({ onClose }: VoiceChannelUIProps) {
   const { currentChannel, participants, isMuted, isDeafened, toggleMute, toggleDeafen, disconnect } = useVoice();
   const [showChat, setShowChat] = useState(false);
 
@@ -19,7 +18,7 @@ export default function VoiceChannelUI({ isOpen, onClose }: VoiceChannelUIProps)
     onClose();
   };
 
-  if (!isOpen || !currentChannel) return null;
+  if (!currentChannel) return null;
 
   return (
     <AnimatePresence>
