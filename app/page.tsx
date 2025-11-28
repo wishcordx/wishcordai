@@ -17,7 +17,7 @@ import type { Persona } from '@/typings/types';
 
 export default function HomePage() {
   const { walletAddress, disconnectWallet, profileExists } = useWallet();
-  const { connectToChannel, disconnect, isConnected, currentChannel, participants } = useVoice();
+  const { connectToChannel, disconnect, isConnected, currentChannel, participants, isMuted, isDeafened, toggleMute, toggleDeafen } = useVoice();
   const [refreshTrigger, setRefreshTrigger] = useState(0);
   const [totalMessages, setTotalMessages] = useState(0);
   const [activeCall, setActiveCall] = useState<Persona | null>(null);
@@ -501,8 +501,155 @@ export default function HomePage() {
 
         {/* Content Area */}
         <div className="flex-1 overflow-y-auto p-4 md:p-6">
+          {/* VOICE CHANNEL VIEW */}
+          {isConnected && currentChannel && (
+            <div className="w-full h-full flex flex-col gap-4">
+              {/* Voice Channel Header */}
+              <div className="bg-[#1e1f2e] rounded-xl p-4 border border-white/5 shadow-lg">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-3">
+                    <div className="w-10 h-10 rounded-full bg-green-500/20 flex items-center justify-center">
+                      <svg className="w-6 h-6 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15.536 8.464a5 5 0 010 7.072m2.828-9.9a9 9 0 010 12.728M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z" />
+                      </svg>
+                    </div>
+                    <div>
+                      <h2 className="text-xl font-bold text-white flex items-center gap-2">
+                        Voice / {currentChannel}
+                      </h2>
+                      <p className="text-sm text-slate-400">{participants.length + 1} {participants.length === 0 ? 'member' : 'members'}</p>
+                    </div>
+                  </div>
+                  <button
+                    onClick={() => {
+                      disconnect();
+                      setShowVoiceUI(false);
+                    }}
+                    className="px-4 py-2 bg-red-500/20 hover:bg-red-500/30 text-red-400 rounded-lg font-semibold transition-colors flex items-center gap-2"
+                  >
+                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+                    </svg>
+                    Disconnect
+                  </button>
+                </div>
+              </div>
+
+              {/* Voice Participants Grid */}
+              <div className="flex-1 bg-[#1e1f2e] rounded-xl p-6 border border-white/5">
+                <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
+                  {/* Local User (You) */}
+                  <div className="flex flex-col items-center gap-2">
+                    <div className="relative">
+                      <div className="w-24 h-24 rounded-full bg-gradient-to-br from-indigo-500 to-purple-500 flex items-center justify-center overflow-hidden border-4 border-transparent">
+                        {userProfile?.avatar && (userProfile.avatar.startsWith('data:') || userProfile.avatar.startsWith('https://')) ? (
+                          <img src={userProfile.avatar} alt={userProfile.username} className="w-full h-full object-cover" />
+                        ) : (
+                          <span className="text-3xl">{userProfile?.avatar || '👤'}</span>
+                        )}
+                      </div>
+                      {/* Muted Indicator */}
+                      {isMuted && (
+                        <div className="absolute bottom-0 right-0 w-7 h-7 bg-red-500 rounded-full flex items-center justify-center border-2 border-[#1e1f2e]">
+                          <svg className="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z M17 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2" />
+                          </svg>
+                        </div>
+                      )}
+                    </div>
+                    <div className="text-center">
+                      <p className="text-sm font-semibold text-white">{userProfile?.username || 'You'}</p>
+                      <p className="text-xs text-green-400">Connected</p>
+                    </div>
+                  </div>
+
+                  {/* Remote Participants */}
+                  {participants.map((participant) => (
+                    <div key={participant.identity} className="flex flex-col items-center gap-2">
+                      <div className="relative">
+                        <div className="w-24 h-24 rounded-full bg-gradient-to-br from-blue-500 to-cyan-500 flex items-center justify-center overflow-hidden border-4 border-transparent">
+                          <span className="text-3xl">👤</span>
+                        </div>
+                        {/* Speaking Indicator */}
+                        {participant.isSpeaking && (
+                          <div className="absolute inset-0 rounded-full border-4 border-green-400 animate-pulse" />
+                        )}
+                      </div>
+                      <div className="text-center">
+                        <p className="text-sm font-semibold text-white">{participant.name || participant.identity}</p>
+                        <p className="text-xs text-slate-400">Voice</p>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+
+                {/* Empty State */}
+                {participants.length === 0 && (
+                  <div className="flex flex-col items-center justify-center py-12 text-center">
+                    <div className="w-20 h-20 rounded-full bg-slate-700/50 flex items-center justify-center mb-4">
+                      <svg className="w-10 h-10 text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+                      </svg>
+                    </div>
+                    <p className="text-slate-400 text-lg font-medium">You're alone in this channel</p>
+                    <p className="text-slate-500 text-sm mt-1">Invite others to join the voice chat!</p>
+                  </div>
+                )}
+              </div>
+
+              {/* Voice Controls */}
+              <div className="bg-[#1e1f2e] rounded-xl p-4 border border-white/5 flex items-center justify-center gap-4">
+                <button
+                  onClick={toggleMute}
+                  className={`p-4 rounded-full transition-all ${
+                    isMuted 
+                      ? 'bg-red-500 hover:bg-red-600 text-white' 
+                      : 'bg-slate-700 hover:bg-slate-600 text-slate-200'
+                  }`}
+                  title={isMuted ? 'Unmute' : 'Mute'}
+                >
+                  <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    {isMuted ? (
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z M17 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2" />
+                    ) : (
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15.536 8.464a5 5 0 010 7.072m2.828-9.9a9 9 0 010 12.728M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z" />
+                    )}
+                  </svg>
+                </button>
+
+                <button
+                  onClick={toggleDeafen}
+                  className={`p-4 rounded-full transition-all ${
+                    isDeafened 
+                      ? 'bg-red-500 hover:bg-red-600 text-white' 
+                      : 'bg-slate-700 hover:bg-slate-600 text-slate-200'
+                  }`}
+                  title={isDeafened ? 'Undeafen' : 'Deafen'}
+                >
+                  <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    {isDeafened ? (
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z M17 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2" />
+                    ) : (
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z" />
+                    )}
+                  </svg>
+                </button>
+
+                <button
+                  className="p-4 rounded-full bg-slate-700 hover:bg-slate-600 text-slate-200 transition-all"
+                  title="Settings"
+                >
+                  <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                  </svg>
+                </button>
+              </div>
+            </div>
+          )}
+
           {/* WISHES VIEW */}
-          {activeTab === 'wishes' && (
+          {!isConnected && activeTab === 'wishes' && (
             <div className="w-full max-w-4xl mx-auto flex flex-col gap-4 fade-in">
               {/* Input Area */}
               <div className="bg-[#1e1f2e] rounded-xl p-4 border border-white/5 shadow-lg">
@@ -535,7 +682,7 @@ export default function HomePage() {
           )}
 
           {/* ABOUT VIEW */}
-          {activeTab === 'about' && (
+          {!isConnected && activeTab === 'about' && (
             <div className="w-full max-w-3xl mx-auto flex flex-col gap-6 fade-in">
               {/* Hero */}
               <div className="bg-gradient-to-br from-indigo-900/50 to-purple-900/50 border border-indigo-500/20 rounded-xl p-8 text-center">
@@ -751,7 +898,7 @@ export default function HomePage() {
           )}
 
           {/* TOKEN VIEW */}
-          {activeTab === 'token' && (
+          {!isConnected && activeTab === 'token' && (
             <div className="w-full max-w-3xl mx-auto flex flex-col gap-6 fade-in">
               {/* Hero */}
               <div className="text-center mb-2">
@@ -941,7 +1088,7 @@ export default function HomePage() {
           )}
 
           {/* HOW IT WORKS VIEW */}
-          {activeTab === 'how-it-works' && (
+          {!isConnected && activeTab === 'how-it-works' && (
             <div className="w-full max-w-3xl mx-auto flex flex-col gap-6 fade-in">
               {/* Hero */}
               <div className="text-center mb-4">
@@ -1366,16 +1513,6 @@ export default function HomePage() {
       {activeCall && <VoiceCallAgent persona={activeCall} onClose={() => setActiveCall(null)} />}
 
       <SocialMediaPopup isOpen={showSocialPopup} onClose={() => setShowSocialPopup(false)} />
-
-      {/* Voice Channel UI */}
-      {showVoiceUI && isConnected && (
-        <VoiceChannelUI 
-          onClose={() => {
-            disconnect();
-            setShowVoiceUI(false);
-          }}
-        />
-      )}
 
       {/* Profile Settings Modal */}
       {walletAddress && (
