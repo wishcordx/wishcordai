@@ -21,6 +21,20 @@ export default function VoiceParticipant({ participant, isLocal = false, isMuted
   useEffect(() => {
     const fetchProfile = async () => {
       try {
+        // For local user, get profile from localStorage first
+        if (isLocal) {
+          const profileData = localStorage.getItem('userProfile');
+          if (profileData) {
+            const localProfile = JSON.parse(profileData);
+            setProfile({
+              username: localProfile.username || 'You',
+              avatar: localProfile.avatar || '👤',
+            });
+            setLoading(false);
+            return;
+          }
+        }
+
         // Try to get username from participant name or identity
         const username = participant.name || participant.identity;
         
@@ -59,7 +73,7 @@ export default function VoiceParticipant({ participant, isLocal = false, isMuted
     };
 
     fetchProfile();
-  }, [participant.identity, participant.name]);
+  }, [participant.identity, participant.name, isLocal]);
 
   const displayName = profile?.username || participant.name || participant.identity;
   const displayAvatar = profile?.avatar || '👤';
