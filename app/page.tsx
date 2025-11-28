@@ -211,7 +211,7 @@ export default function HomePage() {
           </div>
 
           <button
-            onClick={() => setActiveTab('wishes')}
+            onClick={() => { setActiveTab('wishes'); setShowVoiceUI(false); }}
             className={`w-full flex items-center gap-2 px-2 py-1.5 rounded-md group transition-all duration-200 ${activeTab === 'wishes' ? 'bg-[#2b2d3d]/50 text-white' : 'text-slate-400 hover:bg-[#2b2d3d]/30 hover:text-slate-200'}`}
           >
             <span className="text-slate-400">#</span>
@@ -219,7 +219,7 @@ export default function HomePage() {
           </button>
 
           <button
-            onClick={() => setActiveTab('about')}
+            onClick={() => { setActiveTab('about'); setShowVoiceUI(false); }}
             className={`w-full flex items-center gap-2 px-2 py-1.5 rounded-md group transition-all duration-200 ${activeTab === 'about' ? 'bg-[#2b2d3d]/50 text-white' : 'text-slate-400 hover:bg-[#2b2d3d]/30 hover:text-slate-200'}`}
           >
             <svg className="w-4 h-4 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -229,7 +229,7 @@ export default function HomePage() {
           </button>
 
           <button
-            onClick={() => setActiveTab('token')}
+            onClick={() => { setActiveTab('token'); setShowVoiceUI(false); }}
             className={`w-full flex items-center gap-2 px-2 py-1.5 rounded-md group transition-all duration-200 ${activeTab === 'token' ? 'bg-[#2b2d3d]/50 text-white' : 'text-slate-400 hover:bg-[#2b2d3d]/30 hover:text-slate-200'}`}
           >
             <svg className="w-4 h-4 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -239,7 +239,7 @@ export default function HomePage() {
           </button>
 
           <button
-            onClick={() => setActiveTab('how-it-works')}
+            onClick={() => { setActiveTab('how-it-works'); setShowVoiceUI(false); }}
             className={`w-full flex items-center gap-2 px-2 py-1.5 rounded-md group transition-all duration-200 ${activeTab === 'how-it-works' ? 'bg-[#2b2d3d]/50 text-white' : 'text-slate-400 hover:bg-[#2b2d3d]/30 hover:text-slate-200'}`}
           >
             <svg className="w-4 h-4 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -257,11 +257,14 @@ export default function HomePage() {
             <button
               onClick={() => {
                 if (isConnected && currentChannel === 'general') {
-                  disconnect();
-                  setShowVoiceUI(false);
+                  // If already connected, just show the voice UI
+                  setActiveTab('wishes'); // Reset to allow voice view
+                  setShowVoiceUI(true);
                 } else {
+                  // Connect to channel and show voice UI
                   connectToChannel('general');
                   setShowVoiceUI(true);
+                  setActiveTab('wishes');
                 }
               }}
               className={`w-full flex items-center gap-2 px-2 py-1.5 rounded-md group transition-all duration-200 ${
@@ -297,18 +300,77 @@ export default function HomePage() {
               </div>
               <div className="flex-1 min-w-0">
                 <div className="text-sm font-semibold truncate text-white">{userProfile?.username || 'User'}</div>
-                <div className="text-xs text-slate-500 truncate">Online</div>
+                <div className="text-xs text-slate-500 truncate">
+                  {isConnected && currentChannel ? `Voice: ${currentChannel}` : 'Online'}
+                </div>
               </div>
-              <button
-                onClick={() => setShowProfileSettings(true)}
-                className="p-1.5 hover:bg-white/5 rounded transition-colors text-slate-400 hover:text-white"
-                title="Settings"
-              >
-                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                </svg>
-              </button>
+              
+              {/* Voice Controls when connected */}
+              {isConnected && currentChannel && (
+                <div className="flex items-center gap-1">
+                  {/* Microphone */}
+                  <button
+                    onClick={toggleMute}
+                    className={`p-1.5 rounded transition-colors ${
+                      isMuted ? 'bg-red-500 text-white hover:bg-red-600' : 'bg-white/5 text-slate-400 hover:bg-white/10 hover:text-white'
+                    }`}
+                    title={isMuted ? 'Unmute' : 'Mute'}
+                  >
+                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      {isMuted ? (
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z M17 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2" />
+                      ) : (
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15.536 8.464a5 5 0 010 7.072m2.828-9.9a9 9 0 010 12.728M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z" />
+                      )}
+                    </svg>
+                  </button>
+
+                  {/* Audio/Deafen */}
+                  <button
+                    onClick={toggleDeafen}
+                    className={`p-1.5 rounded transition-colors ${
+                      isDeafened ? 'bg-red-500 text-white hover:bg-red-600' : 'bg-white/5 text-slate-400 hover:bg-white/10 hover:text-white'
+                    }`}
+                    title={isDeafened ? 'Undeafen' : 'Deafen'}
+                  >
+                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      {isDeafened ? (
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z M17 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2" />
+                      ) : (
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15.536 8.464a5 5 0 010 7.072m2.828-9.9a9 9 0 010 12.728M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z" />
+                      )}
+                    </svg>
+                  </button>
+
+                  {/* Disconnect */}
+                  <button
+                    onClick={() => {
+                      disconnect();
+                      setShowVoiceUI(false);
+                    }}
+                    className="p-1.5 bg-red-500/20 hover:bg-red-500/30 text-red-400 rounded transition-colors"
+                    title="Disconnect"
+                  >
+                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+                    </svg>
+                  </button>
+                </div>
+              )}
+
+              {/* Settings (only when not in voice) */}
+              {!isConnected && (
+                <button
+                  onClick={() => setShowProfileSettings(true)}
+                  className="p-1.5 hover:bg-white/5 rounded transition-colors text-slate-400 hover:text-white"
+                  title="Settings"
+                >
+                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                  </svg>
+                </button>
+              )}
             </div>
           ) : (
             <button
@@ -349,7 +411,7 @@ export default function HomePage() {
               </div>
 
               <button
-                onClick={() => { setActiveTab('wishes'); setIsMobileMenuOpen(false); }}
+                onClick={() => { setActiveTab('wishes'); setShowVoiceUI(false); setIsMobileMenuOpen(false); }}
                 className={`w-full flex items-center gap-2 px-2 py-1.5 rounded-md group transition-all duration-200 ${activeTab === 'wishes' ? 'bg-[#2b2d3d]/50 text-white' : 'text-slate-400 hover:bg-[#2b2d3d]/30 hover:text-slate-200'}`}
               >
                 <span className="text-slate-400">#</span>
@@ -357,7 +419,7 @@ export default function HomePage() {
               </button>
 
               <button
-                onClick={() => { setActiveTab('about'); setIsMobileMenuOpen(false); }}
+                onClick={() => { setActiveTab('about'); setShowVoiceUI(false); setIsMobileMenuOpen(false); }}
                 className={`w-full flex items-center gap-2 px-2 py-1.5 rounded-md group transition-all duration-200 ${activeTab === 'about' ? 'bg-[#2b2d3d]/50 text-white' : 'text-slate-400 hover:bg-[#2b2d3d]/30 hover:text-slate-200'}`}
               >
                 <svg className="w-4 h-4 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -367,7 +429,7 @@ export default function HomePage() {
               </button>
 
               <button
-                onClick={() => { setActiveTab('token'); setIsMobileMenuOpen(false); }}
+                onClick={() => { setActiveTab('token'); setShowVoiceUI(false); setIsMobileMenuOpen(false); }}
                 className={`w-full flex items-center gap-2 px-2 py-1.5 rounded-md group transition-all duration-200 ${activeTab === 'token' ? 'bg-[#2b2d3d]/50 text-white' : 'text-slate-400 hover:bg-[#2b2d3d]/30 hover:text-slate-200'}`}
               >
                 <svg className="w-4 h-4 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -377,7 +439,7 @@ export default function HomePage() {
               </button>
 
               <button
-                onClick={() => { setActiveTab('how-it-works'); setIsMobileMenuOpen(false); }}
+                onClick={() => { setActiveTab('how-it-works'); setShowVoiceUI(false); setIsMobileMenuOpen(false); }}
                 className={`w-full flex items-center gap-2 px-2 py-1.5 rounded-md group transition-all duration-200 ${activeTab === 'how-it-works' ? 'bg-[#2b2d3d]/50 text-white' : 'text-slate-400 hover:bg-[#2b2d3d]/30 hover:text-slate-200'}`}
               >
                 <svg className="w-4 h-4 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -396,11 +458,14 @@ export default function HomePage() {
                   onClick={() => {
                     setIsMobileMenuOpen(false);
                     if (isConnected && currentChannel === 'general') {
-                      disconnect();
-                      setShowVoiceUI(false);
+                      // If already connected, just show the voice UI
+                      setShowVoiceUI(true);
+                      setActiveTab('wishes');
                     } else {
+                      // Connect to channel and show voice UI
                       connectToChannel('general');
                       setShowVoiceUI(true);
+                      setActiveTab('wishes');
                     }
                   }}
                   className={`w-full flex items-center gap-2 px-2 py-1.5 rounded-md group transition-all duration-200 ${
@@ -436,18 +501,77 @@ export default function HomePage() {
                   </div>
                   <div className="flex-1 min-w-0">
                     <div className="text-sm font-semibold truncate text-white">{userProfile?.username || 'User'}</div>
-                    <div className="text-xs text-slate-500 truncate">Online</div>
+                    <div className="text-xs text-slate-500 truncate">
+                      {isConnected && currentChannel ? `Voice: ${currentChannel}` : 'Online'}
+                    </div>
                   </div>
-                  <button
-                    onClick={() => setShowProfileSettings(true)}
-                    className="p-1.5 hover:bg-white/5 rounded transition-colors text-slate-400 hover:text-white"
-                    title="Settings"
-                  >
-                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                    </svg>
-                  </button>
+                  
+                  {/* Voice Controls when connected */}
+                  {isConnected && currentChannel && (
+                    <div className="flex items-center gap-1">
+                      {/* Microphone */}
+                      <button
+                        onClick={toggleMute}
+                        className={`p-1.5 rounded transition-colors ${
+                          isMuted ? 'bg-red-500 text-white hover:bg-red-600' : 'bg-white/5 text-slate-400 hover:bg-white/10 hover:text-white'
+                        }`}
+                        title={isMuted ? 'Unmute' : 'Mute'}
+                      >
+                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          {isMuted ? (
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z M17 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2" />
+                          ) : (
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15.536 8.464a5 5 0 010 7.072m2.828-9.9a9 9 0 010 12.728M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z" />
+                          )}
+                        </svg>
+                      </button>
+
+                      {/* Audio/Deafen */}
+                      <button
+                        onClick={toggleDeafen}
+                        className={`p-1.5 rounded transition-colors ${
+                          isDeafened ? 'bg-red-500 text-white hover:bg-red-600' : 'bg-white/5 text-slate-400 hover:bg-white/10 hover:text-white'
+                        }`}
+                        title={isDeafened ? 'Undeafen' : 'Deafen'}
+                      >
+                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          {isDeafened ? (
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z M17 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2" />
+                          ) : (
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15.536 8.464a5 5 0 010 7.072m2.828-9.9a9 9 0 010 12.728M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z" />
+                          )}
+                        </svg>
+                      </button>
+
+                      {/* Disconnect */}
+                      <button
+                        onClick={() => {
+                          disconnect();
+                          setShowVoiceUI(false);
+                        }}
+                        className="p-1.5 bg-red-500/20 hover:bg-red-500/30 text-red-400 rounded transition-colors"
+                        title="Disconnect"
+                      >
+                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+                        </svg>
+                      </button>
+                    </div>
+                  )}
+
+                  {/* Settings (only when not in voice) */}
+                  {!isConnected && (
+                    <button
+                      onClick={() => setShowProfileSettings(true)}
+                      className="p-1.5 hover:bg-white/5 rounded transition-colors text-slate-400 hover:text-white"
+                      title="Settings"
+                    >
+                      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                      </svg>
+                    </button>
+                  )}
                 </div>
               ) : (
                 <button
@@ -503,7 +627,7 @@ export default function HomePage() {
         {/* Content Area */}
         <div className="flex-1 overflow-y-auto p-4 md:p-6">
           {/* VOICE CHANNEL VIEW */}
-          {isConnected && currentChannel && (
+          {showVoiceUI && isConnected && currentChannel && (
             <div className="w-full h-full flex flex-col gap-4">
               {/* Voice Channel Header */}
               <div className="bg-[#1e1f2e] rounded-xl p-4 border border-white/5 shadow-lg">
@@ -624,7 +748,7 @@ export default function HomePage() {
           )}
 
           {/* WISHES VIEW */}
-          {!isConnected && activeTab === 'wishes' && (
+          {!showVoiceUI && activeTab === 'wishes' && (
             <div className="w-full max-w-4xl mx-auto flex flex-col gap-4 fade-in">
               {/* Input Area */}
               <div className="bg-[#1e1f2e] rounded-xl p-4 border border-white/5 shadow-lg">
@@ -657,7 +781,7 @@ export default function HomePage() {
           )}
 
           {/* ABOUT VIEW */}
-          {!isConnected && activeTab === 'about' && (
+          {!showVoiceUI && activeTab === 'about' && (
             <div className="w-full max-w-3xl mx-auto flex flex-col gap-6 fade-in">
               {/* Hero */}
               <div className="bg-gradient-to-br from-indigo-900/50 to-purple-900/50 border border-indigo-500/20 rounded-xl p-8 text-center">
@@ -873,7 +997,7 @@ export default function HomePage() {
           )}
 
           {/* TOKEN VIEW */}
-          {!isConnected && activeTab === 'token' && (
+          {!showVoiceUI && activeTab === 'token' && (
             <div className="w-full max-w-3xl mx-auto flex flex-col gap-6 fade-in">
               {/* Hero */}
               <div className="text-center mb-2">
@@ -1063,7 +1187,7 @@ export default function HomePage() {
           )}
 
           {/* HOW IT WORKS VIEW */}
-          {!isConnected && activeTab === 'how-it-works' && (
+          {!showVoiceUI && activeTab === 'how-it-works' && (
             <div className="w-full max-w-3xl mx-auto flex flex-col gap-6 fade-in">
               {/* Hero */}
               <div className="text-center mb-4">
