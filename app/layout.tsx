@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import { Inter } from 'next/font/google';
 import './globals.css';
 import { WalletProvider } from '@/lib/wallet-context';
+import { VoiceProvider } from '@/lib/voice-context';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -22,9 +23,11 @@ export default function RootLayout({
     <html lang="en">
       <body className={`${inter.className} min-h-screen bg-[#1a1b1e]`}>
         <WalletProvider>
-          <div className="min-h-screen bg-[#1a1b1e]">
-            {children}
-          </div>
+          <VoiceProvider>
+            <div className="min-h-screen bg-[#1a1b1e]">
+              {children}
+            </div>
+          </VoiceProvider>
         </WalletProvider>
       </body>
     </html>

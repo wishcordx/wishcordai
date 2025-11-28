@@ -10,11 +10,14 @@ import SocialMediaPopup from '@/components/SocialMediaPopup';
 import MembersList from '@/components/MembersList';
 import ProfileSettingsModal from '@/components/ProfileSettingsModal';
 import WalletConnectModal from '@/components/WalletConnectModal';
+import VoiceChannelUI from '@/components/VoiceChannelUI';
 import { useWallet } from '@/lib/wallet-context';
+import { useVoice } from '@/lib/voice-context';
 import type { Persona } from '@/typings/types';
 
 export default function HomePage() {
   const { walletAddress, disconnectWallet, profileExists } = useWallet();
+  const { connectToChannel, disconnect, isConnected, currentChannel, participants } = useVoice();
   const [refreshTrigger, setRefreshTrigger] = useState(0);
   const [totalMessages, setTotalMessages] = useState(0);
   const [activeCall, setActiveCall] = useState<Persona | null>(null);
@@ -27,6 +30,7 @@ export default function HomePage() {
   const [isMobileSidebarOpen, setIsMobileSidebarOpen] = useState(false);
   const [showProfileSettings, setShowProfileSettings] = useState(false);
   const [showWalletConnect, setShowWalletConnect] = useState(false);
+  const [showVoiceUI, setShowVoiceUI] = useState(false);
 
   const mods = [
     { name: 'BarryJingle', emoji: '🎄', role: 'Helper', color: 'text-emerald-400', persona: 'barry' as Persona, status: 'online' },
@@ -250,14 +254,27 @@ export default function HomePage() {
             </div>
 
             <button
-              className="w-full flex items-center gap-2 px-2 py-1.5 rounded-md group transition-all duration-200 text-slate-400 hover:bg-[#2b2d3d]/30 hover:text-slate-200"
+              onClick={() => {
+                if (isConnected && currentChannel === 'general') {
+                  disconnect();
+                  setShowVoiceUI(false);
+                } else {
+                  connectToChannel('general');
+                  setShowVoiceUI(true);
+                }
+              }}
+              className={`w-full flex items-center gap-2 px-2 py-1.5 rounded-md group transition-all duration-200 ${
+                isConnected && currentChannel === 'general'
+                  ? 'bg-green-500/10 text-green-400 hover:bg-green-500/20'
+                  : 'text-slate-400 hover:bg-[#2b2d3d]/30 hover:text-slate-200'
+              }`}
             >
-              <svg className="w-5 h-5 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15.536 8.464a5 5 0 010 7.072m2.828-9.9a9 9 0 010 12.728M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z" />
               </svg>
               <div className="flex-1 flex items-center justify-between">
                 <span className="font-medium">General</span>
-                <span className="text-xs text-slate-500">0</span>
+                <span className="text-xs text-slate-500">{isConnected && currentChannel === 'general' ? participants.length + 1 : 0}</span>
               </div>
             </button>
           </div>
@@ -375,15 +392,28 @@ export default function HomePage() {
                 </div>
 
                 <button
-                  onClick={() => setIsMobileMenuOpen(false)}
-                  className="w-full flex items-center gap-2 px-2 py-1.5 rounded-md group transition-all duration-200 text-slate-400 hover:bg-[#2b2d3d]/30 hover:text-slate-200"
+                  onClick={() => {
+                    setIsMobileMenuOpen(false);
+                    if (isConnected && currentChannel === 'general') {
+                      disconnect();
+                      setShowVoiceUI(false);
+                    } else {
+                      connectToChannel('general');
+                      setShowVoiceUI(true);
+                    }
+                  }}
+                  className={`w-full flex items-center gap-2 px-2 py-1.5 rounded-md group transition-all duration-200 ${
+                    isConnected && currentChannel === 'general'
+                      ? 'bg-green-500/10 text-green-400 hover:bg-green-500/20'
+                      : 'text-slate-400 hover:bg-[#2b2d3d]/30 hover:text-slate-200'
+                  }`}
                 >
-                  <svg className="w-5 h-5 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15.536 8.464a5 5 0 010 7.072m2.828-9.9a9 9 0 010 12.728M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z" />
                   </svg>
                   <div className="flex-1 flex items-center justify-between">
                     <span className="font-medium">General</span>
-                    <span className="text-xs text-slate-500">0</span>
+                    <span className="text-xs text-slate-500">{isConnected && currentChannel === 'general' ? participants.length + 1 : 0}</span>
                   </div>
                 </button>
               </div>
@@ -1336,6 +1366,16 @@ export default function HomePage() {
       {activeCall && <VoiceCallAgent persona={activeCall} onClose={() => setActiveCall(null)} />}
 
       <SocialMediaPopup isOpen={showSocialPopup} onClose={() => setShowSocialPopup(false)} />
+
+      {/* Voice Channel UI */}
+      {showVoiceUI && isConnected && (
+        <VoiceChannelUI 
+          onClose={() => {
+            disconnect();
+            setShowVoiceUI(false);
+          }}
+        />
+      )}
 
       {/* Profile Settings Modal */}
       {walletAddress && (
