@@ -395,7 +395,11 @@ export default function HomePage() {
                 <div className="flex items-center gap-1">
                   {/* Microphone */}
                   <button
-                    onClick={toggleMute}
+                    onClick={(e) => {
+                      e.preventDefault();
+                      e.stopPropagation();
+                      toggleMute();
+                    }}
                     className={`p-1.5 rounded transition-colors ${
                       isMuted ? 'bg-red-500 text-white hover:bg-red-600' : 'bg-white/5 text-slate-400 hover:bg-white/10 hover:text-white'
                     }`}
@@ -412,7 +416,11 @@ export default function HomePage() {
 
                   {/* Audio/Deafen */}
                   <button
-                    onClick={toggleDeafen}
+                    onClick={(e) => {
+                      e.preventDefault();
+                      e.stopPropagation();
+                      toggleDeafen();
+                    }}
                     className={`p-1.5 rounded transition-colors ${
                       isDeafened ? 'bg-red-500 text-white hover:bg-red-600' : 'bg-white/5 text-slate-400 hover:bg-white/10 hover:text-white'
                     }`}
@@ -429,7 +437,9 @@ export default function HomePage() {
 
                   {/* Disconnect */}
                   <button
-                    onClick={() => {
+                    onClick={(e) => {
+                      e.preventDefault();
+                      e.stopPropagation();
                       disconnect();
                       setShowVoiceUI(false);
                     }}
@@ -626,7 +636,11 @@ export default function HomePage() {
                     <div className="flex items-center gap-1">
                       {/* Microphone */}
                       <button
-                        onClick={toggleMute}
+                        onClick={(e) => {
+                          e.preventDefault();
+                          e.stopPropagation();
+                          toggleMute();
+                        }}
                         className={`p-1.5 rounded transition-colors ${
                           isMuted ? 'bg-red-500 text-white hover:bg-red-600' : 'bg-white/5 text-slate-400 hover:bg-white/10 hover:text-white'
                         }`}
@@ -636,24 +650,28 @@ export default function HomePage() {
                           {isMuted ? (
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z M17 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2" />
                           ) : (
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15.536 8.464a5 5 0 010 7.072m2.828-9.9a9 9 0 010 12.728M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z" />
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z" />
                           )}
                         </svg>
                       </button>
 
                       {/* Audio/Deafen */}
                       <button
-                        onClick={toggleDeafen}
+                        onClick={(e) => {
+                          e.preventDefault();
+                          e.stopPropagation();
+                          toggleDeafen();
+                        }}
                         className={`p-1.5 rounded transition-colors ${
                           isDeafened ? 'bg-red-500 text-white hover:bg-red-600' : 'bg-white/5 text-slate-400 hover:bg-white/10 hover:text-white'
                         }`}
                         title={isDeafened ? 'Undeafen' : 'Deafen'}
                       >
-                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
                           {isDeafened ? (
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z M17 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2" />
+                            <path d="M12 1c-4.97 0-9 4.03-9 9v7c0 1.66 1.34 3 3 3h3v-8H5v-2c0-3.87 3.13-7 7-7s7 3.13 7 7v2h-4v8h3c1.66 0 3-1.34 3-3v-7c0-4.97-4.03-9-9-9zM7 14v4H6c-.55 0-1-.45-1-1v-2c0-.55.45-1 1-1h1zm11 4h-1v-4h1c.55 0 1 .45 1 1v2c0 .55-.45 1-1 1zm-6-4h-2v2h2v-2z" />
                           ) : (
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15.536 8.464a5 5 0 010 7.072m2.828-9.9a9 9 0 010 12.728M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z" />
+                            <path d="M12 1c-4.97 0-9 4.03-9 9v7c0 1.66 1.34 3 3 3h3v-8H5v-2c0-3.87 3.13-7 7-7s7 3.13 7 7v2h-4v8h3c1.66 0 3-1.34 3-3v-7c0-4.97-4.03-9-9-9zM7 14v4H6c-.55 0-1-.45-1-1v-2c0-.55.45-1 1-1h1zm11 4h-1v-4h1c.55 0 1 .45 1 1v2c0 .55-.45 1-1 1z" />
                           )}
                         </svg>
                       </button>
@@ -809,7 +827,11 @@ export default function HomePage() {
               {/* Voice Controls */}
               <div className="bg-[#1e1f2e] rounded-xl p-4 border border-white/5 flex items-center justify-center gap-4">
                 <button
-                  onClick={toggleMute}
+                  onClick={(e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    toggleMute();
+                  }}
                   className={`p-4 rounded-full transition-all ${
                     isMuted 
                       ? 'bg-red-500 hover:bg-red-600 text-white' 
@@ -827,7 +849,11 @@ export default function HomePage() {
                 </button>
 
                 <button
-                  onClick={toggleDeafen}
+                  onClick={(e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    toggleDeafen();
+                  }}
                   className={`p-4 rounded-full transition-all ${
                     isDeafened 
                       ? 'bg-red-500 hover:bg-red-600 text-white' 
