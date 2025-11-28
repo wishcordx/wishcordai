@@ -7,17 +7,28 @@ const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY!;
 export const dynamic = 'force-dynamic';
 export const revalidate = 0;
 
-export async function GET() {
+export async function GET(request: Request) {
   try {
+    const { searchParams } = new URL(request.url);
+    const username = searchParams.get('username');
+    
     const supabase = createClient(supabaseUrl, supabaseServiceKey);
     
     // Consider users online if they were active in the last 5 minutes
     const fiveMinutesAgo = new Date(Date.now() - 5 * 60 * 1000).toISOString();
     
-    const { data: members, error } = await supabase
+    let query = supabase
       .from('members')
-      .select('*')
-      .order('last_active', { ascending: false });
+      .select('*');
+    
+    // Filter by username if provided
+    if (username) {
+      query = query.eq('username', username);
+    } else {
+      query = query.order('last_active', { ascending: false });
+    }
+    
+    const { data: members, error } = await query;
 
     if (error) {
       console.error('Error fetching members:', error);

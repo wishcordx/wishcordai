@@ -11,13 +11,14 @@ import MembersList from '@/components/MembersList';
 import ProfileSettingsModal from '@/components/ProfileSettingsModal';
 import WalletConnectModal from '@/components/WalletConnectModal';
 import VoiceChannelUI from '@/components/VoiceChannelUI';
+import VoiceParticipant from '@/components/VoiceParticipant';
 import { useWallet } from '@/lib/wallet-context';
 import { useVoice } from '@/lib/voice-context';
 import type { Persona } from '@/typings/types';
 
 export default function HomePage() {
   const { walletAddress, disconnectWallet, profileExists } = useWallet();
-  const { connectToChannel, disconnect, isConnected, currentChannel, participants, isMuted, isDeafened, toggleMute, toggleDeafen } = useVoice();
+  const { connectToChannel, disconnect, isConnected, currentChannel, participants, isMuted, isDeafened, toggleMute, toggleDeafen, room } = useVoice();
   const [refreshTrigger, setRefreshTrigger] = useState(0);
   const [totalMessages, setTotalMessages] = useState(0);
   const [activeCall, setActiveCall] = useState<Persona | null>(null);
@@ -539,47 +540,21 @@ export default function HomePage() {
               <div className="flex-1 bg-[#1e1f2e] rounded-xl p-6 border border-white/5">
                 <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
                   {/* Local User (You) */}
-                  <div className="flex flex-col items-center gap-2">
-                    <div className="relative">
-                      <div className="w-24 h-24 rounded-full bg-gradient-to-br from-indigo-500 to-purple-500 flex items-center justify-center overflow-hidden border-4 border-transparent">
-                        {userProfile?.avatar && (userProfile.avatar.startsWith('data:') || userProfile.avatar.startsWith('https://')) ? (
-                          <img src={userProfile.avatar} alt={userProfile.username} className="w-full h-full object-cover" />
-                        ) : (
-                          <span className="text-3xl">{userProfile?.avatar || '👤'}</span>
-                        )}
-                      </div>
-                      {/* Muted Indicator */}
-                      {isMuted && (
-                        <div className="absolute bottom-0 right-0 w-7 h-7 bg-red-500 rounded-full flex items-center justify-center border-2 border-[#1e1f2e]">
-                          <svg className="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z M17 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2" />
-                          </svg>
-                        </div>
-                      )}
-                    </div>
-                    <div className="text-center">
-                      <p className="text-sm font-semibold text-white">{userProfile?.username || 'You'}</p>
-                      <p className="text-xs text-green-400">Connected</p>
-                    </div>
-                  </div>
+                  {room?.localParticipant && (
+                    <VoiceParticipant
+                      participant={room.localParticipant}
+                      isLocal={true}
+                      isMuted={isMuted}
+                    />
+                  )}
 
                   {/* Remote Participants */}
                   {participants.map((participant) => (
-                    <div key={participant.identity} className="flex flex-col items-center gap-2">
-                      <div className="relative">
-                        <div className="w-24 h-24 rounded-full bg-gradient-to-br from-blue-500 to-cyan-500 flex items-center justify-center overflow-hidden border-4 border-transparent">
-                          <span className="text-3xl">👤</span>
-                        </div>
-                        {/* Speaking Indicator */}
-                        {participant.isSpeaking && (
-                          <div className="absolute inset-0 rounded-full border-4 border-green-400 animate-pulse" />
-                        )}
-                      </div>
-                      <div className="text-center">
-                        <p className="text-sm font-semibold text-white">{participant.name || participant.identity}</p>
-                        <p className="text-xs text-slate-400">Voice</p>
-                      </div>
-                    </div>
+                    <VoiceParticipant
+                      key={participant.identity}
+                      participant={participant}
+                      isLocal={false}
+                    />
                   ))}
                 </div>
 

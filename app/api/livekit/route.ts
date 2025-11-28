@@ -23,6 +23,12 @@ export async function GET(req: NextRequest) {
       }
     );
 
+    // Add metadata for profile info (username, avatar)
+    at.metadata = JSON.stringify({
+      username,
+      timestamp: Date.now(),
+    });
+
     // Grant permissions for the room
     at.addGrant({
       roomJoin: true,
