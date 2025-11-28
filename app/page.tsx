@@ -1883,41 +1883,15 @@ export default function HomePage() {
                     </div>
                   </div>
                   <div className="flex-1">
-                    <h2 className="text-2xl font-bold tracking-tight mb-2 text-white">Support & Feedback Board</h2>
-                    <p className="text-slate-300 leading-relaxed text-sm mb-3">
-                      Welcome to our community support channel! This is your space to:
+                    <h2 className="text-lg font-bold tracking-tight mb-1 text-white">Support & Feedback Board</h2>
+                    <p className="text-slate-400 text-xs mb-2">
+                      Get help, share feedback, or suggest improvements
                     </p>
-                    <ul className="space-y-1 text-sm text-slate-400">
-                      <li className="flex items-center gap-2">
-                        <svg className="w-4 h-4 text-teal-400 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-                        </svg>
-                        <span>Get help with technical issues or questions</span>
-                      </li>
-                      <li className="flex items-center gap-2">
-                        <svg className="w-4 h-4 text-teal-400 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-                        </svg>
-                        <span>Share feedback about your Wishcord experience</span>
-                      </li>
-                      <li className="flex items-center gap-2">
-                        <svg className="w-4 h-4 text-teal-400 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-                        </svg>
-                        <span>Suggest new features or improvements</span>
-                      </li>
-                      <li className="flex items-center gap-2">
-                        <svg className="w-4 h-4 text-teal-400 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-                        </svg>
-                        <span>Connect with community members and help each other</span>
-                      </li>
-                    </ul>
-                    <div className="mt-3 flex items-center gap-2 text-xs text-teal-300 bg-teal-900/30 rounded-lg px-3 py-2 border border-teal-500/20">
-                      <svg className="w-4 h-4 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <div className="flex items-center gap-2 text-xs text-teal-300 bg-teal-900/20 rounded px-2 py-1 border border-teal-500/20">
+                      <svg className="w-3 h-3 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                       </svg>
-                      <span>Note: This is a community discussion board. Messages are not AI-moderated.</span>
+                      <span>Community board • Messages are not AI-moderated</span>
                     </div>
                   </div>
                 </div>
@@ -1967,8 +1941,14 @@ export default function HomePage() {
                 {supportMessages.map((msg) => (
                   <div key={msg.id} className="bg-[#1e1f2e] rounded-lg p-4 border border-white/5">
                     <div className="flex items-start gap-3">
-                      <div className="w-10 h-10 bg-gradient-to-br from-indigo-600 to-purple-600 rounded-full flex items-center justify-center text-lg font-bold text-white flex-shrink-0">
-                        {msg.avatar}
+                      <div className="w-10 h-10 rounded-full flex items-center justify-center flex-shrink-0 overflow-hidden">
+                        {msg.avatar && (msg.avatar.startsWith('data:') || msg.avatar.startsWith('https://') || msg.avatar.startsWith('http://')) ? (
+                          <img src={msg.avatar} alt={msg.username} className="w-full h-full object-cover" />
+                        ) : (
+                          <div className="w-full h-full bg-gradient-to-br from-indigo-600 to-purple-600 flex items-center justify-center text-xl">
+                            {msg.avatar || '👤'}
+                          </div>
+                        )}
                       </div>
                       <div className="flex-1 min-w-0">
                         <div className="flex items-center gap-2 mb-1">
@@ -1980,7 +1960,7 @@ export default function HomePage() {
                           )}
                           <span className="text-xs text-slate-500">{msg.timestamp}</span>
                         </div>
-                        <p className="text-slate-300 text-sm leading-relaxed">
+                        <p className="text-slate-300 text-sm leading-relaxed break-words">
                           {msg.message}
                         </p>
                       </div>
@@ -1990,7 +1970,7 @@ export default function HomePage() {
               </div>
 
               {/* Input Bar - Fixed at Bottom */}
-              <div className="sticky bottom-0 bg-[#0b0c15] pt-3 pb-4 border-t border-white/5">
+              <div className="sticky bottom-0 bg-[#0b0c15] pt-2 pb-2 border-t border-white/5">
                 <form className="relative" onSubmit={(e) => {
                   e.preventDefault();
                   const input = e.currentTarget.querySelector('textarea') as HTMLTextAreaElement;
@@ -2007,22 +1987,22 @@ export default function HomePage() {
                     input.value = '';
                   }
                 }}>
-                  <div className="bg-[#1e1f2e] rounded-xl border border-white/10 focus-within:border-teal-500/50 transition-colors">
+                  <div className="bg-[#1e1f2e] rounded-lg border border-white/10 focus-within:border-teal-500/50 transition-colors">
                     <textarea
                       placeholder="Share your feedback, ask for help, or suggest improvements..."
-                      className="w-full bg-transparent text-white placeholder-slate-500 px-4 py-3 focus:outline-none resize-none text-sm"
-                      rows={3}
+                      className="w-full bg-transparent text-white placeholder-slate-500 px-3 py-2 focus:outline-none resize-none text-sm"
+                      rows={2}
                       maxLength={1000}
                     />
-                    <div className="flex items-center justify-between px-4 pb-3">
+                    <div className="flex items-center justify-between px-3 pb-2">
                       <span className="text-xs text-slate-500">
                         Max 1000 characters • No AI mod tagging
                       </span>
                       <button
                         type="submit"
-                        className="px-4 py-2 bg-gradient-to-r from-teal-600 to-blue-600 hover:from-teal-500 hover:to-blue-500 text-white rounded-lg font-medium text-sm transition-all duration-200 flex items-center gap-2 shadow-lg"
+                        className="px-3 py-1.5 bg-gradient-to-r from-teal-600 to-blue-600 hover:from-teal-500 hover:to-blue-500 text-white rounded-lg font-medium text-xs transition-all duration-200 flex items-center gap-1.5 shadow-lg"
                       >
-                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" />
                         </svg>
                         Send Message
