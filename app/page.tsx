@@ -118,6 +118,60 @@ export default function HomePage() {
     setTimeout(() => setShowSocialPopup(true), 1000);
   }, []);
 
+  // Load support messages and set up real-time subscription
+  useEffect(() => {
+    const loadSupportMessages = async () => {
+      try {
+        const response = await fetch('/api/support');
+        const data = await response.json();
+        if (data.messages) {
+          setSupportMessages(data.messages.map((msg: any) => ({
+            id: msg.id,
+            username: msg.username,
+            avatar: msg.avatar,
+            message: msg.message,
+            timestamp: new Date(msg.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+            isStaff: msg.is_staff
+          })));
+        }
+      } catch (error) {
+        console.error('Error loading support messages:', error);
+      }
+    };
+
+    loadSupportMessages();
+
+    // Set up real-time subscription
+    const { createClient } = require('@supabase/supabase-js');
+    const supabase = createClient(
+      process.env.NEXT_PUBLIC_SUPABASE_URL!,
+      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+    );
+
+    const channel = supabase
+      .channel('support_messages')
+      .on('postgres_changes', {
+        event: 'INSERT',
+        schema: 'public',
+        table: 'support_messages'
+      }, (payload: any) => {
+        const newMsg = payload.new;
+        setSupportMessages(prev => [...prev, {
+          id: newMsg.id,
+          username: newMsg.username,
+          avatar: newMsg.avatar,
+          message: newMsg.message,
+          timestamp: new Date(newMsg.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+          isStaff: newMsg.is_staff
+        }]);
+      })
+      .subscribe();
+
+    return () => {
+      supabase.removeChannel(channel);
+    };
+  }, []);
+
   const getStatusColor = (status: string) => {
     switch (status) {
       case 'online': return 'bg-green-500';
@@ -717,9 +771,10 @@ export default function HomePage() {
 
               {/* Voice Participants Grid */}
               <div className="flex-1 bg-[#1e1f2e] rounded-xl p-6 border border-white/5">
+                {/* Always show participants grid when connected */}
                 <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
-                  {/* Local User (You) */}
-                  {room?.localParticipant && (
+                  {/* Local User (You) - Always show if connected */}
+                  {isConnected && room?.localParticipant && (
                     <VoiceParticipant
                       participant={room.localParticipant}
                       isLocal={true}
@@ -737,16 +792,16 @@ export default function HomePage() {
                   ))}
                 </div>
 
-                {/* Empty State */}
-                {participants.length === 0 && (
+                {/* Empty State - Only show when no local participant visible */}
+                {(!room?.localParticipant || !isConnected) && participants.length === 0 && (
                   <div className="flex flex-col items-center justify-center py-12 text-center">
                     <div className="w-20 h-20 rounded-full bg-slate-700/50 flex items-center justify-center mb-4">
                       <svg className="w-10 h-10 text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
                       </svg>
                     </div>
-                    <p className="text-slate-400 text-lg font-medium">You're alone in this channel</p>
-                    <p className="text-slate-500 text-sm mt-1">Invite others to join the voice chat!</p>
+                    <p className="text-slate-400 text-lg font-medium">Connecting to voice channel...</p>
+                    <p className="text-slate-500 text-sm mt-1">Please wait...</p>
                   </div>
                 )}
               </div>
@@ -1971,20 +2026,30 @@ export default function HomePage() {
 
               {/* Input Bar - Fixed at Bottom */}
               <div className="sticky bottom-0 bg-[#0b0c15] pt-2 pb-2 border-t border-white/5">
-                <form className="relative" onSubmit={(e) => {
+                <form className="relative" onSubmit={async (e) => {
                   e.preventDefault();
                   const input = e.currentTarget.querySelector('textarea') as HTMLTextAreaElement;
                   if (input && input.value.trim()) {
-                    const newMessage = {
-                      id: Date.now(),
-                      username: userProfile?.username || 'Anonymous',
-                      avatar: userProfile?.avatar || '👤',
-                      message: input.value.trim(),
-                      timestamp: 'Just now',
-                      isStaff: false
-                    };
-                    setSupportMessages(prev => [...prev, newMessage]);
-                    input.value = '';
+                    try {
+                      const response = await fetch('/api/support', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                          username: userProfile?.username || 'Anonymous',
+                          avatar: userProfile?.avatar || '👤',
+                          message: input.value.trim(),
+                          is_staff: false
+                        })
+                      });
+                      
+                      if (response.ok) {
+                        input.value = '';
+                      } else {
+                        console.error('Failed to send message');
+                      }
+                    } catch (error) {
+                      console.error('Error sending message:', error);
+                    }
                   }
                 }}>
                   <div className="bg-[#1e1f2e] rounded-lg border border-white/10 focus-within:border-teal-500/50 transition-colors">
