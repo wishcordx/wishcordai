@@ -16,32 +16,26 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   cursor: default;
+}
+
+/* Prevent text selection on non-input elements */
+body * {
   user-select: none;
   -webkit-user-select: none;
   -moz-user-select: none;
-  -ms-user-select: none;
 }
 
-/* Prevent text cursor and selection on all elements by default */
-* {
-  cursor: default;
-  user-select: none;
-  -webkit-user-select: none;
-}
-
-/* Allow pointer cursor on interactive elements */
-a, button, [role="button"], .cursor-pointer, [onclick] {
+/* Allow pointer cursor and clicks on interactive elements */
+a, button, [role="button"] {
   cursor: pointer !important;
-  user-select: none !important;
 }
 
-/* Allow text cursor and selection only in input fields */
+/* Allow text cursor, selection, and interaction in input fields */
 input, textarea, [contenteditable="true"] {
   cursor: text !important;
   user-select: text !important;
   -webkit-user-select: text !important;
   -moz-user-select: text !important;
-  pointer-events: auto !important;
 }
 
 /* Custom Scrollbar */
