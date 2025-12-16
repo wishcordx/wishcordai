@@ -15,6 +15,20 @@ body {
   background: var(--background);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  cursor: default;
+}
+
+/* Prevent text cursor on non-editable elements */
+* {
+  cursor: inherit;
+}
+
+a, button, [role="button"], .cursor-pointer {
+  cursor: pointer !important;
+}
+
+input, textarea, [contenteditable="true"] {
+  cursor: text !important;
 }
 
 /* Custom Scrollbar */
