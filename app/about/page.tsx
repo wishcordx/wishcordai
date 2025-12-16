@@ -150,7 +150,7 @@ export default function AboutPage() {
                 <span className="text-3xl">🔗</span>
                 <div>
                   <h3 className="text-xl font-semibold mb-1 text-white">Web3 Integration</h3>
-                  <p className="text-gray-400">Connect your Solana wallet for authenticated experiences and $WISH token access</p>
+                  <p className="text-gray-400">Connect your Solana wallet for authenticated experiences and $CORD token access</p>
                 </div>
               </div>
 
@@ -203,18 +203,18 @@ export default function AboutPage() {
             </div>
           </section>
 
-          {/* $WISH Token */}
+          {/* $CORD Token */}
           <section className="bg-gradient-to-r from-indigo-600/20 to-purple-600/20 rounded-lg p-8 border border-indigo-500/30">
-            <h2 className="text-3xl font-bold mb-4 text-indigo-300">💎 $WISH Token</h2>
+            <h2 className="text-3xl font-bold mb-4 text-indigo-300">💎 $CORD Token</h2>
             <p className="text-gray-300 leading-relaxed mb-4">
-              $WISH is the native token powering the WCordAI ecosystem. Hold $WISH to access premium features,
+              $CORD is the native token powering the WCordAI ecosystem. Hold $CORD to access premium features,
               exclusive AI personalities, and participate in governance decisions.
             </p>
             <Link 
               href="/wishtoken"
               className="inline-block px-6 py-3 bg-indigo-600 hover:bg-indigo-700 rounded-lg font-semibold transition-colors"
             >
-              Learn More About $WISH →
+              Learn More About $CORD →
             </Link>
           </section>
 

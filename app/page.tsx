@@ -1079,7 +1079,7 @@ export default function HomePage() {
                     <span className="text-2xl">🔗</span>
                     <div>
                       <h4 className="text-base font-semibold mb-0.5 text-white">Web3 Integration</h4>
-                      <p className="text-sm text-slate-400">Connect your Solana wallet for authenticated experiences and $WISH token access</p>
+                      <p className="text-sm text-slate-400">Connect your Solana wallet for authenticated experiences and $CORD token access</p>
                     </div>
                   </div>
 
@@ -1173,16 +1173,16 @@ export default function HomePage() {
 
               {/* CTA */}
               <div className="bg-gradient-to-r from-indigo-600/20 to-purple-600/20 rounded-xl p-6 border border-indigo-500/30 text-center">
-                <h3 className="text-xl font-bold mb-2 text-indigo-300">💎 $WISH Token</h3>
+                <h3 className="text-xl font-bold mb-2 text-indigo-300">💎 $CORD Token</h3>
                 <p className="text-slate-300 mb-4 text-sm">
-                  $WISH is the native token powering the WCordAI ecosystem. Hold $WISH to access premium features, 
+                  $CORD is the native token powering the WCordAI ecosystem. Hold $CORD to access premium features, 
                   exclusive AI personalities, and participate in governance decisions.
                 </p>
                 <button
                   onClick={() => setActiveTab('token')}
                   className="px-6 py-2 bg-indigo-600 hover:bg-indigo-700 rounded-lg font-semibold transition-colors text-sm"
                 >
-                  Learn More About $WISH →
+                  Learn More About $CORD →
                 </button>
               </div>
             </div>
@@ -1194,10 +1194,10 @@ export default function HomePage() {
               {/* Hero */}
               <div className="text-center mb-2">
                 <h2 className="text-3xl font-bold mb-2 bg-gradient-to-r from-yellow-400 to-orange-500 bg-clip-text text-transparent">
-                  $WISH Token
+                  $CORD Token
                 </h2>
                 <p className="text-base text-slate-400">
-                  The official token of WCordAI. Make wishes, earn $WISH, and spread Christmas cheer on the blockchain! 🎄
+                  The official token of WCordAI. Make wishes, earn $CORD, and spread Christmas cheer on the blockchain! 🎄
                 </p>
               </div>
 
@@ -1294,14 +1294,14 @@ export default function HomePage() {
                 </div>
               </div>
 
-              {/* What is $WISH */}
+              {/* What is $CORD */}
               <div className="bg-gradient-to-r from-yellow-600/20 to-orange-600/20 rounded-xl p-6 border border-yellow-500/30">
                 <h3 className="text-xl font-bold mb-3 text-yellow-300 flex items-center gap-2">
-                  💰 What is $WISH?
+                  💰 What is $CORD?
                 </h3>
                 <div className="space-y-3 text-slate-300 text-sm">
                   <p>
-                    $WISH is the native utility token of the WCordAI ecosystem, built on Solana for lightning-fast transactions and minimal fees.
+                    $CORD is the native utility token of the WCordAI ecosystem, built on Solana for lightning-fast transactions and minimal fees.
                   </p>
                   <p>
                     <strong className="text-white">Token Benefits:</strong>
@@ -1351,7 +1351,7 @@ export default function HomePage() {
                       ⏳
                     </div>
                     <div>
-                      <h4 className="text-white font-semibold text-sm">Phase 2: $WISH Token Launch</h4>
+                      <h4 className="text-white font-semibold text-sm">Phase 2: $CORD Token Launch</h4>
                       <p className="text-slate-400 text-xs">Token deployment on Pump.fun, liquidity pool creation</p>
                     </div>
                   </div>
@@ -1406,7 +1406,7 @@ export default function HomePage() {
                       <li>Verified identity with your wallet address</li>
                       <li>Custom username and avatar</li>
                       <li>Access to your wish history</li>
-                      <li>$WISH token integration</li>
+                      <li>$CORD token integration</li>
                     </ul>
                     <p className="text-sm text-slate-500 mt-3 italic">
                       💡 Tip: You can also use WCordAI anonymously without connecting a wallet!
@@ -1702,7 +1702,7 @@ export default function HomePage() {
                   </li>
                   <li className="flex items-start gap-2">
                     <span className="text-yellow-400 font-bold">•</span>
-                    <span>Hold $WISH tokens to unlock premium features and exclusive mods</span>
+                    <span>Hold $CORD tokens to unlock premium features and exclusive mods</span>
                   </li>
                 </ul>
               </div>
@@ -1768,7 +1768,7 @@ export default function HomePage() {
                   <div>
                     <h4 className="text-lg font-semibold text-white mb-2">What is the WISH token?</h4>
                     <p className="text-slate-300 leading-relaxed">
-                      $WISH is the community token on Solana blockchain. Token holders get exclusive features, VIP voice access, 
+                      $CORD is the community token on Solana blockchain. Token holders get exclusive features, VIP voice access, 
                       special badges, and governance rights. Check the WISH Token page for current stats and wallet integration.
                     </p>
                   </div>

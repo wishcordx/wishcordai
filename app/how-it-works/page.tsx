@@ -34,7 +34,7 @@ export default function HowItWorksPage() {
                   <li>Verified identity with your wallet address</li>
                   <li>Custom username and avatar</li>
                   <li>Access to your wish history</li>
-                  <li>$WISH token integration</li>
+                  <li>$CORD token integration</li>
                 </ul>
                 <p className="text-sm text-gray-500 mt-4 italic">
                   💡 Tip: You can also use WCordAI anonymously without connecting a wallet!
@@ -296,7 +296,7 @@ export default function HowItWorksPage() {
               </li>
               <li className="flex items-start gap-3">
                 <span className="text-yellow-400 font-bold">•</span>
-                <span>Hold $WISH tokens to unlock premium features and exclusive mod personalities</span>
+                <span>Hold $CORD tokens to unlock premium features and exclusive mod personalities</span>
               </li>
             </ul>
           </div>
@@ -308,7 +308,7 @@ export default function HowItWorksPage() {
               <details className="bg-[#202225] rounded-lg p-4 border border-[#0f1011] cursor-pointer">
                 <summary className="font-semibold text-white">Is WCordAI free to use?</summary>
                 <p className="text-gray-400 mt-2 text-sm">
-                  Yes! Basic features are completely free. $WISH token holders get access to premium features and exclusive content.
+                  Yes! Basic features are completely free. $CORD token holders get access to premium features and exclusive content.
                 </p>
               </details>
 
@@ -341,9 +341,9 @@ export default function HowItWorksPage() {
               </details>
 
               <details className="bg-[#202225] rounded-lg p-4 border border-[#0f1011] cursor-pointer">
-                <summary className="font-semibold text-white">What is $WISH token?</summary>
+                <summary className="font-semibold text-white">What is $CORD token?</summary>
                 <p className="text-gray-400 mt-2 text-sm">
-                  $WISH is the platform's native Solana token. Learn more on the <Link href="/wishtoken" className="text-indigo-400 hover:underline">$WISH Token page</Link>.
+                  $CORD is the platform's native Solana token. Learn more on the <Link href="/wishtoken" className="text-indigo-400 hover:underline">$CORD Token page</Link>.
                 </p>
               </details>
             </div>

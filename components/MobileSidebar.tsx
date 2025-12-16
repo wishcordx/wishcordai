@@ -79,7 +79,7 @@ export default function MobileSidebar({ isOpen, onClose, onModClick, totalMessag
                   className="flex items-center gap-2 px-3 py-2 text-yellow-400 bg-yellow-500/10 hover:bg-yellow-500/20 rounded-lg transition-colors w-full font-medium"
                 >
                   <span className="text-xl">💰</span>
-                  <span>$WISH Token</span>
+                  <span>$CORD Token</span>
                 </a>
               </div>
             </div>

@@ -65,10 +65,10 @@ export default function WishTokenPage() {
         {/* Hero Section */}
         <div className="text-center mb-8 sm:mb-12">
           <h1 className="text-3xl sm:text-5xl font-bold text-white mb-3 sm:mb-4 bg-gradient-to-r from-yellow-400 to-orange-500 bg-clip-text text-transparent">
-            $WISH Token
+            $CORD Token
           </h1>
           <p className="text-base sm:text-xl text-gray-400 max-w-2xl mx-auto">
-            The official token of WCordAI. Make wishes, earn $WISH, and spread Christmas cheer on the blockchain! 🎄
+            The official token of WCordAI. Make wishes, earn $CORD, and spread Christmas cheer on the blockchain! 🎄
           </p>
         </div>
 
