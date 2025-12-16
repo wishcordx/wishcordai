@@ -37,20 +37,18 @@ export default function Header({ onMenuClick }: HeaderProps = {}) {
     <header className="border-b border-[#1e1f22] bg-[#313338]">
       <div className="mx-auto max-w-7xl px-3 sm:px-6 py-2 sm:py-3">
         <div className="flex items-center justify-between">
-          <Link href="/">
-            <div className="flex items-center gap-3 sm:gap-4 group" style={{ cursor: 'pointer' }}>
-              <div className="w-14 h-14 sm:w-20 sm:h-20 rounded-2xl flex items-center justify-center overflow-hidden shadow-lg ring-2 ring-indigo-500/20 group-hover:ring-indigo-500/40 transition-all">
-                <img src="/assets/logo.webp" alt="WCordAI" className="w-full h-full object-cover" draggable="false" />
-              </div>
-              <div>
-                <h1 className="text-xl sm:text-2xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 via-purple-400 to-pink-400 group-hover:from-indigo-300 group-hover:via-purple-300 group-hover:to-pink-300 transition-all">
-                  WCordAI
-                </h1>
-                <p className="text-xs sm:text-sm text-gray-400 font-medium hidden sm:block">
-                  <span className="inline-block w-2 h-2 bg-green-500 rounded-full mr-1.5 animate-pulse"></span>
-                  5 mods online
-                </p>
-              </div>
+          <Link href="/" className="flex items-center gap-3 sm:gap-4 group cursor-pointer">
+            <div className="w-14 h-14 sm:w-20 sm:h-20 rounded-2xl flex items-center justify-center overflow-hidden shadow-lg ring-2 ring-indigo-500/20 group-hover:ring-indigo-500/40 transition-all">
+              <img src="/assets/logo.webp" alt="WCordAI" className="w-full h-full object-cover" draggable="false" />
+            </div>
+            <div>
+              <h1 className="text-xl sm:text-2xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 via-purple-400 to-pink-400 group-hover:from-indigo-300 group-hover:via-purple-300 group-hover:to-pink-300 transition-all">
+                WCordAI
+              </h1>
+              <p className="text-xs sm:text-sm text-gray-400 font-medium hidden sm:block">
+                <span className="inline-block w-2 h-2 bg-green-500 rounded-full mr-1.5 animate-pulse"></span>
+                5 mods online
+              </p>
             </div>
           </Link>
           
