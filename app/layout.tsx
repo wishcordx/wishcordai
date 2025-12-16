@@ -7,8 +7,8 @@ import { VoiceProvider } from '@/lib/voice-context';
 const inter = Inter({ subsets: ['latin'] });
 
 export const metadata: Metadata = {
-  title: 'Santa\'s Discord - Christmas Wish Server',
-  description: 'Post your Christmas wish and get roasted by unhinged Discord mods. Will they grant your wish, deny it, or send you straight to coal?',
+  title: 'WCordAI - AI-Powered Christmas Social Platform',
+  description: 'Drop your Christmas wish and interact with 8 AI mods on WCordAI. A Discord-style platform where AI personalities respond to your wishes in real-time.',
   icons: {
     icon: '/assets/logo.webp',
   },
