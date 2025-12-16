@@ -16,19 +16,29 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   cursor: default;
+  user-select: none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
 }
 
-/* Prevent text cursor on non-editable elements */
+/* Prevent text cursor and selection on all elements by default */
 * {
-  cursor: inherit;
+  cursor: default;
+  user-select: none;
+  -webkit-user-select: none;
 }
 
-a, button, [role="button"], .cursor-pointer {
+/* Allow pointer cursor on interactive elements */
+a, button, [role="button"], .cursor-pointer, [onclick] {
   cursor: pointer !important;
 }
 
+/* Allow text cursor and selection only in input fields */
 input, textarea, [contenteditable="true"] {
   cursor: text !important;
+  user-select: text !important;
+  -webkit-user-select: text !important;
 }
 
 /* Custom Scrollbar */
