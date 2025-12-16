@@ -15,6 +15,12 @@ body {
   background: var(--background);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  cursor: default;
+}
+
+/* Prevent text cursor on all elements by default */
+* {
+  cursor: default;
 }
 
 /* Prevent text selection only on images */
@@ -25,12 +31,12 @@ img {
   pointer-events: none;
 }
 
-/* Ensure buttons have proper cursor */
-button, [role="button"] {
-  cursor: pointer;
+/* Links and buttons should have pointer cursor */
+a, button, [role="button"] {
+  cursor: pointer !important;
 }
 
-/* Ensure input fields work properly */
+/* ONLY input fields should have text cursor */
 input, textarea, [contenteditable="true"] {
   cursor: text !important;
   user-select: text !important;
