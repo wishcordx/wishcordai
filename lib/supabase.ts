@@ -36,10 +36,7 @@ export async function createWish(wish: Omit<Wish, 'id' | 'created_at'>) {
  * Get all wishes, ordered by created_at descending
  */
 export async function getWishes(limit = 50): Promise<Wish[]> {
-  // Create a fresh client for each request to avoid caching
-  const freshClient = createClient(supabaseUrl, supabaseServiceKey);
-  
-  const { data, error } = await freshClient
+  const { data, error } = await supabaseAdmin
     .from('wishes')
     .select('*')
     .order('created_at', { ascending: false })
