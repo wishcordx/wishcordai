@@ -1986,44 +1986,6 @@ export default function HomePage() {
 
               {/* Messages Feed */}
               <div className="flex-1 overflow-y-auto space-y-3 mb-4 pr-2" style={{ maxHeight: 'calc(100vh - 400px)' }}>
-                {/* Welcome Message */}
-                <div className="bg-[#1e1f2e] rounded-lg p-4 border border-white/5">
-                  <div className="flex items-start gap-3">
-                    <div className="w-10 h-10 bg-gradient-to-br from-purple-600 to-pink-600 rounded-full flex items-center justify-center text-lg font-bold text-white flex-shrink-0">
-                      A
-                    </div>
-                    <div className="flex-1 min-w-0">
-                      <div className="flex items-center gap-2 mb-1">
-                        <span className="font-semibold text-white">Anonymous</span>
-                        <span className="text-xs text-slate-500">2 hours ago</span>
-                      </div>
-                      <p className="text-slate-300 text-sm leading-relaxed">
-                        Welcome to the Support & Feedback board! Feel free to share your thoughts, ask questions, or help fellow community members.
-                      </p>
-                    </div>
-                  </div>
-                </div>
-
-                <div className="bg-[#1e1f2e] rounded-lg p-4 border border-white/5">
-                  <div className="flex items-start gap-3">
-                    <div className="w-10 h-10 bg-gradient-to-br from-blue-600 to-cyan-600 rounded-full flex items-center justify-center text-lg font-bold text-white flex-shrink-0">
-                      W
-                    </div>
-                    <div className="flex-1 min-w-0">
-                      <div className="flex items-center gap-2 mb-1">
-                        <span className="font-semibold text-white">WCordAI Team</span>
-                        <span className="inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-bold bg-gradient-to-r from-indigo-600 to-purple-600 text-white border border-indigo-400/30">
-                          STAFF
-                        </span>
-                        <span className="text-xs text-slate-500">1 hour ago</span>
-                      </div>
-                      <p className="text-slate-300 text-sm leading-relaxed">
-                        We're always listening! Your feedback helps us build a better platform. Whether it's a bug report, feature request, or just a general comment - we appreciate you taking the time to share. 🎄✨
-                      </p>
-                    </div>
-                  </div>
-                </div>
-
                 {/* Dynamic Messages */}
                 {supportMessages.map((msg) => (
                   <div key={msg.id} className="bg-[#1e1f2e] rounded-lg p-4 border border-white/5">
