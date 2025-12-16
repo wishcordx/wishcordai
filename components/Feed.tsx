@@ -129,6 +129,9 @@ export default function Feed({ refreshTrigger, newWish }: FeedProps) {
       const data = await response.json();
 
       if (data.success) {
+        setWishes(data.wishes || []);
+        setError(null);
+      } else {
         setError(data.error || 'Failed to load wishes');
       }
     } catch (err) {
