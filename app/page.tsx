@@ -14,6 +14,7 @@ import VoiceChannelUI from '@/components/VoiceChannelUI';
 import VoiceParticipant from '@/components/VoiceParticipant';
 import { useWallet } from '@/lib/wallet-context';
 import { useVoice } from '@/lib/voice-context';
+import { supabase } from '@/lib/supabase';
 import type { Persona } from '@/typings/types';
 
 export default function HomePage() {
@@ -142,8 +143,6 @@ export default function HomePage() {
     loadSupportMessages();
 
     // Set up real-time subscription
-    const { supabase } = await import('@/lib/supabase');
-
     const channel = supabase
       .channel('support_messages')
       .on('postgres_changes', {
