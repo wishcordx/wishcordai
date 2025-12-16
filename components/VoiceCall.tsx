@@ -52,7 +52,6 @@ export default function VoiceCall({ persona, onClose }: VoiceCallProps) {
     preloadedAudio.preload = 'auto';
     preloadedAudio.setAttribute('playsinline', 'true');
     preloadedAudioRef.current = preloadedAudio;
-    console.log('🎵 Pre-initialized audio element for mobile Safari');
     
     return () => {
       if (ringToneRef.current) {
@@ -81,7 +80,6 @@ export default function VoiceCall({ persona, onClose }: VoiceCallProps) {
 
   const startCallSequence = async () => {
     try {
-      console.log('🔔 Starting ringtone...');
       // Play ringtone and keep playing until AI responds
       if (ringToneRef.current) {
         try {
@@ -90,7 +88,6 @@ export default function VoiceCall({ persona, onClose }: VoiceCallProps) {
           const playPromise = ringToneRef.current.play();
           if (playPromise !== undefined) {
             await playPromise;
-            console.log('🎵 Ringtone playing successfully');
           }
         } catch (err) {
           console.error('❌ Ringtone play failed:', err);
@@ -99,7 +96,6 @@ export default function VoiceCall({ persona, onClose }: VoiceCallProps) {
         }
       }
 
-      console.log('📞 Initiating call to AI...');
       // Start actual call - ringtone will keep playing
       await startCall();
       
@@ -134,7 +130,6 @@ export default function VoiceCall({ persona, onClose }: VoiceCallProps) {
       const data = await response.json();
       if (data.success) {
         // Stop ringtone immediately when AI responds
-        console.log('✅ AI responded, stopping ringtone');
         if (ringToneRef.current) {
           ringToneRef.current.pause();
           ringToneRef.current.currentTime = 0;

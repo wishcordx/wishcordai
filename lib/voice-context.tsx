@@ -56,57 +56,46 @@ export function VoiceProvider({ children }: { children: ReactNode }) {
       const updateParticipantsList = () => {
         const remotes = Array.from(newRoom.remoteParticipants.values());
         setParticipants(remotes);
-        console.log('👥 Participants:', remotes.length, remotes.map(p => p.name || p.identity));
       };
       
       // Handle audio track subscriptions for voice playback
       newRoom.on(RoomEvent.TrackSubscribed, (track, publication, participant) => {
-        console.log('🎵 Track subscribed:', track.kind, 'from', participant.name || participant.identity);
         if (track.kind === 'audio') {
           // Attach audio element to DOM for playback
           const element = track.attach();
           element.volume = isDeafened ? 0 : 1;
           document.body.appendChild(element);
-          console.log('🔊 Audio element attached and playing for', participant.name || participant.identity);
         }
       });
 
       newRoom.on(RoomEvent.TrackUnsubscribed, (track, publication, participant) => {
-        console.log('🔇 Track unsubscribed:', track.kind, 'from', participant?.name || participant?.identity);
         if (track.kind === 'audio') {
           track.detach().forEach(element => element.remove());
         }
       });
       
       newRoom.on(RoomEvent.ParticipantConnected, (participant) => {
-        console.log('✅ Participant joined:', participant.name || participant.identity);
         updateParticipantsList();
       });
       
       newRoom.on(RoomEvent.ParticipantDisconnected, (participant) => {
-        console.log('❌ Participant left:', participant.name || participant.identity);
         updateParticipantsList();
       });
       
       newRoom.on(RoomEvent.LocalTrackPublished, (publication) => {
-        console.log('📢 Local track published:', publication.kind);
         updateParticipantsList();
       });
       
       newRoom.on(RoomEvent.LocalTrackUnpublished, updateParticipantsList);
-      newRoom.on(RoomEvent.AudioPlaybackStatusChanged, () => {
-        console.log('🔊 Audio playback status changed');
-      });
+      newRoom.on(RoomEvent.AudioPlaybackStatusChanged, () => {});
       
       newRoom.on(RoomEvent.Connected, () => {
-        console.log('✅ Connected to voice channel:', channelName);
         setIsConnected(true);
         setCurrentChannel(channelName);
         updateParticipantsList();
       });
 
       newRoom.on(RoomEvent.Disconnected, () => {
-        console.log('❌ Disconnected from voice channel');
         setIsConnected(false);
         setCurrentChannel(null);
         setParticipants([]);
@@ -123,8 +112,6 @@ export function VoiceProvider({ children }: { children: ReactNode }) {
 
       setRoom(newRoom);
       updateParticipantsList();
-      
-      console.log('🎤 Microphone enabled and audio started');
     } catch (error) {
       console.error('Failed to connect to voice channel:', error);
       throw error;

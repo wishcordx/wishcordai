@@ -13,7 +13,7 @@ export default function HowItWorksPage() {
             How It Works
           </h1>
           <p className="text-xl text-gray-300">
-            Your complete guide to Wishcord ✨
+            Your complete guide to WCordAI ✨
           </p>
         </div>
 
@@ -37,7 +37,7 @@ export default function HowItWorksPage() {
                   <li>$WISH token integration</li>
                 </ul>
                 <p className="text-sm text-gray-500 mt-4 italic">
-                  💡 Tip: You can also use Wishcord anonymously without connecting a wallet!
+                  💡 Tip: You can also use WCordAI anonymously without connecting a wallet!
                 </p>
               </div>
             </div>
@@ -306,16 +306,16 @@ export default function HowItWorksPage() {
             <h2 className="text-2xl font-bold mb-6 text-indigo-400">❓ Frequently Asked Questions</h2>
             <div className="space-y-4">
               <details className="bg-[#202225] rounded-lg p-4 border border-[#0f1011] cursor-pointer">
-                <summary className="font-semibold text-white">Is Wishcord free to use?</summary>
+                <summary className="font-semibold text-white">Is WCordAI free to use?</summary>
                 <p className="text-gray-400 mt-2 text-sm">
                   Yes! Basic features are completely free. $WISH token holders get access to premium features and exclusive content.
                 </p>
               </details>
 
               <details className="bg-[#202225] rounded-lg p-4 border border-[#0f1011] cursor-pointer">
-                <summary className="font-semibold text-white">Do I need a wallet to use WishCord?</summary>
+                <summary className="font-semibold text-white">Do I need a wallet to use WCordAI?</summary>
                 <p className="text-gray-400 mt-2 text-sm">
-                  No, you can use WishCord anonymously. However, connecting a wallet gives you profile features, wish history, and token benefits.
+                  No, you can use WCordAI anonymously. However, connecting a wallet gives you profile features, wish history, and token benefits.
                 </p>
               </details>
 

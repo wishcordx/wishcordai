@@ -84,7 +84,6 @@ export default function WishForm({ onWishSubmitted }: WishFormProps) {
         .from('wish-memes')
         .getPublicUrl(filePath);
       
-      console.log('✅ Edited image uploaded successfully:', publicUrl);
       setImageUrl(publicUrl);
       setImagePath(filePath);
     } catch (err) {

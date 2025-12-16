@@ -32,8 +32,6 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    console.log(`💬 ${persona} responding to: "${userMessage}"`);
-
     const modPersona = getPersonaConfig(persona as any);
     
     // Build conversation context
@@ -61,11 +59,9 @@ export async function POST(request: NextRequest) {
     });
 
     const aiText = response.content[0].type === 'text' ? response.content[0].text : '';
-    console.log(`✅ ${persona} says: "${aiText}"`);
 
     // Generate voice audio
     const voiceId = VOICE_MAP[persona];
-    console.log(`🎙️ Generating voice with ID: ${voiceId}`);
 
     const audio = await elevenlabs.textToSpeech.convert(voiceId, {
       text: aiText,
@@ -84,8 +80,6 @@ export async function POST(request: NextRequest) {
     const audioBuffer = Buffer.concat(chunks);
     const audioBase64 = audioBuffer.toString('base64');
     
-    console.log(`✅ Audio generated, size: ${audioBase64.length} bytes`);
-
     return NextResponse.json({
       success: true,
       text: aiText,

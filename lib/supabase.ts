@@ -7,10 +7,7 @@ const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY || '';
 
 // Validate environment variables
 if (!supabaseUrl || !supabaseAnonKey) {
-  console.error('Missing Supabase environment variables:', {
-    url: !!supabaseUrl,
-    anonKey: !!supabaseAnonKey,
-  });
+  console.error('Missing Supabase environment variables');
 }
 
 // Client-side Supabase client
@@ -51,11 +48,6 @@ export async function getWishes(limit = 50): Promise<Wish[]> {
   if (error) {
     console.error('❌ Error fetching wishes:', error);
     throw error;
-  }
-  
-  console.log(`📊 Query returned ${data?.length || 0} wishes`);
-  if (data && data.length > 0) {
-    console.log('📌 Most recent wish ID:', data[0].id);
   }
   
   return data as Wish[];

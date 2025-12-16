@@ -254,11 +254,11 @@ export default function HomePage() {
         {/* Header */}
         <div className="h-16 flex items-center justify-between px-4 border-b border-white/5 shrink-0">
           <div className="flex items-center gap-2 group cursor-pointer">
-            <img src="/assets/logo.webp" alt="Wishcord" className="w-8 h-8 rounded-lg" />
-            <span className="text-lg font-semibold tracking-tight text-white">Wishcord</span>
+            <img src="/assets/logo.webp" alt="WCordAI" className="w-8 h-8 rounded-lg" />
+            <span className="text-lg font-semibold tracking-tight text-white">WCordAI</span>
           </div>
           <a 
-            href="https://x.com/wishcord" 
+            href="https://x.com/WCordAI" 
             target="_blank" 
             rel="noopener noreferrer"
             className="p-1.5 hover:bg-white/5 rounded transition-colors text-slate-400 hover:text-white"
@@ -505,8 +505,8 @@ export default function HomePage() {
             {/* Header */}
             <div className="h-16 flex items-center px-4 border-b border-white/5 shrink-0">
               <div className="flex items-center gap-2 group cursor-pointer">
-                <img src="/assets/logo.webp" alt="Wishcord" className="w-8 h-8 rounded-lg" />
-                <span className="text-lg font-semibold tracking-tight text-white">Wishcord</span>
+                <img src="/assets/logo.webp" alt="WCordAI" className="w-8 h-8 rounded-lg" />
+                <span className="text-lg font-semibold tracking-tight text-white">WCordAI</span>
               </div>
             </div>
 
@@ -751,10 +751,10 @@ export default function HomePage() {
               </h1>
               <p className="text-xs hidden sm:block text-slate-400">
                 {activeTab === 'wishes' && 'Drop your Xmas wish. Our AI mods are online 24/7.'}
-                {activeTab === 'about' && 'Learn more about the Wishcord community.'}
+                {activeTab === 'about' && 'Learn more about the WCordAI community.'}
                 {activeTab === 'token' && 'Current market stats and wallet integration.'}
-                {activeTab === 'how-it-works' && 'Your complete guide to Wishcord'}
-                {activeTab === 'faq' && 'Frequently asked questions about Wishcord'}
+                {activeTab === 'how-it-works' && 'Your complete guide to WCordAI'}
+                {activeTab === 'faq' && 'Frequently asked questions about WCordAI'}
                 {activeTab === 'community-rules' && 'Guidelines for our community'}
                 {activeTab === 'support' && 'Get help or share your feedback with us'}
               </p>
@@ -936,24 +936,24 @@ export default function HomePage() {
               {/* Hero */}
               <div className="bg-gradient-to-br from-indigo-900/50 to-purple-900/50 border border-indigo-500/20 rounded-xl p-8 text-center">
                 <div className="flex justify-center mb-4">
-                  <img src="/assets/logo.webp" alt="Wishcord" className="w-20 h-20 rounded-xl" />
+                  <img src="/assets/logo.webp" alt="WCordAI" className="w-20 h-20 rounded-xl" />
                 </div>
-                <h2 className="text-3xl font-bold tracking-tight mb-3 text-white">About Wishcord</h2>
+                <h2 className="text-3xl font-bold tracking-tight mb-3 text-white">About WCordAI</h2>
                 <p className="text-lg text-slate-400">
                   Where AI meets the holiday spirit 🎄✨
                 </p>
               </div>
 
-              {/* What is Wishcord */}
+              {/* What is WCordAI */}
               <div className="bg-[#1e1f2e] rounded-xl p-6 border border-white/5">
-                <h3 className="text-2xl font-bold mb-3 text-indigo-400">🎅 What is Wishcord?</h3>
+                <h3 className="text-2xl font-bold mb-3 text-indigo-400">🎅 What is WCordAI?</h3>
                 <p className="text-slate-300 leading-relaxed mb-3">
-                  Wishcord is a revolutionary social platform that combines the magic of the holiday season with cutting-edge AI technology. 
+                  WCordAI is a revolutionary social platform that combines the magic of the holiday season with cutting-edge AI technology. 
                   Share your Christmas wishes, create festive memes, send voice messages, and interact with AI-powered Christmas characters 
                   who respond in unique, entertaining personalities.
                 </p>
                 <p className="text-slate-300 leading-relaxed">
-                  Built on the Solana blockchain with Web3 integration, Wishcord creates a decentralized community where every wish is 
+                  Built on the Solana blockchain with Web3 integration, WCordAI creates a decentralized community where every wish is 
                   permanently recorded and every interaction is authentic.
                 </p>
               </div>
@@ -967,7 +967,7 @@ export default function HomePage() {
                       🎅 <span className="text-red-400">SantaMod69</span>
                     </h4>
                     <p className="text-sm text-slate-400">
-                      The boomer admin of Wishcord since 1823. Types in ALL CAPS occasionally. Everything reminds him of "BACK IN MY DAY."
+                      The boomer admin of WCordAI since 1823. Types in ALL CAPS occasionally. Everything reminds him of "BACK IN MY DAY."
                     </p>
                   </div>
 
@@ -1030,7 +1030,7 @@ export default function HomePage() {
                       🎄 <span className="text-emerald-400">BarryJingle</span>
                     </h4>
                     <p className="text-sm text-slate-400">
-                      The friendly and helpful guide who explains everything about Wishcord. Always ready to assist newcomers.
+                      The friendly and helpful guide who explains everything about WCordAI. Always ready to assist newcomers.
                     </p>
                   </div>
                 </div>
@@ -1102,7 +1102,7 @@ export default function HomePage() {
               <div className="bg-[#1e1f2e] rounded-xl p-6 border border-white/5">
                 <h3 className="text-2xl font-bold mb-4 text-cyan-400">🎙️ Real-Time Voice Chat</h3>
                 <p className="text-slate-300 leading-relaxed mb-4">
-                  Wishcord now features Discord-style voice channels powered by LiveKit. Connect with the community in real-time, 
+                  WCordAI now features Discord-style voice channels powered by LiveKit. Connect with the community in real-time, 
                   share holiday stories, or just hang out in voice while browsing wishes.
                 </p>
                 <div className="space-y-3">
@@ -1180,7 +1180,7 @@ export default function HomePage() {
               <div className="bg-gradient-to-r from-indigo-600/20 to-purple-600/20 rounded-xl p-6 border border-indigo-500/30 text-center">
                 <h3 className="text-xl font-bold mb-2 text-indigo-300">💎 $WISH Token</h3>
                 <p className="text-slate-300 mb-4 text-sm">
-                  $WISH is the native token powering the Wishcord ecosystem. Hold $WISH to access premium features, 
+                  $WISH is the native token powering the WCordAI ecosystem. Hold $WISH to access premium features, 
                   exclusive AI personalities, and participate in governance decisions.
                 </p>
                 <button
@@ -1202,7 +1202,7 @@ export default function HomePage() {
                   $WISH Token
                 </h2>
                 <p className="text-base text-slate-400">
-                  The official token of Wishcord. Make wishes, earn $WISH, and spread Christmas cheer on the blockchain! 🎄
+                  The official token of WCordAI. Make wishes, earn $WISH, and spread Christmas cheer on the blockchain! 🎄
                 </p>
               </div>
 
@@ -1306,7 +1306,7 @@ export default function HomePage() {
                 </h3>
                 <div className="space-y-3 text-slate-300 text-sm">
                   <p>
-                    $WISH is the native utility token of the Wishcord ecosystem, built on Solana for lightning-fast transactions and minimal fees.
+                    $WISH is the native utility token of the WCordAI ecosystem, built on Solana for lightning-fast transactions and minimal fees.
                   </p>
                   <p>
                     <strong className="text-white">Token Benefits:</strong>
@@ -1348,7 +1348,7 @@ export default function HomePage() {
                     </div>
                     <div>
                       <h4 className="text-white font-semibold text-sm">Phase 1: Platform Launch</h4>
-                      <p className="text-slate-400 text-xs">Wishcord platform with 8 AI mods, voice calls, meme editor</p>
+                      <p className="text-slate-400 text-xs">WCordAI platform with 8 AI mods, voice calls, meme editor</p>
                     </div>
                   </div>
                   <div className="flex gap-3">
@@ -1392,7 +1392,7 @@ export default function HomePage() {
                   How It Works
                 </h2>
                 <p className="text-lg text-slate-400">
-                  Your complete guide to Wishcord ✨
+                  Your complete guide to WCordAI ✨
                 </p>
               </div>
 
@@ -1414,7 +1414,7 @@ export default function HomePage() {
                       <li>$WISH token integration</li>
                     </ul>
                     <p className="text-sm text-slate-500 mt-3 italic">
-                      💡 Tip: You can also use Wishcord anonymously without connecting a wallet!
+                      💡 Tip: You can also use WCordAI anonymously without connecting a wallet!
                     </p>
                   </div>
                 </div>
@@ -1721,7 +1721,7 @@ export default function HomePage() {
               <div className="bg-gradient-to-br from-blue-900/50 to-cyan-900/50 border border-blue-500/20 rounded-xl p-8 text-center">
                 <h2 className="text-3xl font-bold tracking-tight mb-3 text-white">Frequently Asked Questions</h2>
                 <p className="text-lg text-slate-400">
-                  Everything you need to know about Wishcord
+                  Everything you need to know about WCordAI
                 </p>
               </div>
 
@@ -1759,7 +1759,7 @@ export default function HomePage() {
                   <div>
                     <h4 className="text-lg font-semibold text-white mb-2">Do I need to connect a wallet?</h4>
                     <p className="text-slate-300 leading-relaxed">
-                      No! You can use Wishcord anonymously. Connecting a wallet gives you benefits like custom profiles, wish history, 
+                      No! You can use WCordAI anonymously. Connecting a wallet gives you benefits like custom profiles, wish history, 
                       and WISH token integration, but it's entirely optional.
                     </p>
                   </div>
@@ -1808,7 +1808,7 @@ export default function HomePage() {
                   <div>
                     <h4 className="text-lg font-semibold text-white mb-2">What browsers are supported?</h4>
                     <p className="text-slate-300 leading-relaxed">
-                      Wishcord works best on Chrome, Firefox, Safari, and Edge. Voice chat requires microphone permissions. 
+                      WCordAI works best on Chrome, Firefox, Safari, and Edge. Voice chat requires microphone permissions. 
                       Mobile browsers (iOS Safari, Chrome) are fully supported.
                     </p>
                   </div>
@@ -1831,7 +1831,7 @@ export default function HomePage() {
               <div className="bg-gradient-to-br from-red-900/50 to-orange-900/50 border border-red-500/20 rounded-xl p-8 text-center">
                 <h2 className="text-3xl font-bold tracking-tight mb-3 text-white">Community Rules</h2>
                 <p className="text-lg text-slate-400">
-                  Guidelines to keep Wishcord fun and festive for everyone
+                  Guidelines to keep WCordAI fun and festive for everyone
                 </p>
               </div>
 
@@ -1849,7 +1849,7 @@ export default function HomePage() {
                   <div className="bg-[#11121c] rounded-lg p-4 border-l-4 border-orange-500">
                     <h4 className="text-lg font-semibold text-white mb-2">2. Keep It Family-Friendly</h4>
                     <p className="text-slate-300 leading-relaxed">
-                      Wishcord is for all ages. No NSFW content, explicit language, or inappropriate material. 
+                      WCordAI is for all ages. No NSFW content, explicit language, or inappropriate material. 
                       Keep your wishes, memes, and voice messages appropriate for a holiday celebration.
                     </p>
                   </div>
@@ -1950,7 +1950,7 @@ export default function HomePage() {
               <div className="bg-gradient-to-br from-green-900/30 to-emerald-900/30 border border-green-500/20 rounded-xl p-6">
                 <h3 className="text-xl font-bold mb-3 text-green-400">Building a Positive Community</h3>
                 <p className="text-slate-300 leading-relaxed mb-3">
-                  Wishcord thrives when everyone contributes positively. Share creative wishes, support fellow community members, 
+                  WCordAI thrives when everyone contributes positively. Share creative wishes, support fellow community members, 
                   engage with AI mods respectfully, and help newcomers feel welcome.
                 </p>
                 <p className="text-slate-300 leading-relaxed">
@@ -2016,7 +2016,7 @@ export default function HomePage() {
                     </div>
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center gap-2 mb-1">
-                        <span className="font-semibold text-white">Wishcord Team</span>
+                        <span className="font-semibold text-white">WCordAI Team</span>
                         <span className="inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-bold bg-gradient-to-r from-indigo-600 to-purple-600 text-white border border-indigo-400/30">
                           STAFF
                         </span>

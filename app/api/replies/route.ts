@@ -159,8 +159,6 @@ export async function POST(req: NextRequest) {
             avatar: personaConfig!.emoji,
             reply_text: aiReply,
           });
-          
-          console.log(`✅ ${personaConfig!.name} responded to reply with full context!`);
         } catch (aiError) {
           console.error('❌ Failed to generate AI reply:', aiError);
           // Don't fail the whole request if AI fails

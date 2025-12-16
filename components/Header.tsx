@@ -39,11 +39,11 @@ export default function Header({ onMenuClick }: HeaderProps = {}) {
         <div className="flex items-center justify-between">
           <Link href="/" className="flex items-center gap-2 sm:gap-3">
             <div className="w-10 h-10 sm:w-16 sm:h-16 rounded-full flex items-center justify-center overflow-hidden">
-              <img src="/assets/logo.webp" alt="Wishcord" className="w-full h-full object-cover" />
+              <img src="/assets/logo.webp" alt="WCordAI" className="w-full h-full object-cover" />
             </div>
             <div>
               <h1 className="text-base sm:text-lg font-bold text-white">
-                Wishcord
+                WCordAI
               </h1>
               <p className="text-xs text-gray-400 hidden sm:block">5 mods online</p>
             </div>

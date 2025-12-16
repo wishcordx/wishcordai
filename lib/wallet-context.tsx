@@ -44,7 +44,6 @@ export function WalletProvider({ children }: { children: ReactNode }) {
       if (error) {
         if (error.code === 'PGRST116') {
           // No profile found - user needs to create one
-          console.log('No profile found for wallet:', address);
           setProfileExists(false);
           localStorage.removeItem('userProfile');
         } else {
@@ -64,7 +63,6 @@ export function WalletProvider({ children }: { children: ReactNode }) {
         };
         localStorage.setItem('userProfile', JSON.stringify(profile));
         setProfileExists(true);
-        console.log('Profile loaded from database:', profile.username);
 
         // Update last_active timestamp
         await supabase

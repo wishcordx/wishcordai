@@ -101,7 +101,7 @@ export default function ProfileSetupModal({ isOpen, onClose }: ProfileSetupModal
         {step === 1 && (
           <div>
             <h2 className="text-2xl font-bold text-white mb-2">Choose Your Username</h2>
-            <p className="text-gray-400 text-sm mb-6">This is how others will see you on Wishcord</p>
+            <p className="text-gray-400 text-sm mb-6">This is how others will see you on WCordAI</p>
             
             <div className="mb-6">
               <label className="block text-sm font-medium text-gray-300 mb-2">Username</label>

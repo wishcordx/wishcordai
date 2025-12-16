@@ -44,14 +44,6 @@ export async function POST(request: NextRequest) {
       mentionedPersonas 
     } = body;
 
-    // DEBUG: Log incoming request
-    console.log('📥 INCOMING WISH REQUEST:');
-    console.log('  📝 wishText:', wishText);
-    console.log('  🎭 persona:', persona);
-    console.log('  👥 mentionedPersonas:', mentionedPersonas);
-    console.log('  🎤 audioUrl:', audioUrl);
-    console.log('  🖼️ imageUrl:', imageUrl);
-
     // Validate input - allow empty text if media is present
     if (!wishText?.trim() && !imageUrl && !audioUrl) {
       return NextResponse.json<WishResponse>(
@@ -95,11 +87,6 @@ export async function POST(request: NextRequest) {
 
     // Only respond if this persona was mentioned (no mentions = no AI response)
     const shouldRespond = mentionedPersonaIds.includes(persona);
-    
-    console.log('🏷️ Mentions detected:', mentions);
-    console.log('🎭 Persona IDs:', mentionedPersonaIds);
-    console.log('🤖 Current persona:', persona);
-    console.log('💭 Should respond:', shouldRespond);
 
     // STEP 1: Save wish immediately with pending status if AI response is needed
     const aiStatus = shouldRespond ? 'pending' : null;
@@ -119,8 +106,6 @@ export async function POST(request: NextRequest) {
       mentioned_personas: mentionedPersonaIds.length > 0 ? mentionedPersonaIds : undefined,
     });
 
-    console.log('📝 Wish saved instantly:', wish.id, 'AI status:', aiStatus);
-
     // STEP 2: Return immediately so user sees their message
     const response = NextResponse.json<WishResponse>(
       { success: true, wish },
@@ -129,13 +114,9 @@ export async function POST(request: NextRequest) {
 
     // STEP 3: Generate AI response in background (if mod mentioned) - same as replies
     if (shouldRespond) {
-      console.log(`💬 ${personaConfig.name} is typing...`);
-      
       // Fire and forget - generate AI response async (same pattern as replies)
       (async () => {
         try {
-          console.log(`🤖 [ASYNC] Generating AI response from ${personaConfig.name}...`);
-          
           let aiReply: string | null = null;
           let aiAudioUrl: string | undefined;
           let aiAudioPath: string | undefined;
@@ -143,7 +124,6 @@ export async function POST(request: NextRequest) {
 
           // Analyze image if present
           if (imageUrl) {
-            console.log('🖼️ Analyzing image with Claude Vision...');
             imageDescription = await aiRouter.analyzeMeme(imageUrl, 'claude');
           }
 
@@ -156,10 +136,7 @@ export async function POST(request: NextRequest) {
             contextMessage += '\n[Audio message attached]';
           }
 
-          console.log(`📝 Message content: "${contextMessage}"`);
-
           // Generate AI response with full context
-          console.log(`⏱️ [${wish.id}] Calling aiRouter.generateModResponse...`);
           aiReply = await aiRouter.generateModResponse(
             personaConfig.systemPrompt,
             contextMessage,
@@ -167,13 +144,9 @@ export async function POST(request: NextRequest) {
             undefined
           );
 
-          console.log(`✅ [${wish.id}] ${personaConfig.name} responded!`);
-
           // Generate voice response if user sent voice message
           if (audioUrl && aiReply) {
             try {
-              console.log(`🎙️ Generating voice response for ${personaConfig.name}...`);
-              
               if (!process.env.ELEVENLABS_API_KEY) {
                 throw new Error('ElevenLabs API key not configured');
               }
@@ -209,7 +182,6 @@ export async function POST(request: NextRequest) {
                 
                 aiAudioUrl = publicUrl;
                 aiAudioPath = fileName;
-                console.log(`✅ Voice response uploaded: ${publicUrl}`);
               }
             } catch (voiceError) {
               console.error('❌ Voice generation failed:', voiceError);
@@ -217,7 +189,6 @@ export async function POST(request: NextRequest) {
           }
 
           // Update wish with AI response
-          console.log(`⏱️ [${wish.id}] Updating database with AI response...`);
           const { error: updateError } = await supabase
             .from('wishes')
             .update({
@@ -235,8 +206,6 @@ export async function POST(request: NextRequest) {
               .from('wishes')
               .update({ ai_status: 'failed' })
               .eq('id', wish.id);
-          } else {
-            console.log(`✅✅✅ [${wish.id}] COMPLETE! Database updated`);
           }
         } catch (error) {
           console.error(`❌ [${wish.id}] AI generation error:`, error);
@@ -245,11 +214,8 @@ export async function POST(request: NextRequest) {
             .from('wishes')
             .update({ ai_status: 'failed' })
             .eq('id', wish.id);
-          console.log(`⚠️ [${wish.id}] Marked as failed in database`);
         }
       })();
-    } else {
-      console.log(`⏭️ ${personaConfig.name} not mentioned, no AI response needed`);
     }
 
     return response;

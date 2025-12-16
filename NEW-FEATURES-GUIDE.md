@@ -1,8 +1,8 @@
-# 🎄 WishCord New Features - Setup Guide
+# 🎄 WCordAI New Features - Setup Guide
 
 ## What's New
 
-I've implemented 4 major Discord-like features to make WishCord more engaging and viral:
+I've implemented 4 major Discord-like features to make WCordAI more engaging and viral:
 
 ### ✅ 1. Emoji Reactions (👍 ❤️ 😂 💀 🎄 🎅)
 - Click "😊 React" button below any wish
@@ -29,7 +29,7 @@ I've implemented 4 major Discord-like features to make WishCord more engaging an
 - Pre-filled tweet with:
   - User's wish excerpt
   - Mod's response snippet
-  - Hashtags: #WishCord #XmasAI #Web3Christmas
+  - Hashtags: #WCordAI #XmasAI #Web3Christmas
   - Viral-ready format
 - Opens Twitter in new tab
 - **FREE BRANDING & ADVERTISING** when users share!
@@ -108,13 +108,13 @@ The Twitter share button is designed for **maximum virality**:
 
 ### Sample Tweet (Auto-generated):
 ```
-Just made a wish on WishCord! 🎅✨
+Just made a wish on WCordAI! 🎅✨
 
 "I wish for a PS5 for Christmas so I can finally play with my friends..."
 
 SantaMod69 responded with: "GRANTED lmao but only if you're not on the naughty list, which judging by..."
 
-#WishCord #XmasAI #Web3Christmas
+#WCordAI #XmasAI #Web3Christmas
 ```
 
 ### Why This Works:

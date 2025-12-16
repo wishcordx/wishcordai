@@ -39,8 +39,6 @@ export async function POST(request: NextRequest) {
       audioUrl?: string;
     } = await request.json();
     
-    console.log(`⏱️ [${wishId}] Starting AI generation at ${new Date().toISOString()}`);
-    
     const personaConfig = getPersonaConfig(persona);
     if (!personaConfig) {
       throw new Error(`Invalid persona: ${persona}`);
@@ -53,16 +51,10 @@ export async function POST(request: NextRequest) {
 
     // Analyze image if present
     if (imageUrl) {
-      console.log('🖼️ Analyzing image with Claude Vision...');
       imageDescription = await aiRouter.analyzeMeme(imageUrl, 'claude');
     }
 
-    console.log(`📝 Message content: "${wishText}"`);
-    console.log(`🎤 Has audio: ${!!audioUrl}`);
-    console.log(`🖼️ Has image: ${!!imageUrl}`);
-
     // Generate AI response with full context
-    console.log(`⏱️ [${wishId}] Calling aiRouter.generateModResponse...`);
     aiReply = await aiRouter.generateModResponse(
       personaConfig.systemPrompt,
       wishText || '[No text, see attached media]',
@@ -70,14 +62,9 @@ export async function POST(request: NextRequest) {
       undefined
     );
 
-    const elapsed = ((Date.now() - startTime) / 1000).toFixed(2);
-    console.log(`✅ [${wishId}] ${personaConfig.name} responded in ${elapsed}s!`);
-
     // Generate voice response if user sent voice message
     if (audioUrl && aiReply) {
       try {
-        console.log(`🎙️ Generating voice response for ${personaConfig.name}...`);
-        
         if (!process.env.ELEVENLABS_API_KEY) {
           throw new Error('ElevenLabs API key not configured');
         }
@@ -113,7 +100,6 @@ export async function POST(request: NextRequest) {
           
           aiAudioUrl = publicUrl;
           aiAudioPath = fileName;
-          console.log(`✅ Voice response uploaded: ${publicUrl}`);
         }
       } catch (voiceError) {
         console.error('❌ Voice generation failed:', voiceError);
@@ -121,7 +107,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Update wish with AI response
-    console.log(`⏱️ [${wishId}] Updating database with AI response...`);
+
     const { error: updateError } = await supabase
       .from('wishes')
       .update({

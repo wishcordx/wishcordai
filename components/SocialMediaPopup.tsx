@@ -200,7 +200,7 @@ export default function SocialMediaPopup({ isOpen, onClose }: SocialMediaPopupPr
               />
               <div className="heading">Follow us on X!</div>
               <div className="icons">
-                <a className="x" href="https://x.com/wishcord" target="_blank" rel="noopener noreferrer">
+                <a className="x" href="https://x.com/wcordai" target="_blank" rel="noopener noreferrer">
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
                     fill="none"

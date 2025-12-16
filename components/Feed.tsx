@@ -44,18 +44,15 @@ export default function Feed({ refreshTrigger, newWish }: FeedProps) {
   useEffect(() => {
     const handleWishUpdated = (event: CustomEvent) => {
       const { wishId, wish: updatedWish } = event.detail;
-      console.log('📢 [Feed] Received wish-updated event for:', wishId);
       
       setWishes(prev => {
         const index = prev.findIndex(w => w.id === wishId);
         if (index === -1) {
-          console.warn('⚠️ [Feed] Wish not found:', wishId);
           return prev;
         }
         
         const updated = [...prev];
         updated[index] = updatedWish;
-        console.log('✅ [Feed] Updated wish via polling fallback');
         return updated;
       });
     };
@@ -69,15 +66,12 @@ export default function Feed({ refreshTrigger, newWish }: FeedProps) {
 
   // Supabase Realtime - Listen for new wishes and updates
   useEffect(() => {
-    console.log('🔌 Connecting to Supabase Realtime...');
-    
     const channel = supabase
       .channel('wishes-realtime')
       .on(
         'postgres_changes',
         { event: 'INSERT', schema: 'public', table: 'wishes' },
         (payload) => {
-          console.log('✨ New wish via Realtime:', payload.new);
           const newWish = payload.new as Wish;
           setWishes(prev => {
             // Avoid duplicates
@@ -90,14 +84,9 @@ export default function Feed({ refreshTrigger, newWish }: FeedProps) {
         'postgres_changes',
         { event: 'UPDATE', schema: 'public', table: 'wishes' },
         (payload) => {
-          console.log('🔄 Wish updated via Realtime:', payload.new);
           const updatedWish = payload.new as Wish;
-          console.log('📝 AI Status:', updatedWish.ai_status, 'Reply:', updatedWish.ai_reply?.substring(0, 50));
-          console.log('🆔 Updated wish ID:', updatedWish.id);
           setWishes(prev => {
-            console.log('📋 Current wishes count:', prev.length);
             const foundIndex = prev.findIndex(w => w.id === updatedWish.id);
-            console.log('🔍 Found wish at index:', foundIndex);
             
             if (foundIndex === -1) {
               console.warn('⚠️ Wish not found in current list!');
@@ -107,19 +96,13 @@ export default function Feed({ refreshTrigger, newWish }: FeedProps) {
             // Create completely new array with updated wish
             const updated = [...prev];
             updated[foundIndex] = { ...updatedWish };
-            console.log('✅ Wishes state updated, wish at index', foundIndex, 'status:', updated[foundIndex].ai_status);
             return updated;
           });
         }
       )
-      .subscribe((status) => {
-        if (status === 'SUBSCRIBED') {
-          console.log('✅ Realtime connected!');
-        }
-      });
+      .subscribe();
 
     return () => {
-      console.log('🔌 Disconnecting from Supabase Realtime...');
       supabase.removeChannel(channel);
     };
   }, []);
@@ -145,12 +128,7 @@ export default function Feed({ refreshTrigger, newWish }: FeedProps) {
       const response = await fetch(`/api/wishes?t=${Date.now()}`);
       const data = await response.json();
 
-      console.log('Feed data:', data);
-
       if (data.success) {
-        setWishes(data.wishes || []);
-        console.log('Wishes loaded:', data.wishes?.length || 0);
-      } else {
         setError(data.error || 'Failed to load wishes');
       }
     } catch (err) {

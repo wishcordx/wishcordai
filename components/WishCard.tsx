@@ -110,22 +110,15 @@ export default function WishCard({ wish }: WishCardProps) {
   const [shouldPollReplies, setShouldPollReplies] = useState(false);
   const [expectedModUsername, setExpectedModUsername] = useState<string | null>(null);
   
-  // Debug: Log when wish prop updates
-  useEffect(() => {
-    console.log(`🔄 [WishCard ${wish.id}] Rendered with ai_status:`, wish.ai_status, 'ai_reply:', wish.ai_reply?.substring(0, 30));
-  }, [wish.ai_status, wish.ai_reply, wish.id]);
-  
   // Poll for AI response completion if status is pending (fallback in case Realtime fails)
   useEffect(() => {
     if (wish.ai_status !== 'pending') return;
     
-    console.log(`⏱️ [WishCard ${wish.id}] AI is pending, starting polling fallback...`);
     let pollCount = 0;
-    const maxPolls = 30; // Poll for up to 60 seconds
+    const maxPolls = 30;
     
     const pollInterval = setInterval(async () => {
       pollCount++;
-      console.log(`🔄 [Poll ${pollCount}/${maxPolls}] Checking wish ${wish.id} status...`);
       
       try {
         const response = await fetch(`/api/wishes/${wish.id}`, {
@@ -134,11 +127,8 @@ export default function WishCard({ wish }: WishCardProps) {
         const data = await response.json();
         
         if (data.success && data.wish) {
-          console.log(`📝 [Poll] Wish ${wish.id} status:`, data.wish.ai_status);
-          
           // If status changed from pending, trigger a feed refresh
           if (data.wish.ai_status !== 'pending') {
-            console.log(`✅ [Poll] AI response completed! Triggering manual update...`);
             // Dispatch custom event to trigger Feed refresh
             window.dispatchEvent(new CustomEvent('wish-updated', { 
               detail: { wishId: wish.id, wish: data.wish } 
@@ -151,13 +141,11 @@ export default function WishCard({ wish }: WishCardProps) {
       }
       
       if (pollCount >= maxPolls) {
-        console.log(`⏹️ [Poll] Max polls reached for wish ${wish.id}`);
         clearInterval(pollInterval);
       }
     }, 2000);
     
     return () => {
-      console.log(`🛑 [Poll] Cleanup for wish ${wish.id}`);
       clearInterval(pollInterval);
     };
   }, [wish.id, wish.ai_status]);
@@ -176,8 +164,6 @@ export default function WishCard({ wish }: WishCardProps) {
   // Supabase Realtime - Listen for new replies on this wish
   useEffect(() => {
     if (showReplies) {
-      console.log(`🔌 Listening for replies on wish ${wish.id}...`);
-      
       const channel = supabase
         .channel(`replies-${wish.id}`)
         .on(
@@ -189,7 +175,6 @@ export default function WishCard({ wish }: WishCardProps) {
             filter: `wish_id=eq.${wish.id}`,
           },
           (payload) => {
-            console.log('✨ New reply via Realtime:', payload.new);
             const newReply = payload.new as Reply;
             setReplies(prev => {
               // Avoid duplicates
@@ -208,21 +193,15 @@ export default function WishCard({ wish }: WishCardProps) {
             filter: `wish_id=eq.${wish.id}`,
           },
           (payload) => {
-            console.log('🔄 Reply updated via Realtime:', payload.new);
             const updatedReply = payload.new as Reply;
             setReplies(prev =>
               prev.map(r => (r.id === updatedReply.id ? updatedReply : r))
             );
           }
         )
-        .subscribe((status) => {
-          if (status === 'SUBSCRIBED') {
-            console.log(`✅ Realtime connected for replies on wish ${wish.id}`);
-          }
-        });
+        .subscribe();
 
       return () => {
-        console.log(`🔌 Disconnecting from replies on wish ${wish.id}`);
         supabase.removeChannel(channel);
       };
     }
@@ -251,7 +230,6 @@ export default function WishCard({ wish }: WishCardProps) {
           
           // If we got a new reply, update and stop polling
           if (newReplyCount > lastReplyCount) {
-            console.log('✅ New reply detected! Updating...');
             setReplies(data.replies);
             setReplyCount(newReplyCount);
             setLastReplyCount(newReplyCount);
@@ -263,7 +241,6 @@ export default function WishCard({ wish }: WishCardProps) {
         
         // Stop polling after max attempts
         if (pollCount >= maxPolls) {
-          console.log('⏱️ Stopped polling for replies after 60 seconds');
           setShouldPollReplies(false);
           setExpectedModUsername(null);
           clearInterval(pollInterval);
@@ -520,7 +497,7 @@ export default function WishCard({ wish }: WishCardProps) {
 
   const shareToTwitter = () => {
     setShareCount(prev => prev + 1);
-    const tweetText = `Just made a wish on Wishcord! 🎅✨\n\n"${wish.wish_text.slice(0, 100)}${wish.wish_text.length > 100 ? '...' : ''}"\n\n${personaConfig?.name} responded with: "${wish.ai_reply?.slice(0, 80)}..."\n\n#Wishcord #XmasAI #Web3Christmas`;
+    const tweetText = `Just made a wish on WCordAI! 🎅✨\n\n"${wish.wish_text.slice(0, 100)}${wish.wish_text.length > 100 ? '...' : ''}"\n\n${personaConfig?.name} responded with: "${wish.ai_reply?.slice(0, 80)}..."\n\n#WCordAI #XmasAI #Web3Christmas`;
     const tweetUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(tweetText)}`;
     window.open(tweetUrl, '_blank');
   };

@@ -22,8 +22,6 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    console.log('🎤 Transcribing audio...');
-
     // Convert File to Buffer for OpenAI
     const arrayBuffer = await audioFile.arrayBuffer();
     const buffer = Buffer.from(arrayBuffer);
@@ -36,8 +34,6 @@ export async function POST(request: NextRequest) {
       file: file,
       model: 'whisper-1',
     });
-
-    console.log('✅ Transcribed:', transcription.text);
 
     // Upload audio to Supabase Storage
     const fileName = `voice-${Date.now()}.webm`;
@@ -60,8 +56,6 @@ export async function POST(request: NextRequest) {
     const { data: { publicUrl } } = supabase.storage
       .from('wish-audio')
       .getPublicUrl(fileName);
-
-    console.log('✅ Audio uploaded:', publicUrl);
 
     return NextResponse.json({
       success: true,

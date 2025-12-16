@@ -10,11 +10,6 @@ export async function GET() {
   try {
     const wishes = await getWishes(50);
     
-    console.log('GET /api/wishes - Found wishes:', wishes.length);
-    if (wishes.length > 0) {
-      console.log('Latest wish ID:', wishes[0].id);
-    }
-
     return NextResponse.json<WishesResponse>(
       { success: true, wishes },
       { 
