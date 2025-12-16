@@ -142,11 +142,7 @@ export default function HomePage() {
     loadSupportMessages();
 
     // Set up real-time subscription
-    const { createClient } = require('@supabase/supabase-js');
-    const supabase = createClient(
-      process.env.NEXT_PUBLIC_SUPABASE_URL!,
-      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
-    );
+    const { supabase } = await import('@/lib/supabase');
 
     const channel = supabase
       .channel('support_messages')
