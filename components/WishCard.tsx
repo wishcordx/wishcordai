@@ -467,7 +467,7 @@ export default function WishCard({ wish }: WishCardProps) {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           wish_id: wish.id,
-          wallet_address: walletAddress,
+          wallet_address: walletAddress || null,
           username: profile?.username || 'Anonymous',
           avatar: profile?.avatar || '👤',
           reply_text: replyText,
@@ -823,7 +823,7 @@ export default function WishCard({ wish }: WishCardProps) {
           })()}
 
           {/* Reply Input */}
-          <div className="flex gap-1.5 sm:gap-2 mt-2 sm:mt-3">
+          <div className="flex gap-1.5 sm:gap-2 mt-2 sm:mt-3 relative z-10">
             <div className="flex-1 relative">
               <input
                 ref={replyInputRef}
@@ -832,7 +832,8 @@ export default function WishCard({ wish }: WishCardProps) {
                 onChange={handleReplyTextChange}
                 onKeyDown={handleReplyKeyDown}
                 placeholder="Write a reply..."
-                disabled={!walletAddress || isPostingReply}
+                disabled={isPostingReply}
+                style={{ pointerEvents: 'auto', cursor: 'text' }}
                 className="w-full bg-[#1e1f22] border border-[#35373c] rounded px-2 sm:px-3 py-1.5 sm:py-2 text-xs sm:text-sm text-white placeholder-gray-500 focus:outline-none focus:border-indigo-500 disabled:opacity-50"
               />
               
@@ -854,7 +855,7 @@ export default function WishCard({ wish }: WishCardProps) {
             </div>
             <button
               onClick={handlePostReply}
-              disabled={!walletAddress || !replyText.trim() || isPostingReply}
+              disabled={!replyText.trim() || isPostingReply}
               className="bg-indigo-600 hover:bg-indigo-700 disabled:bg-gray-600 disabled:opacity-50 text-white px-3 sm:px-4 py-1.5 sm:py-2 rounded text-xs sm:text-sm font-medium transition-colors"
             >
               {isPostingReply ? '...' : 'Send'}
